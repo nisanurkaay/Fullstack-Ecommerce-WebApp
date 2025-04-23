@@ -1,0 +1,14 @@
+.app-container {
+  min-height: 100vh; /* Tüm ekranı kapla */
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1 0 auto; /* İçeriğin yüksekliği artsın, kalanını doldursun */
+}
+
+/* Footer'ın üstte durmasını engeller, hep aşağıda tutar */
+app-footer {
+  flex-shrink: 0;
+}
