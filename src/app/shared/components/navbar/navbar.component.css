@@ -41,7 +41,7 @@
   --height-of-input: 40px;
   --border-height: 2px;
   --input-bg: #fff;
-  --border-color: #2f2ee9;
+  --border-color: #193f77;
   --border-radius: 30px;
   --after-border-radius: 1px;
   position: relative;
@@ -86,6 +86,12 @@
 input:focus {
   outline: none;
 }
+.poppins-extrabold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
 /* here is code of animated border */
 .form:focus-within:before {
   transform: scale(1);
@@ -108,6 +114,7 @@ input:not(:placeholder-shown) ~ .reset {
   width: 17px;
   margin-top: 3px;
 }
-* {
-  color:#59616E;
+
+span, mat-icon {
+  color:black;
 }
