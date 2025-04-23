@@ -1,0 +1,31 @@
+.logo {
+  font-size: 1.4rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.search-bar {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.search-input {
+  width: 350px;
+  max-width: 90vw;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 768px) {
+  .search-bar {
+    width: 100%;
+    min-width: 0;
+  }
+  .search-input {
+    width: 100%;
+    min-width: 0;
+  }
+}

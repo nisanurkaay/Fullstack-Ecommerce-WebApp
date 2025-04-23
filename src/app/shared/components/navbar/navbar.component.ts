@@ -1,22 +1,23 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
   standalone: false,
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css'
+  styleUrl: './navbar.component.css',
+
 })
 export class NavbarComponent {
-  showCategories = false;
-  categories = [
-    { id: 'electronics', name: 'Electronics' },
-    { id: 'clothing', name: 'Clothing' }
-  ];
-
-  toggleCategories() {
-    this.showCategories = !this.showCategories;
+  searchQuery = '';
+  filteredOptions: string[] = [];
+  allOptions: string[] = ['Laptop', 'Phone', 'Headphones', 'Shoes']; // örnek ürünler
+  cartCount = 2;
+  isLoggedIn = false;
+  onSearch() {
+    this.filteredOptions = this.allOptions.filter(option =>
+      option.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
   }
-
-  // ... rest of your component logic
+  logout() { this.isLoggedIn = false; }
 }
-

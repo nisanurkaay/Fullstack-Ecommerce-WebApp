@@ -1,0 +1,40 @@
+<mat-toolbar color="primary" class="navbar">
+  <!-- Logo -->
+  <span class="logo" routerLink="/" style="cursor:pointer;">MyShop</span>
+
+  <!-- Search Bar (with autocomplete) -->
+  <div class="search-bar">
+    <mat-form-field appearance="outline" class="search-input">
+      <input matInput [matAutocomplete]="auto" placeholder="Search products" [(ngModel)]="searchQuery" (input)="onSearch()">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+
+  <span class="spacer"></span>
+
+  <!-- Wishlist Icon -->
+  <button mat-icon-button routerLink="/wishlist">
+    <mat-icon>favorite_border</mat-icon>
+  </button>
+
+  <!-- Cart Icon with Counter -->
+  <button mat-icon-button routerLink="/cart" matBadge="{{cartCount}}" matBadgeColor="accent">
+    <mat-icon>shopping_cart</mat-icon>
+  </button>
+
+  <!-- User Profile Dropdown -->
+  <button mat-icon-button [matMenuTriggerFor]="userMenu">
+    <mat-icon>account_circle</mat-icon>
+  </button>
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item routerLink="/profile"><mat-icon>person</mat-icon> Profile</button>
+    <button mat-menu-item routerLink="/orders"><mat-icon>assignment</mat-icon> Orders</button>
+    <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Logout</button>
+    <button mat-menu-item routerLink="/login" *ngIf="!isLoggedIn"><mat-icon>login</mat-icon> Login</button>
+    <button mat-menu-item routerLink="/register" *ngIf="!isLoggedIn"><mat-icon>person_add</mat-icon> Register</button>
+  </mat-menu>
+</mat-toolbar>
