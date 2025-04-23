@@ -1,7 +1,43 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './core/guards/auth.guard';
+import { AdminGuard } from './core/guards/admin.guard';
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: 'auth',
+    loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
+  },
+  {
+    path: 'products',
+    loadChildren: () => import('./modules/product/product.module').then(m => m.ProductModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'cart',
+    loadChildren: () => import('./modules/cart/cart.module').then(m => m.CartModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'orders',
+    loadChildren: () => import('./modules/order/order.module').then(m => m.OrderModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
+    canActivate: [AdminGuard]
+  },
+  {
+    path: '',
+    redirectTo: 'auth/login',
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: 'auth/login'
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

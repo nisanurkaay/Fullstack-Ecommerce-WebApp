@@ -1,0 +1,15 @@
+<div class="auth-container">
+  <h2>Sign Up</h2>
+  <form (ngSubmit)="onRegister()" [formGroup]="registerForm">
+    <input formControlName="name" placeholder="Full Name" required>
+    <input formControlName="email" placeholder="Email" type="email" required>
+    <input formControlName="password" placeholder="Password" type="password" required>
+    <button type="submit" [disabled]="registerForm.invalid">Register</button>
+  </form>
+
+<!--- <button (click)="registerWithGoogle()">Sign up with Google</button>-->
+
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+  <p>Already have an account? <a routerLink="/auth/login">Login</a></p>
+</div>
