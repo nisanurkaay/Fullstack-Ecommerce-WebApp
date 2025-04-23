@@ -19,4 +19,11 @@ export class NavbarComponent {
     );
   }
   logout() { this.isLoggedIn = false; }
+
+    onReset() {
+      this.searchQuery = '';
+      // eğer autocomplete veya filtreleme yapıyorsanız onları da temizleyin
+      // this.filteredOptions = [];
+    }
+
 }

@@ -1,37 +1,67 @@
-<footer class="footer">
-  <div class="footer-section links">
-    <h3>Quick Links</h3>
-    <a routerLink="/about">About</a>
-    <a routerLink="/contact">Contact</a>
+<!-- src/app/shared/components/footer/footer.component.html -->
+<footer class="w-full bg-gray-900 text-gray-200 flex flex-col md:flex-row flex-wrap justify-around p-8 gap-8">
+  <!-- Quick Links -->
+  <div class="min-w-[180px]">
+    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+    <ul class="space-y-2">
+      <li>
+        <a routerLink="/about"
+           class="block hover:text-white transition-colors">
+          About
+        </a>
+      </li>
+      <li>
+        <a routerLink="/contact"
+           class="block hover:text-white transition-colors">
+          Contact
+        </a>
+      </li>
+    </ul>
   </div>
 
-  <div class="footer-section newsletter">
-    <h3>Newsletter</h3>
-    <form (ngSubmit)="subscribe()" class="newsletter-form">
-      <input type="email" placeholder="Your email" [(ngModel)]="email" name="email" required>
-      <button mat-raised-button color="accent" type="submit">Sign Up</button>
+  <!-- Newsletter -->
+  <div class="min-w-[240px]">
+    <h3 class="text-lg font-semibold mb-4">Newsletter</h3>
+    <form (ngSubmit)="subscribe()" class="flex flex-col sm:flex-row sm:items-center gap-4">
+      <input
+        type="email"
+        placeholder="Your email"
+        [(ngModel)]="email"
+        name="email"
+        required
+        class="flex-1 px-4 py-2 rounded-md bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button
+        type="submit"
+        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white transition-colors">
+        Sign Up
+      </button>
     </form>
   </div>
 
-  <div class="footer-section social">
-    <h3>Follow Us</h3>
-    <a href="https://facebook.com" target="_blank">
-      <img src="assets/facebook.png" alt="Facebook" height="28" />
-    </a>
-    <a href="https://twitter.com" target="_blank">
-      <img src="assets/twitter.png" alt="Twitter" height="45" />
-    </a>
-    <a href="https://instagram.com" target="_blank">
-      <img src="assets/instagram.png" alt="Instagram" height="28" />
-    </a>
-
+  <!-- Social -->
+  <div class="min-w-[180px]">
+    <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+    <div class="flex items-center space-x-4">
+      <a href="https://facebook.com" target="_blank" class="hover:opacity-80 transition-opacity">
+        <img src="assets/facebook.png" alt="Facebook" class="h-6 w-6"/>
+      </a>
+      <a href="https://twitter.com" target="_blank" class="hover:opacity-80 transition-opacity">
+        <img src="assets/twitter.png" alt="Twitter" class="h-6 w-6"/>
+      </a>
+      <a href="https://instagram.com" target="_blank" class="hover:opacity-80 transition-opacity">
+        <img src="assets/instagram.png" alt="Instagram" class="h-6 w-6"/>
+      </a>
+    </div>
   </div>
 
-  <div class="footer-section payment">
-    <h3>We Accept</h3>
-    <img src="assets/visa.png" alt="Visa" height="10"/>
-<img src="assets/mastercard.png" alt="Mastercard" height="20"/>
-<img src="assets/paypal.png" alt="PayPal" height="20"/>
-
+  <!-- Payment -->
+  <div class="min-w-[180px]">
+    <h3 class="text-lg font-semibold mb-4">We Accept</h3>
+    <div class="flex items-center space-x-4">
+      <img src="assets/visa.png"       alt="Visa"       class="h-8 bg-white rounded p-1 shadow"/>
+      <img src="assets/mastercard.png" alt="Mastercard" class="h-8 bg-white rounded p-1 shadow"/>
+      <img src="assets/paypal.png"     alt="PayPal"     class="h-8 bg-white rounded p-1 shadow"/>
+    </div>
   </div>
 </footer>

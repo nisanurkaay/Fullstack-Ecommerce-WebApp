@@ -1,40 +1,110 @@
-<mat-toolbar color="primary" class="navbar">
-  <!-- Logo -->
-  <span class="logo" routerLink="/" style="cursor:pointer;">MyShop</span>
+<header class="bg-white shadow-md sticky top-0 z-50 w-full">
+  <div class="flex items-center px-4 py-2">
+    <!-- Logo (solda) -->
+    <span
+      class="text-2xl font-horizon cursor-pointer"
+      routerLink="/"
+    >
+      MyShop
+    </span>
 
-  <!-- Search Bar (with autocomplete) -->
-  <div class="search-bar">
-    <mat-form-field appearance="outline" class="search-input">
-      <input matInput [matAutocomplete]="auto" placeholder="Search products" [(ngModel)]="searchQuery" (input)="onSearch()">
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of filteredOptions" [value]="option">
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+    <!-- Desktop: Categories + Search (ortada) -->
+    <div
+      class="hidden md:flex flex-1 justify-center items-center space-x-4"
+    >
+      <!-- Categories -->
+      <button
+        mat-button
+        routerLink="/categories"
+        class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+        aria-label="Categories"
+      >
+        <mat-icon>list</mat-icon>
+        <span class="text-sm">Categories</span>
+      </button>
+
+      <!-- Search Form -->
+      <form
+        (submit)="onSearch()"
+        class="form w-auto"
+      >
+        <button type="submit" aria-label="Search">
+          <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+            <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9"
+                  stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <input
+          class="input"
+          placeholder="Type your text"
+          required
+          [(ngModel)]="searchQuery"
+          name="search"
+          type="text"
+          (input)="onSearch()"
+        />
+        <button type="reset" class="reset" aria-label="Clear" (click)="onReset()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Icons (sağda) -->
+    <div class="flex items-center space-x-4 ml-auto">
+      <button mat-button [matMenuTriggerFor]="userMenu"
+      class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
+<mat-icon>account_circle</mat-icon>
+<span class="hidden md:inline text-sm">Profile</span>
+</button>
+      <button mat-button routerLink="/wishlist" class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
+        <mat-icon>favorite_border</mat-icon>
+        <span class="hidden md:inline text-sm">Wishlist</span>
+      </button>
+      <button mat-button routerLink="/cart" class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+              [matBadge]="cartCount" matBadgeColor="warn">
+        <mat-icon>shopping_cart</mat-icon>
+        <span class="hidden md:inline text-sm">Cart</span>
+      </button>
+
+    </div>
   </div>
 
-  <span class="spacer"></span>
+  <!-- Mobile Search (alt satırda) -->
+  <div class="block md:hidden px-4 pb-2">
+    <form (submit)="onSearch()" class="form w-full">
+      <button type="submit" aria-label="Search">
+        <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
+          <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9"
+                stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <input
+        class="input"
+        placeholder="Type your text"
+        required
+        [(ngModel)]="searchQuery"
+        name="searchMobile"
+        type="text"
+        (input)="onSearch()"
+      />
+      <button type="reset" class="reset" aria-label="Clear" (click)="onReset()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </form>
+  </div>
 
-  <!-- Wishlist Icon -->
-  <button mat-icon-button routerLink="/wishlist">
-    <mat-icon>favorite_border</mat-icon>
-  </button>
-
-  <!-- Cart Icon with Counter -->
-  <button mat-icon-button routerLink="/cart" matBadge="{{cartCount}}" matBadgeColor="accent">
-    <mat-icon>shopping_cart</mat-icon>
-  </button>
-
-  <!-- User Profile Dropdown -->
-  <button mat-icon-button [matMenuTriggerFor]="userMenu">
-    <mat-icon>account_circle</mat-icon>
-  </button>
+  <!-- Profile Menü -->
   <mat-menu #userMenu="matMenu">
-    <button mat-menu-item routerLink="/profile"><mat-icon>person</mat-icon> Profile</button>
-    <button mat-menu-item routerLink="/orders"><mat-icon>assignment</mat-icon> Orders</button>
-    <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Logout</button>
-    <button mat-menu-item routerLink="/login" *ngIf="!isLoggedIn"><mat-icon>login</mat-icon> Login</button>
-    <button mat-menu-item routerLink="/register" *ngIf="!isLoggedIn"><mat-icon>person_add</mat-icon> Register</button>
+    <button mat-menu-item routerLink="/profile"><mat-icon>person</mat-icon>Profile</button>
+    <button mat-menu-item routerLink="/orders"><mat-icon>assignment</mat-icon>Orders</button>
+    <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>
+    <button mat-menu-item routerLink="/login" *ngIf="!isLoggedIn"><mat-icon>login</mat-icon>Login</button>
+    <button mat-menu-item routerLink="/register" *ngIf="!isLoggedIn"><mat-icon>person_add</mat-icon>Register</button>
   </mat-menu>
-</mat-toolbar>
+</header>
