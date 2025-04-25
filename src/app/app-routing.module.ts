@@ -1,17 +1,22 @@
+// src/app/app-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
+import { AuthGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
+
+  { path: 'login',    redirectTo: '/auth/login',    pathMatch: 'full' },
+  { path: 'register', redirectTo: '/auth/register', pathMatch: 'full' },
+
+
   {
     path: 'auth',
     loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
   },
   {
     path: 'products',
-    loadChildren: () => import('./modules/product/product.module').then(m => m.ProductModule),
-
+    loadChildren: () => import('./modules/product/product.module').then(m => m.ProductModule)
   },
   {
     path: 'cart',
@@ -28,15 +33,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
     canActivate: [AdminGuard]
   },
-  {
-    path: '',
-    redirectTo: '/products',
-    pathMatch: 'full'
-  },
-  {
-    path: '**',
-    redirectTo: '/products'
-  }
+
+  // ana sayfa + wildcard
+  { path: '',     redirectTo: '/products', pathMatch: 'full' },
+  { path: '**',   redirectTo: '/products' }
 ];
 
 @NgModule({
