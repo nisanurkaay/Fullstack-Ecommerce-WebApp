@@ -14,7 +14,6 @@ import { AuthComponent } from './auth.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-
 @NgModule({
   declarations: [
     AuthComponent,
@@ -28,20 +27,6 @@ import { RegisterComponent } from './register/register.component';
     AuthRoutingModule,
     SocialLoginModule
   ],
-  providers: [
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: <SocialAuthServiceConfig>{
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider('YOUR_GOOGLE_CLIENT_ID')
-          }
-        ],
-        onError: err => console.error(err)
-      }
-    }
-  ]
+
 })
-export class AuthModule { }
+export class AuthModule {}

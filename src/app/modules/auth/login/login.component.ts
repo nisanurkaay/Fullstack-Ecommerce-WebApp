@@ -1,13 +1,12 @@
-// src/app/auth/login/login.component.ts
-import { SocialUser } from '@abacritt/angularx-social-login';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+// import { SocialUser } from '@abacritt/angularx-social-login'; // şimdilik kullanılmıyor
 
 @Component({
   selector: 'app-login',
-  standalone:false,
+  standalone: false,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -23,7 +22,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      email:    ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
   }
@@ -38,13 +37,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-
-  onGoogleSignIn(): void {
-    this.auth.googleSignIn()
-      .then((user: SocialUser) => {
-
-        this.router.navigateByUrl('/products');
-      })
-      .catch(err => this.error = 'Google login failed');
-  }
+  // onGoogleSignIn(): void {
+  //   this.auth.googleSignIn()
+  //     .then((user: SocialUser) => {
+  //       this.router.navigateByUrl('/products');
+  //     })
+  //     .catch(err => this.error = 'Google login failed');
+  // }
 }
