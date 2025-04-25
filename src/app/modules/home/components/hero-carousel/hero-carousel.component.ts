@@ -2,22 +2,20 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-hero-carousel',
-  standalone:false,
+  standalone: false,
   templateUrl: './hero-carousel.component.html',
   styleUrls: ['./hero-carousel.component.css']
 })
 export class HeroCarouselComponent implements OnInit {
   currentSlide = 0;
   slides = [
-    'assets/summer24.jpg',
-    'assets/denim.jpg',
-    'assets/tech.jpg'
+    'https://via.placeholder.com/1200x500/FF5733/FFFFFF?text=Summer+Collection',
+    'https://via.placeholder.com/1200x500/33A8FF/FFFFFF?text=Denim+Styles',
+    'https://via.placeholder.com/1200x500/33FF57/FFFFFF?text=Tech+Gadgets'
   ];
 
   ngOnInit(): void {
-    setInterval(() => {
-      this.nextSlide();
-    }, 4000); // auto slide every 4s
+    setInterval(() => this.nextSlide(), 4000);
   }
 
   nextSlide(): void {

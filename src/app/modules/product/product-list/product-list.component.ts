@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
-
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -13,22 +13,30 @@ import { ProductService } from '../../../core/services/product.service';
 
   export class ProductListComponent implements OnInit {
     products: Product[] = [];
+    filteredProducts: Product[] = [];
     isLoading = true;
     error: string | null = null;
 
-    constructor(private productService: ProductService) {}
+    constructor(private productService: ProductService, private route: ActivatedRoute) {}
 
     ngOnInit() {
-      this.productService.getProducts().subscribe({
-        next: prods => {
-          this.products = prods;
-          this.isLoading = false;
-        },
-        error: err => {
-          console.error(err);
-          this.error = 'Ürünleri yüklerken bir hata oluştu.';
-          this.isLoading = false;
-        }
+      this.route.queryParamMap.subscribe(params => {
+        const query = params.get('q')?.toLowerCase() || '';
+
+        this.productService.getProducts().subscribe({
+          next: data => {
+            this.products = data;
+            this.filteredProducts = query
+              ? data.filter(p => p.description.toLowerCase().includes(query))
+              : data;
+            this.isLoading = false;
+          },
+          error: err => {
+            this.error = 'Hata oluştu';
+            this.isLoading = false;
+          }
+        });
       });
     }
+
   }

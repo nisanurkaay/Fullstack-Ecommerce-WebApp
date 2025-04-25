@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -13,10 +14,13 @@ export class NavbarComponent {
   allOptions: string[] = ['Laptop', 'Phone', 'Headphones', 'Shoes']; // örnek ürünler
   cartCount = 2;
   isLoggedIn = false;
-  onSearch() {
-    this.filteredOptions = this.allOptions.filter(option =>
-      option.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
+
+  constructor(private router: Router) {}
+
+  onSearch(): void {
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/products'], { queryParams: { q: this.searchQuery.trim() } });
+    }
   }
   logout() { this.isLoggedIn = false; }
 
