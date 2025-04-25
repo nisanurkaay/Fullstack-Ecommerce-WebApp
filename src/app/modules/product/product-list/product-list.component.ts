@@ -23,12 +23,13 @@ import { ActivatedRoute } from '@angular/router';
       this.route.queryParamMap.subscribe(params => {
         const query = params.get('q')?.toLowerCase() || '';
 
+        this.isLoading = true;
         this.productService.getProducts().subscribe({
           next: data => {
             this.products = data;
             this.filteredProducts = query
-              ? data.filter(p => p.description.toLowerCase().includes(query))
-              : data;
+              ? data.filter(p => p.title.toLowerCase().includes(query))
+              : data; // 👈 boşsa hepsini göster
             this.isLoading = false;
           },
           error: err => {

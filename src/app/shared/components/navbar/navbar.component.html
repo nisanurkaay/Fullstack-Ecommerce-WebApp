@@ -101,11 +101,30 @@
   </div>
 
   <!-- Profile Menü -->
-  <mat-menu #userMenu="matMenu">
-    <button mat-menu-item routerLink="/profile"><mat-icon>person</mat-icon>Profile</button>
-    <button mat-menu-item routerLink="/orders"><mat-icon>assignment</mat-icon>Orders</button>
-    <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon>Logout</button>
-    <button mat-menu-item routerLink="/login" *ngIf="!isLoggedIn"><mat-icon>login</mat-icon>Login</button>
-    <button mat-menu-item routerLink="/register" *ngIf="!isLoggedIn"><mat-icon>person_add</mat-icon>Register</button>
-  </mat-menu>
+ <!-- Profile Menü -->
+<mat-menu #userMenu="matMenu">
+  <!-- Kullanıcı giriş yaptıysa -->
+  <ng-container *ngIf="isLoggedIn; else guestLinks">
+    <button mat-menu-item routerLink="/profile">
+      <mat-icon>person</mat-icon>Profile
+    </button>
+    <button mat-menu-item routerLink="/orders">
+      <mat-icon>assignment</mat-icon>Orders
+    </button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>Logout
+    </button>
+  </ng-container>
+
+  <!-- Giriş yapılmamışsa -->
+  <ng-template #guestLinks>
+    <button mat-menu-item routerLink="/auth/login">
+      <mat-icon>login</mat-icon>Login
+    </button>
+    <button mat-menu-item routerLink="/auth/register">
+      <mat-icon>person_add</mat-icon>Register
+    </button>
+  </ng-template>
+</mat-menu>
+
 </header>

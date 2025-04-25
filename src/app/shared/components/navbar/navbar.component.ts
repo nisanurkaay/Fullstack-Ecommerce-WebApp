@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-
+import { AuthService } from '@core/services/auth.service';
+import { OnInit } from '@angular/core';
 @Component({
   selector: 'app-navbar',
   standalone: false,
@@ -8,26 +9,33 @@ import { Router } from '@angular/router';
   styleUrl: './navbar.component.css',
 
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   searchQuery = '';
   filteredOptions: string[] = [];
-  allOptions: string[] = ['Laptop', 'Phone', 'Headphones', 'Shoes']; // örnek ürünler
   cartCount = 2;
   isLoggedIn = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private auth :AuthService) {}
 
-  onSearch(): void {
-    if (this.searchQuery.trim()) {
-      this.router.navigate(['/products'], { queryParams: { q: this.searchQuery.trim() } });
-    }
+  ngOnInit() {
+    this.isLoggedIn = this.auth.isLoggedIn();
+  }
+  onSearch() {
+    this.router.navigate(['/products'], {
+      queryParams: this.searchQuery.trim()
+        ? { q: this.searchQuery.trim() }
+        : {} // ❗ boşsa query param gönderme
+    });
   }
   logout() { this.isLoggedIn = false; }
 
-    onReset() {
-      this.searchQuery = '';
-      // eğer autocomplete veya filtreleme yapıyorsanız onları da temizleyin
-      // this.filteredOptions = [];
-    }
+  onReset() {
+    this.searchQuery = '';
+
+    // ❗ URL'deki ?q=... parametresini temizle
+    this.router.navigate(['/products'], {
+      queryParams: {}
+    });
+  }
 
 }

@@ -5,10 +5,12 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
+import { WishlistComponent } from './modules/wishlist/components/wishlist/wishlist.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    WishlistComponent
   ],
   imports: [
     BrowserModule,
