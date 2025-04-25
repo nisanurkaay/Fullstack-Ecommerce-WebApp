@@ -1,44 +1,58 @@
-import { Component } from '@angular/core';
+// src/app/modules/auth/register/register.component.ts
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '@core/services/auth.service';
-
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
-  standalone: false,
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  standalone:false,
+    templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
-export class RegisterComponent {
-  registerForm: FormGroup;
+export class RegisterComponent implements OnInit {
+  registerForm!: FormGroup;
   errorMessage = '';
+  successMessage = '';
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private auth: AuthService,
     private router: Router
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.registerForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      name:            ['', Validators.required],
+      email:           ['', [Validators.required, Validators.email]],
+      password:        ['', Validators.required],
+      confirmPassword: ['', Validators.required]
+    }, {
+      validators: this.passwordsMatch
     });
   }
 
-  onRegister() {
-    if (this.registerForm.invalid) return;
+  private passwordsMatch(form: FormGroup) {
+    return form.get('password')?.value === form.get('confirmPassword')?.value
+      ? null
+      : { mismatch: true };
+  }
 
-    this.authService.register(this.registerForm.value).subscribe({
-      next: () => this.router.navigate(['/auth/login']),
-      error: (err: unknown) => {
-        this.errorMessage = err instanceof Error ? err.message : 'Registration failed.';
-      }
+  onRegister(): void {
+    if (this.registerForm.invalid) {
+      this.errorMessage = 'Please fix the errors above.';
+      return;
+    }
+
+    this.errorMessage = '';
+    const { name, email, password } = this.registerForm.value;
+
+    this.auth.register({ name, email, password }).subscribe({
+      next: () => {
+        this.successMessage = 'Registered successfully! Redirecting…';
+        setTimeout(() => this.router.navigateByUrl('/auth/login'), 1500);
+      },
+      error: err => this.errorMessage = err.message || 'Registration failed.'
     });
   }
-  registerWithGoogle() {
-    // Placeholder for Google login integration
-    console.log('Google login not yet implemented');
-  }
-
 }
