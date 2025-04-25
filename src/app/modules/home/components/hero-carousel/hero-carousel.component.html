@@ -1,43 +1,49 @@
-<div class="carousel relative w-full h-[400px] overflow-hidden rounded-lg">
-  <!-- Slide container with width set dynamically -->
+<div class="carousel relative w-full h-[500px] overflow-hidden rounded-lg bg-gray-100">
+  <!-- Slide container -->
   <div
     class="flex transition-transform duration-700 ease-in-out"
+    [style.transform]="'translateX(-' + currentSlide * 100 + '%)'"
     [style.width.%]="slides.length * 100"
-    [style.transform]="'translateX(-' + currentSlide * (100 / slides.length) + '%)'"
   >
     <div
       *ngFor="let slide of slides"
-      class="w-full flex-shrink-0 h-[400px] flex justify-center items-center"
+      class="w-full h-full flex-shrink-0 relative"
     >
-      <img
-        [src]="slide"
-        alt="Hero image"
-        class="w-full h-full object-cover"
-      />
+      <div class="absolute inset-0 flex justify-center items-center">
+        <img
+          [src]="slide"
+          alt="Hero image"
+          class="max-w-full max-h-full object-contain"
+        />
+      </div>
     </div>
   </div>
 
-  <!-- Navigation Buttons -->
+  <!-- Navigation -->
   <button
     (click)="prevSlide()"
-    class="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-full"
-  >‹</button>
+    class="absolute top-1/2 left-4 -translate-y-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full z-10 hover:bg-opacity-70 transition"
+  >
+    ‹
+  </button>
+
   <button
     (click)="nextSlide()"
-    class="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-full"
-  >›</button>
+    class="absolute top-1/2 right-4 -translate-y-1/2 bg-black bg-opacity-50 text-white px-4 py-2 rounded-full z-10 hover:bg-opacity-70 transition"
+  >
+    ›
+  </button>
 
   <!-- Dots -->
-  <div class="absolute bottom-3 w-full flex justify-center gap-2">
+  <div class="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
     <button
       *ngFor="let slide of slides; let i = index"
       (click)="goToSlide(i)"
-      class="w-3 h-3 rounded-full"
+      class="w-3 h-3 rounded-full transition"
       [ngClass]="{
-        'bg-white': currentSlide === i,
+        'bg-white scale-125': currentSlide === i,
         'bg-gray-400': currentSlide !== i
       }"
     ></button>
   </div>
 </div>
-
