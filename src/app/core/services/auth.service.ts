@@ -57,4 +57,7 @@ export class AuthService {
     const user = this.getCurrentUser();
     return user?.role || '';
   }
+  forgotPassword(email: string): Observable<any> {
+    return of({ success: true });
+  }
 }
