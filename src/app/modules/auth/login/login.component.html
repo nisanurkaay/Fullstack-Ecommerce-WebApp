@@ -1,80 +1,51 @@
-<div class="auth-container max-w-md mx-auto p-6 bg-white rounded shadow mt-10">
-  <h2 class="text-2xl font-semibold mb-6 text-center">Login</h2>
+<div class="auth-box">
+  <div class="auth-content">
+    <h2 class="auth-title">Login</h2>
 
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-    <!-- Email -->
-    <div class="form-group mb-4">
-      <label for="email" class="block mb-1 font-medium">Email</label>
-      <input
-        id="email"
-        type="email"
-        formControlName="email"
-        class="form-control w-full p-2 border rounded"
-        placeholder="Enter your email"
-        required
-      />
-      <div
-        *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
-        class="text-red-500 text-sm mt-1"
-      >
-        Please enter a valid email.
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <input
+          id="email"
+          formControlName="email"
+          type="email"
+          class="form-control"
+          placeholder="Enter your email"
+        />
       </div>
-    </div>
 
-    <!-- Password -->
-    <div class="form-group mb-4">
-      <label for="password" class="block mb-1 font-medium">Password</label>
-      <input
-        id="password"
-        type="password"
-        formControlName="password"
-        class="form-control w-full p-2 border rounded"
-        placeholder="Enter your password"
-        required
-      />
-      <div
-        *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
-        class="text-red-500 text-sm mt-1"
-      >
-        Password is required.
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input
+          id="password"
+          formControlName="password"
+          type="password"
+          class="form-control"
+          placeholder="Enter your password"
+        />
       </div>
-    </div>
 
-    <button
-      type="submit"
-      class="btn btn-primary w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-      [disabled]="loginForm.invalid"
-    >
-      Login
-    </button>
-  </form>
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-  <div class="relative my-6">
-    <div class="absolute inset-0 flex items-center">
-      <div class="w-full border-t border-gray-300"></div>
-    </div>
-    <div class="relative flex justify-center text-sm">
-      <span class="bg-white px-2 text-gray-500">or</span>
-    </div>
+      <button
+        type="submit"
+        class="btn-submit"
+        [disabled]="loginForm.invalid"
+      >
+        Login
+      </button>
+    </form>
+
+
+    <p class="footer-link" style="margin-top: 1rem;">
+      <a routerLink="/auth/forgot-password">Forgot password?</a>
+    </p>
+
+    <div class="divider"><span>or</span></div>
+
+    <p class="footer-link">
+      Don't have an account?
+      <a routerLink="/auth/register">Sign up</a>
+    </p>
   </div>
-<!--
-
-  <button
-    type="button"
-    class="btn btn-danger w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 flex items-center justify-center gap-2"
-    (click)="onGoogleSignIn()"
-  >
-    <i class="bi bi-google"></i>
-    Login with Google
-  </button>
--->
-  <!-- Error Message -->
-  <div *ngIf="error" class="alert alert-danger mt-4 text-red-600 text-center">
-    {{ error }}
-  </div>
-
-  <p class="mt-6 text-center text-sm text-gray-600">
-    Don't have an account?
-    <a routerLink="/auth/register" class="text-blue-600 hover:underline">Sign up</a>
-  </p>
 </div>

@@ -24,11 +24,11 @@
 }
 .auth-box::before {
   left: 0;
-  background: linear-gradient(to bottom, #ff7e5f, #feb47b);
+  background: linear-gradient(to bottom,#132f59, #2575fc);
 }
 .auth-box::after {
   right: 0;
-  background: linear-gradient(to bottom, #6a11cb, #2575fc);
+  background: linear-gradient(to bottom, #13305c, #2575fc);
 }
 
 /* Inner content spacing and alignment */
@@ -42,7 +42,7 @@
   font-size: 1.875rem;
   font-weight: 700;
   margin-bottom: 1.75rem;
-  color: #333333;
+  color: #161a53;
 }
 
 /* Form fields */
@@ -66,6 +66,24 @@
   border-radius: 0.5rem;
   font-size: 1rem;
   transition: all 0.3s;
+}
+
+.form-control::placeholder {
+  color: #6c757d;
+  opacity: 1;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #6c757d;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: #6c757d;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: #6c757d;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: #6c757d;
 }
 
 .form-control:focus {
