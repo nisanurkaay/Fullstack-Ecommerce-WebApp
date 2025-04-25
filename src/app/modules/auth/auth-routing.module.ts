@@ -1,13 +1,22 @@
+// src/app/modules/auth/auth-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+
+import { AuthComponent } from './auth.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  // Optional redirect if someone enters just /auth
-  { path: '', redirectTo: 'login', pathMatch: 'full' }
+  {
+    path: '',
+    component: AuthComponent,
+    children: [
+      { path: 'login',    component: LoginComponent   },
+      { path: 'register', component: RegisterComponent },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+      { path: '**', redirectTo: 'login' }
+    ]
+  }
 ];
 
 @NgModule({
@@ -15,3 +24,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class AuthRoutingModule { }
+
