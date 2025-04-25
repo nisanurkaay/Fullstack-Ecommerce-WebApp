@@ -1,0 +1,32 @@
+<div class="relative flex flex-col border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+  <!-- Product Image -->
+  <img [src]="product.image" [alt]="product.title" class="h-48 object-contain mb-4" />
+
+  <!-- Heart Button in the top-right corner -->
+ <!-- Kalp Butonu -->
+<div class="button" (click)="toggleWishlist()">
+  <i class="heart-icon" [ngClass]="{'text-red-500': isInWishlist, 'text-gray-500': !isInWishlist}">♥</i>
+</div>
+
+  <!-- Product Title -->
+  <h3 class="text-md font-semibold mb-2 line-clamp-2">
+    {{ product.title }}
+  </h3>
+
+  <!-- Product Description -->
+  <p class="text-sm text-gray-600 mb-4 line-clamp-3">
+    {{ product.description }}
+  </p>
+
+  <!-- Price + Button -->
+  <div class="mt-auto flex items-center justify-between">
+    <span class="text-lg font-bold text-gray-800">
+      {{ product.price | currency:'USD' }}
+    </span>
+    <button
+      class="px-3 py-1 bg-orange-500 text-white rounded hover:bg-orange-600 transition"
+    >
+      Add to Cart
+    </button>
+  </div>
+</div>

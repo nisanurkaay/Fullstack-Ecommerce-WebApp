@@ -12,32 +12,7 @@
   No products found.
 </div>
 
-<!-- Product Grid -->
+<!-- src/app/modules/product/components/product-list/product-list.component.html -->
 <div *ngIf="!isLoading && filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-  <div *ngFor="let p of filteredProducts" class="border rounded-lg p-4 flex flex-col bg-white shadow-sm hover:shadow-md transition-shadow">
-    <!-- Product Image -->
-    <img [src]="p.image" [alt]="p.title" class="h-48 object-contain mb-4" />
-
-    <!-- Product Title -->
-    <h3 class="text-md font-semibold mb-2 line-clamp-2">
-      {{ p.title }}
-    </h3>
-
-    <!-- Product Description -->
-    <p class="text-sm text-gray-600 mb-4 line-clamp-3">
-      {{ p.description }}
-    </p>
-
-    <!-- Price + Button -->
-    <div class="mt-auto flex items-center justify-between">
-      <span class="text-lg font-bold text-gray-800">
-        {{ p.price | currency:'USD' }}
-      </span>
-      <button
-        class="px-3 py-1 bg-orange-500 text-white rounded hover:bg-orange-600 transition"
-      >
-        Add to Cart
-      </button>
-    </div>
-  </div>
+  <app-product-card *ngFor="let p of filteredProducts" [product]="p"></app-product-card>  <!-- ProductCardComponent'i burada kullanıyoruz -->
 </div>

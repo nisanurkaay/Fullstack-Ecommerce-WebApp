@@ -13,10 +13,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { ProductCardComponent } from './components/product-card/product-card.component';
 @NgModule({
   declarations: [
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    ProductCardComponent
   ],
   imports: [
     FormsModule,
@@ -36,7 +38,8 @@ import { RouterModule } from '@angular/router';
   ],
   exports: [
     NavbarComponent,
-    FooterComponent
+    FooterComponent,
+    ProductCardComponent
   ]
 })
 export class SharedModule { }

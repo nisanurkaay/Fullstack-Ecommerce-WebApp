@@ -1,10 +1,9 @@
-// src/app/modules/wishlist/components/wishlist.component.ts
 import { Component, OnInit } from '@angular/core';
-import { WishlistService } from '../../../../core/services/wishlist.service';
-import { Product } from '../../../../core/models/product.model';
+import { WishlistService } from '../../../core/services/wishlist.service';
+import { Product } from '../../../core/models/product.model';
 
 @Component({
-  standalone:false,
+  standalone: false,
   selector: 'app-wishlist',
   templateUrl: './wishlist.component.html',
   styleUrls: ['./wishlist.component.css']
@@ -20,7 +19,8 @@ export class WishlistComponent implements OnInit {
     });
   }
 
-  remove(id: number): void {
-    this.wishlistService.removeFromWishlist(id);
+  // remove methodu artık Product alacak
+  remove(product: Product): void {
+    this.wishlistService.removeFromWishlist(product);
   }
 }

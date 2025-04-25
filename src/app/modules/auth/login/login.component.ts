@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     this.error = null;
 
     this.auth.login(this.loginForm.value).subscribe({
-      next: () => this.router.navigateByUrl('/products'),
+      next: () => this.router.navigateByUrl(''),
       error: err => this.error = err.message || 'Login failed'
     });
   }
