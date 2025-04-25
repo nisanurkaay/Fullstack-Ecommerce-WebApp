@@ -1,41 +1,44 @@
+// src/app/shared/navbar/navbar.component.ts
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-import { OnInit } from '@angular/core';
+
 @Component({
   selector: 'app-navbar',
-  standalone: false,
+  standalone:false,
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css',
-
+  styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   searchQuery = '';
   filteredOptions: string[] = [];
   cartCount = 2;
-  isLoggedIn = false;
 
-  constructor(private router: Router, private auth :AuthService) {}
+  constructor(
+    public auth: AuthService,
+    private router: Router
+  ) {}
 
-  ngOnInit() {
-    this.isLoggedIn = this.auth.isLoggedIn();
-  }
-  onSearch() {
+  onSearch(): void {
     this.router.navigate(['/products'], {
       queryParams: this.searchQuery.trim()
         ? { q: this.searchQuery.trim() }
-        : {} // ❗ boşsa query param gönderme
+        : {}
     });
   }
-  logout() { this.isLoggedIn = false; }
 
-  onReset() {
+  onReset(): void {
     this.searchQuery = '';
-
-    // ❗ URL'deki ?q=... parametresini temizle
-    this.router.navigate(['/products'], {
-      queryParams: {}
-    });
+    this.router.navigate(['/products'], { queryParams: {} });
   }
 
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/auth/login']);
+  }
+
+  get isLoggedIn(): boolean {
+    return this.auth.isLoggedIn();
+  }
 }
+
