@@ -4,43 +4,17 @@ import { AuthGuard } from './core/guards/auth.guard';
 import { AdminGuard } from './core/guards/admin.guard';
 
 const routes: Routes = [
-  {
-    path: 'auth',
-    loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
-  },
-  {
-    path: 'products',
-    loadChildren: () => import('./modules/product/product.module').then(m => m.ProductModule),
-
-  },
-  {
-    path: 'cart',
-    loadChildren: () => import('./modules/cart/cart.module').then(m => m.CartModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'orders',
-    loadChildren: () => import('./modules/order/order.module').then(m => m.OrderModule),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'admin',
-    loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
-    canActivate: [AdminGuard]
-  },
-  {
-    path: '',
-    redirectTo: '/products',
-    pathMatch: 'full'
-  },
-  {
-    path: '**',
-    redirectTo: '/products'
-  }
+  { path: '', loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule) },
+  { path: 'auth', loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule) },
+  { path: 'products', loadChildren: () => import('./modules/product/product.module').then(m => m.ProductModule) },
+  { path: 'cart', loadChildren: () => import('./modules/cart/cart.module').then(m => m.CartModule), canActivate: [AuthGuard] },
+  { path: 'orders', loadChildren: () => import('./modules/order/order.module').then(m => m.OrderModule), canActivate: [AuthGuard] },
+  { path: 'admin', loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule), canActivate: [AdminGuard] },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

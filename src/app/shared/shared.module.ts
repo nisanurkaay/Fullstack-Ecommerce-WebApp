@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
+import { RouterModule } from '@angular/router';
 @NgModule({
   declarations: [
     NavbarComponent,
@@ -29,6 +29,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
+    RouterModule,
 
 
 

@@ -1,0 +1,38 @@
+<section class="p-4">
+  <h2 class="text-xl font-semibold mb-4">🔥 Best Sellers</h2>
+
+  <div *ngIf="isLoading">Loading...</div>
+
+  <div
+    *ngIf="!isLoading"
+    class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth"
+  >
+    <!-- Product Cards -->
+    <div
+      *ngFor="let product of bestSellers"
+      class="min-w-[200px] max-w-[200px] bg-white border p-3 rounded shadow-sm flex-shrink-0"
+    >
+      <img
+        [src]="product.image"
+        [alt]="product.title"
+        class="w-full h-36 object-contain mb-2"
+      />
+      <div class="font-medium text-sm line-clamp-2">{{ product.title }}</div>
+      <div class="text-sm text-gray-500 mb-1">${{ product.price }}</div>
+      <button
+        class="mt-1 bg-orange-500 hover:bg-orange-600 text-white text-xs px-3 py-1 rounded w-full"
+      >
+        Add to Cart
+      </button>
+    </div>
+
+    <!-- View All Card -->
+    <div
+      routerLink="/products"
+      class="min-w-[200px] max-w-[200px] flex flex-col items-center justify-center text-center bg-gray-100 border-dashed border-2 border-gray-400 p-4 rounded shadow-sm flex-shrink-0 cursor-pointer hover:bg-gray-200 transition"
+    >
+      <div class="text-4xl">🔍</div>
+      <p class="text-sm font-medium mt-2">View All Products</p>
+    </div>
+  </div>
+</section>

@@ -7,15 +7,24 @@ import { Product } from '../models/product.model';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'https://fakestoreapi.com/products';
+  private apiUrl = 'https://fakestoreapi.com';
 
   constructor(private http: HttpClient) {}
 
   getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.apiUrl);
+    return this.http.get<Product[]>(`${this.apiUrl}/products`);
+  }
+
+  getProductsByCategory(cat: string): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/products/category/${cat}`);
   }
 
   getProduct(id: number): Observable<Product> {
-    return this.http.get<Product>(`${this.apiUrl}/${id}`);
+    return this.http.get<Product>(`${this.apiUrl}/products/${id}`);
+  }
+
+  // 🔥 The one you deleted
+  getCategories(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/products/categories`);
   }
 }
