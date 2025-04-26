@@ -1,1 +1,60 @@
-<p>cart works!</p>
+<div class="p-4">
+  <!-- Sepet Boş -->
+  <ng-container *ngIf="!items.length; else showCart">
+    <p class="text-center text-gray-500">Cart is empty</p>
+  </ng-container>
+
+  <!-- Sepet Doluyken -->
+  <ng-template #showCart>
+    <table class="w-full table-auto border-collapse">
+      <thead>
+        <tr class="border-b">
+          <th class="text-left p-2">Product</th>
+          <th class="text-center p-2">Amount</th>
+          <th class="text-right p-2">Total</th>
+          <th class="p-2"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of items" class="border-b">
+          <td class="p-2 flex items-center gap-4">
+            <img [src]="item.product.image" alt="" class="w-16 h-16 object-cover rounded">
+            <div>
+              <div class="font-semibold">{{ item.product.title }}</div>
+              <div class="text-sm text-gray-500">{{ item.product.price | currency }}</div>
+            </div>
+          </td>
+          <td class="p-2 text-center">
+            <input
+              type="number"
+              [value]="item.quantity"
+              (change)="updateQty(item, $event.target.value)"
+              class="w-16 border rounded p-1"
+              min="1"
+            />
+          </td>
+          <td class="p-2 text-right font-medium">
+            {{ (item.product.price * item.quantity) | currency }}
+          </td>
+          <td class="p-2 text-center">
+            <button
+              class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              (click)="remove(item)"
+            >Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="flex justify-between items-center mt-4">
+      <button
+        class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+        (click)="clearCart()"
+      >Delete all</button>
+
+      <div class="text-lg font-semibold">
+        Total: {{ totalPrice | currency }}
+      </div>
+    </div>
+  </ng-template>
+</div>

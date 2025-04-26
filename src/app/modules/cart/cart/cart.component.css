@@ -1,0 +1,19 @@
+.cart-container {
+  font-family: 'Inter', sans-serif;
+}
+
+.cart-container h2 {
+  color: #193f77;
+}
+
+.cart-container ul li:hover {
+  background-color: rgba(25, 63, 119, 0.05);
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}

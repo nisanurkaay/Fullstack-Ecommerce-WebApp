@@ -1,23 +1,35 @@
 // src/app/shared/navbar/navbar.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Product } from '@core/models/product.model';
 import { AuthService } from '@core/services/auth.service';
+import { CartService } from '@core/services/cart.service';
 
 @Component({
   selector: 'app-navbar',
-  standalone:false,
+  standalone: false,
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   searchQuery = '';
   filteredOptions: string[] = [];
-  cartCount = 2;
+  cartCount = 0;
+  cartItems: Product[] = [];
 
   constructor(
     public auth: AuthService,
-    private router: Router
+    private router: Router,
+    public cartService: CartService
   ) {}
+
+  ngOnInit(): void {
+    // Sepetteki öğeleri dinle, count'u güncelle
+    this.cartService.getCart().subscribe(items => {
+      this.cartItems = items;
+      this.cartCount = items.length;
+    });
+  }
 
   onSearch(): void {
     this.router.navigate(['/products'], {
@@ -41,4 +53,3 @@ export class NavbarComponent {
     return this.auth.isLoggedIn();
   }
 }
-
