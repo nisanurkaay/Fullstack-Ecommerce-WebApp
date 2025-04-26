@@ -1,6 +1,9 @@
+// src/app/shared/components/product-card/product-card.component.ts
 import { Component, Input, OnInit } from '@angular/core';
-import { WishlistService } from '../../../core/services/wishlist.service';
+import { Router } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
+import { CartService } from '../../../core/services/cart.service';
+import { WishlistService } from '../../../core/services/wishlist.service';
 
 @Component({
   selector: 'app-product-card',
@@ -10,9 +13,13 @@ import { Product } from '../../../core/models/product.model';
 })
 export class ProductCardComponent implements OnInit {
   @Input() product!: Product;
-  isInWishlist: boolean = false;
+  isInWishlist = false;
 
-  constructor(private wishlistService: WishlistService) {}
+  constructor(
+    private wishlistService: WishlistService,
+    private cartService: CartService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     // Wishlist'te olup olmadığını kontrol et
@@ -26,5 +33,14 @@ export class ProductCardComponent implements OnInit {
       this.wishlistService.addToWishlist(this.product);
     }
     this.isInWishlist = !this.isInWishlist;
+  }
+
+  addToCart(): void {
+    this.cartService.addToCart(this.product);
+  }
+
+  // İstersen ürüne tıklanınca detay sayfasına yönlendirme de ekleyebilirsin
+  viewDetails(): void {
+    this.router.navigate(['/products', this.product.id]);
   }
 }

@@ -1,30 +1,49 @@
+<!-- src/app/shared/components/product-card/product-card.component.html -->
 <div class="relative flex flex-col border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
-  <!-- Product Image -->
-  <img [src]="product.image" [alt]="product.title" class="h-48 object-contain mb-4" />
+  <!-- Detay sayfasına yönlendirmek istersen görsele tıklatabilirsin -->
+  <img
+    [src]="product.image"
+    [alt]="product.title"
+    class="h-48 object-contain mb-4 cursor-pointer"
+    (click)="viewDetails()"
+  />
 
-  <!-- Heart Button in the top-right corner -->
- <!-- Kalp Butonu -->
-<div class="button" (click)="toggleWishlist()">
-  <i class="heart-icon" [ngClass]="{'text-red-500': isInWishlist, 'text-gray-500': !isInWishlist}">♥</i>
-</div>
+  <!-- Kalp butonu -->
+  <button
+    class="absolute top-2 right-2 focus:outline-none"
+    (click)="toggleWishlist()"
+    [title]="isInWishlist ? 'Favorilerden çıkar' : 'Favorilere ekle'"
+  >
+    <mat-icon
+      [ngClass]="{
+        'text-red-500': isInWishlist,
+        'text-gray-400': !isInWishlist
+      }"
+      >{{ isInWishlist ? 'favorite' : 'favorite_border' }}</mat-icon
+    >
+  </button>
 
-  <!-- Product Title -->
-  <h3 class="text-md font-semibold mb-2 line-clamp-2">
+  <!-- Başlık -->
+  <h3
+    class="text-md font-semibold mb-2 line-clamp-2 cursor-pointer"
+    (click)="viewDetails()"
+  >
     {{ product.title }}
   </h3>
 
-  <!-- Product Description -->
+  <!-- Açıklama -->
   <p class="text-sm text-gray-600 mb-4 line-clamp-3">
     {{ product.description }}
   </p>
 
-  <!-- Price + Button -->
+  <!-- Fiyat ve Sepete Ekle Butonu -->
   <div class="mt-auto flex items-center justify-between">
     <span class="text-lg font-bold text-gray-800">
-      {{ product.price | currency:'USD' }}
+      {{ product.price | currency:'USD':'symbol':'1.2-2' }}
     </span>
     <button
-      class="px-3 py-1 bg-orange-500 text-white rounded hover:bg-orange-600 transition"
+      class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition"
+      (click)="addToCart()"
     >
       Add to Cart
     </button>

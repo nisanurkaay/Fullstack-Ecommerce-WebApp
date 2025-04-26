@@ -4,29 +4,19 @@ import { Product } from '../models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private items: Product[] = [];
-  private cartSubject = new BehaviorSubject<Product[]>([]);
-
-
+  private itemsSubject = new BehaviorSubject<Product[]>([]);
   getCart(): Observable<Product[]> {
-    return this.cartSubject.asObservable();
+    return this.itemsSubject.asObservable();
   }
-
-
   addToCart(product: Product): void {
-    this.items.push(product);
-    this.cartSubject.next(this.items);
+    const items = this.itemsSubject.value;
+    this.itemsSubject.next([...items, product]);
   }
-
-
   removeFromCart(index: number): void {
-    this.items.splice(index, 1);
-    this.cartSubject.next(this.items);
+    const items = this.itemsSubject.value.filter((_, i) => i !== index);
+    this.itemsSubject.next(items);
   }
-
-
   clearCart(): void {
-    this.items = [];
-    this.cartSubject.next(this.items);
+    this.itemsSubject.next([]);
   }
 }
