@@ -1,42 +1,51 @@
+// src/app/modules/product-detail/product-detail.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Review } from '../../../core/models/review.model';
 import { Product } from '../../../core/models/product.model';
-import { ReviewService } from '../../../core/services/review.service';
+import { Review } from '../../../core/models/review.model';
+import { CartService } from '../../../core/services/cart.service';
 import { ProductService } from '../../../core/services/product.service';
-
+import { ReviewService } from '../../../core/services/review.service';
 
 @Component({
   selector: 'app-product-detail',
   standalone: false,
   templateUrl: './product-detail.component.html',
-  styleUrl: './product-detail.component.css'
-})export class ProductDetailComponent implements OnInit {
+  styleUrls: ['./product-detail.component.css']   // <-- çoğul
+})
+export class ProductDetailComponent implements OnInit {
   productId!: number;
   product!: Product;
-  productReviews = [];  // Empty for now or fetched separately if ready
-
-  // Static size and color options (just for now)
+  productReviews: Review[] = [];                  // tipi Review[]
   sizes: string[] = ['S', 'M', 'L', 'XL'];
   colors: string[] = ['black', 'green', 'blue'];
 
   constructor(
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private reviewService: ReviewService,
+    private cartService: CartService             // CartService inject
   ) {}
 
   ngOnInit(): void {
-    // Get product id from URL
+    // URL'den id al
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
 
-    // Fetch product from API
+    // Ürünü çek
     this.productService.getProduct(this.productId).subscribe({
-      next: (data) => {
-        this.product = data;
-      },
-      error: (err) => {
-        console.error('Error fetching product:', err);
-      }
+      next: data => this.product = data,
+      error: err => console.error('Error fetching product:', err)
     });
+
+    // O ürüne ait yorumları çek
+    this.reviewService.getReviewsByProductId(this.productId).subscribe({
+      next: reviews => this.productReviews = reviews,
+      error: err => console.error('Error fetching reviews:', err)
+    });
+  }
+
+  /** Sepete ürün ekle */
+  addToCart(): void {
+    this.cartService.addToCart(this.product);
   }
 }
