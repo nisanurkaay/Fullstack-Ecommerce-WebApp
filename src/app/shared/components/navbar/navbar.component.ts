@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-import { CartService, CartItem } from '@core/services/cart.service'; // CartItem'ı unutma!
+import { CartItem, CartService } from '@core/services/cart.service'; // CartItem'ı unutma!
 
 @Component({
   selector: 'app-navbar',
@@ -53,5 +53,9 @@ export class NavbarComponent implements OnInit {
 
   removeFromCart(productId: number): void {
     this.cartService.removeItem(productId);
+  }
+
+  get currentUserName(): string {
+    return this.auth.getCurrentUser()?.name || '';
   }
 }

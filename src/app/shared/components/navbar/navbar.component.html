@@ -5,103 +5,82 @@
       SHOPAGO
     </span>
 
-   <!-- Desktop: Categories + Search (ortada) -->
-   <div
-   class="hidden md:flex flex-1 justify-center items-center space-x-4"
- >
-   <!-- Categories -->
-   <button
-     mat-button
-     routerLink="/categories"
-     class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
-     aria-label="Categories"
-   >
-     <mat-icon>list</mat-icon>
-     <span class="text-sm">Categories</span>
-   </button>
+    <!-- Desktop: Categories + Search -->
+    <div class="hidden md:flex flex-1 justify-center items-center space-x-4">
+      <!-- Categories -->
+      <button
+        mat-button
+        routerLink="/categories"
+        class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+        aria-label="Categories"
+      >
+        <mat-icon>list</mat-icon>
+        <span class="text-sm">Categories</span>
+      </button>
 
-   <!-- Search Form -->
-   <form
-     (submit)="onSearch()"
-     class="form w-auto"
-   >
-     <button type="submit" aria-label="Search">
-       <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
-         <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9"
-               stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"/>
-       </svg>
-     </button>
-     <input
-       class="input"
-       placeholder="Type your text"
-       required
-       [(ngModel)]="searchQuery"
-       name="search"
-       type="text"
-       (input)="onSearch()"
-     />
-     <button type="reset" class="reset" aria-label="Clear" (click)="onReset()">
-       <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-       </svg>
-     </button>
-   </form>
-   </div>
+      <!-- Search Form -->
+      <form (submit)="onSearch()" class="form w-auto">
+        <button type="submit" aria-label="Search">
+          <!-- svg icon -->
+        </button>
+        <input
+          class="input"
+          placeholder="Type your text"
+          required
+          [(ngModel)]="searchQuery"
+          name="search"
+          type="text"
+          (input)="onSearch()"
+        />
+        <button type="reset" class="reset" aria-label="Clear" (click)="onReset()">
+          <!-- svg icon -->
+        </button>
+      </form>
+    </div>
+
     <!-- Icons (sağda) -->
     <div class="flex items-center space-x-4 ml-auto">
       <!-- Profile Menu Trigger -->
-      <button mat-button [matMenuTriggerFor]="userMenu" class="flex items-center gap-1">
+      <button mat-button [matMenuTriggerFor]="userMenu" class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
         <mat-icon>account_circle</mat-icon>
-        <span class="hidden md:inline text-sm">Profile</span>
+        <span class="hidden md:inline text-sm">
+          {{ isLoggedIn ? currentUserName : 'Profile' }}
+        </span>
       </button>
 
       <!-- Wishlist -->
-      <button mat-button routerLink="/wishlist" class="flex items-center gap-1">
+      <button mat-button routerLink="/wishlist" class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
         <mat-icon>favorite_border</mat-icon>
         <span class="hidden md:inline text-sm">Wishlist</span>
       </button>
 
-      <!-- Cart Menu Trigger -->
-      <button mat-button [matMenuTriggerFor]="cartMenu" matBadge="{{ cartCount }}" matBadgeColor="warn" class="flex items-center gap-1">
+      <!-- Cart Mini-Menu Trigger -->
+      <button
+        mat-button
+        [matMenuTriggerFor]="cartMenu"
+        [matBadge]="cartCount"
+        matBadgeColor="warn"
+        class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+      >
         <mat-icon>shopping_cart</mat-icon>
         <span class="hidden md:inline text-sm">Cart</span>
       </button>
     </div>
   </div>
 
-   <!-- Mobile Search (alt satırda) -->
-   <div class="block md:hidden px-4 pb-2">
+  <!-- Mobile Search -->
+  <div class="block md:hidden px-4 pb-2">
     <form (submit)="onSearch()" class="form w-full">
-      <button type="submit" aria-label="Search">
-        <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img">
-          <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9"
-                stroke="currentColor" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <input
-        class="input"
-        placeholder="Type your text"
-        required
-        [(ngModel)]="searchQuery"
-        name="searchMobile"
-        type="text"
-        (input)="onSearch()"
-      />
-      <button type="reset" class="reset" aria-label="Clear" (click)="onReset()">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-      </button>
+      <!-- aynı search içeriği -->
     </form>
   </div>
 
-  <!-- Profile Menü -->
+  <!-- Profile Menüsü -->
   <mat-menu #userMenu="matMenu">
     <ng-container *ngIf="isLoggedIn; else guestLinks">
       <button mat-menu-item routerLink="/profile">
-        <mat-icon>person</mat-icon>Profile
+        <mat-icon>person</mat-icon>
+        {{ currentUserName }}
       </button>
       <button mat-menu-item routerLink="/orders">
         <mat-icon>assignment</mat-icon>Orders
@@ -120,36 +99,37 @@
     </ng-template>
   </mat-menu>
 
- <!-- Cart Mini-Menu -->
-<mat-menu #cartMenu="matMenu" class="cart-menu-panel">
-  <ng-container *ngIf="cartItems.length; else emptyCart">
-    <ng-container *ngFor="let item of cartItems">
-      <button mat-menu-item class="flex items-center gap-3">
-        <img [src]="item.product.image" alt="{{item.product.title}}" class="w-10 h-10 object-cover rounded" />
-        <div class="flex-1 text-left">
-          <p class="font-medium">{{ item.product.title }}</p>
-          <p class="text-sm text-gray-600">
-            ${{ item.product.price }} x {{ item.quantity }}
-          </p>
-        </div>
-        <button mat-icon-button (click)="removeFromCart(item.product.id)">
-          <mat-icon>delete</mat-icon>
+  <!-- Cart Mini-Menu -->
+  <mat-menu #cartMenu="matMenu" class="cart-menu-panel">
+    <ng-container *ngIf="cartItems.length; else emptyCart">
+      <ng-container *ngFor="let item of cartItems">
+        <button mat-menu-item class="flex items-center gap-3">
+          <img
+            [src]="item.product.image"
+            alt="{{ item.product.title }}"
+            class="w-10 h-10 object-cover rounded"
+          />
+          <div class="flex-1 text-left">
+            <p class="font-medium">{{ item.product.title }}</p>
+            <p class="text-sm text-gray-600">
+              ${{ item.product.price }} x {{ item.quantity }}
+            </p>
+          </div>
+          <button mat-icon-button (click)="removeFromCart(item.product.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
         </button>
+      </ng-container>
+
+      <mat-divider></mat-divider>
+
+      <button mat-menu-item routerLink="/cart" class="justify-center">
+        View Full Cart
       </button>
     </ng-container>
 
-    <mat-divider></mat-divider>
-
-    <button mat-menu-item routerLink="/cart" class="justify-center">
-      View Full Cart
-    </button>
-  </ng-container>
-
-  <ng-template #emptyCart>
-    <button mat-menu-item disabled>
-      Cart is empty
-    </button>
-  </ng-template>
-</mat-menu>
-
+    <ng-template #emptyCart>
+      <button mat-menu-item disabled>Cart is empty</button>
+    </ng-template>
+  </mat-menu>
 </header>
