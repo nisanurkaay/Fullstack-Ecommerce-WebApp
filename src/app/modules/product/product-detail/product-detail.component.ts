@@ -28,19 +28,14 @@ export class ProductDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // URL'den id al
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
-
-    // Ürünü çek
     this.productService.getProduct(this.productId).subscribe({
-      next: data => this.product = data,
-      error: err => console.error('Error fetching product:', err)
+      next: prod => this.product = prod,
+      error: e => console.error(e)
     });
-
-    // O ürüne ait yorumları çek
     this.reviewService.getReviewsByProductId(this.productId).subscribe({
-      next: reviews => this.productReviews = reviews,
-      error: err => console.error('Error fetching reviews:', err)
+      next: revs => this.productReviews = revs,
+      error: e => console.error(e)
     });
   }
 
