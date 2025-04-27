@@ -5,20 +5,25 @@ import { ProductRoutingModule } from './product-routing.module';
 import { ProductListComponent } from './product-list/product-list.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { SearchComponent } from './search/search.component';
-import { SharedModule } from '../../shared/shared.module';  // SharedModule'ü import edin
+import { SharedModule } from '../../shared/shared.module';
+import { ReviewCardComponent } from './review-card/review-card.component';
+import { ReviewListComponent } from './review-list/review-list.component';  // SharedModule'ü import edin
 
-
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
     ProductListComponent,
     ProductDetailComponent,
-    SearchComponent
+    SearchComponent,
+    ReviewCardComponent,
+    ReviewListComponent
   ],
   imports: [
     CommonModule,
     ProductRoutingModule,
-    SharedModule
+    SharedModule,
+    MatTabsModule
   ]
 })
 export class ProductModule { }

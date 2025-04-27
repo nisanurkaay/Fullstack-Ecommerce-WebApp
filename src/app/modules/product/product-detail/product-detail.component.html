@@ -1,1 +1,53 @@
-<p>product-detail works!</p>
+<div *ngIf="product">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <img [src]="product.image" alt="{{ product.title }}" class="rounded-lg">
+    </div>
+
+    <div>
+      <h1 class="text-3xl font-bold">{{ product.title }}</h1>
+      <p class="text-lg text-gray-600 mt-2">{{ product.description }}</p>
+
+      <div class="flex items-center space-x-2 mt-4">
+        <span class="text-2xl font-bold">${{ product.price }}</span>
+      </div>
+
+      <!-- Static Color Selection -->
+      <div class="mt-4">
+        <label class="font-semibold">Color:</label>
+        <div class="flex space-x-2 mt-1">
+          <div *ngFor="let color of colors" class="w-6 h-6 rounded-full" [ngClass]="color"></div>
+        </div>
+      </div>
+
+      <!-- Static Size Selection -->
+      <div class="mt-4">
+        <label class="font-semibold">Size:</label>
+        <div class="flex space-x-2 mt-1">
+          <button *ngFor="let size of sizes" class="border px-3 py-1 rounded">
+            {{ size }}
+          </button>
+        </div>
+      </div>
+
+      <button class="mt-6 bg-black text-white py-2 px-6 rounded hover:bg-gray-700">
+        Add to Cart
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabs Section -->
+  <mat-tab-group class="mt-10">
+    <mat-tab label="Product Details">
+      <p class="mt-4 text-gray-600">{{ product.description }}</p>
+    </mat-tab>
+
+    <mat-tab label="Ratings & Reviews">
+      <app-review-list [reviews]="productReviews"></app-review-list>
+    </mat-tab>
+
+    <mat-tab label="FAQs">
+      <p class="mt-4 text-gray-600">Frequently Asked Questions will go here.</p>
+    </mat-tab>
+  </mat-tab-group>
+</div>

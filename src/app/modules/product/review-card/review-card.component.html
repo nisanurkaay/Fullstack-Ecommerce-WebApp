@@ -1,0 +1,16 @@
+<div class="p-4 rounded-lg shadow-md border mb-4">
+  <div class="flex justify-between items-center mb-2">
+    <h3 class="font-semibold text-lg">{{ reviewerName }}</h3>
+    <div class="flex items-center space-x-1">
+      <ng-container *ngFor="let star of [1,2,3,4,5]">
+        <mat-icon [class.text-yellow-400]="star <= rating" [class.text-gray-300]="star > rating">
+          star
+        </mat-icon>
+      </ng-container>
+    </div>
+  </div>
+
+
+  <p class="text-sm text-gray-600 mb-2">{{ comment }}</p>
+  <p class="text-xs text-gray-400">{{ date }}</p>
+</div>
