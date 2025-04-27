@@ -40,7 +40,7 @@ export class ProductDetailComponent implements OnInit {
   }
 
   /** Sepete ürün ekle */
-  addToCart(): void {
+  addToCart(product: Product): void {
     this.cartService.addToCart(this.product);
   }
 }
