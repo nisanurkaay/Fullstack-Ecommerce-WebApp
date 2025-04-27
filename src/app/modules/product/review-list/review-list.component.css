@@ -1,0 +1,120 @@
+/* review-list.component.css */
+
+/* Genel sarmalayıcıya biraz iç boşluk ve maksimum genişlik */
+.reviews-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Başlık ve kontroller satırı */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* Başlığa özel */
+.header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Sort dropdown ve butonları hizala */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Mat-Form-Field dış kenarlık inceltme */
+.controls .mat-form-field {
+  width: 160px;
+}
+
+.controls button {
+  white-space: nowrap;
+}
+
+/* Yorum kartlarının grid’i */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mat-card içine padding, radius ekle */
+.review-card {
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Kart başlığı ve tarih */
+.review-card mat-card-header {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.review-card mat-card-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.review-card mat-card-subtitle {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+/* Yıldızlar */
+.stars {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.star {
+  font-size: 1.2rem;
+}
+
+.star.filled {
+  color: #f5b301;
+}
+
+.star:not(.filled) {
+  color: #ccc;
+}
+
+/* Load more butonu */
+.load-more button {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  border-radius: 24px;
+  font-weight: 600;
+}

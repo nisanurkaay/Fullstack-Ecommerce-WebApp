@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon'; // yıldızlar için
+import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs'; // sekmeler için
 import { SharedModule } from '../../shared/shared.module';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
@@ -10,6 +15,7 @@ import { ProductRoutingModule } from './product-routing.module';
 import { ReviewCardComponent } from './review-card/review-card.component';
 import { ReviewListComponent } from './review-list/review-list.component'; // SharedModule'ü import edidc  // ← Ekle
 import { SearchComponent } from './search/search.component';
+
 
 
 @NgModule({
@@ -25,7 +31,15 @@ import { SearchComponent } from './search/search.component';
     ProductRoutingModule,
     SharedModule,
     MatTabsModule,
-    MatIconModule
+    MatIconModule,
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatTabsModule,
   ]
 })
 export class ProductModule { }
