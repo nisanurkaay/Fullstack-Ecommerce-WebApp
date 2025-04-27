@@ -1,16 +1,20 @@
 // src/app/modules/wishlist/wishlist.module.ts
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WishlistComponent } from './/wishlist/wishlist.component';
-import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '../../core/guards/auth.guard';
-
-const routes: Routes = [
-  { path: '', component: WishlistComponent, canActivate: [AuthGuard] }
-];
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
+import { SharedModule } from '../../shared/shared.module'; // Navbar, ProductCard, MatButton vs.
+import { WishlistRoutingModule } from './wishlist-routing.module';
+import { WishlistComponent } from './wishlist/wishlist.component';
 
 @NgModule({
   declarations: [WishlistComponent],
-  imports: [CommonModule, RouterModule.forChild(routes)]
+  imports: [
+    CommonModule,
+    WishlistRoutingModule,
+    SharedModule,
+    MatButtonModule,
+    RouterModule
+  ]
 })
 export class WishlistModule {}
