@@ -1,13 +1,10 @@
 <!-- src/app/modules/product/review-list/review-list.component.html -->
-<div class="reviews-wrapper">
+<section class="px-6 py-8 bg-white rounded-lg shadow">
   <!-- Başlık + Kontroller -->
-  <div class="header flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-    <h2 class="text-2xl font-semibold mb-4 md:mb-0">
-      All Reviews ({{ reviews.length }})
-    </h2>
-    <div class="controls flex items-center space-x-4">
-      <!-- Sıralama -->
-      <mat-form-field appearance="outline" class="sort-field">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    <h2 class="text-2xl font-bold">All Reviews ({{ reviews.length }})</h2>
+    <div class="flex items-center gap-4">
+      <mat-form-field appearance="outline" class="w-48">
         <mat-label>Sort</mat-label>
         <mat-select [(value)]="selectedSort" (selectionChange)="onSortChange()">
           <mat-option value="newest">Newest</mat-option>
@@ -16,44 +13,72 @@
           <mat-option value="lowest">Lowest Rating</mat-option>
         </mat-select>
       </mat-form-field>
-      <!-- Yorum Yaz -->
-      <button mat-flat-button color="primary">
-        Write a Review
+      <button mat-flat-button color="primary" (click)="toggleForm()">
+        {{ showForm ? 'Cancel' : 'Write a Review' }}
       </button>
     </div>
   </div>
 
-  <!-- Yorum Kartları -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <ng-container *ngFor="let r of reviews | slice:0:displayCount">
-      <mat-card class="review-card">
-        <mat-card-header>
-          <mat-card-title>{{ r.reviewerName }}</mat-card-title>
-          <mat-card-subtitle>{{ r.date | date:'mediumDate' }}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="stars mb-2">
-            <ng-container *ngFor="let _ of [].constructor(r.rating)">
-              <mat-icon class="star filled">star</mat-icon>
-            </ng-container>
-            <ng-container *ngFor="let _ of [].constructor(5 - r.rating)">
-              <mat-icon class="star">star_border</mat-icon>
-            </ng-container>
-          </div>
-          <p>{{ r.comment }}</p>
-        </mat-card-content>
-      </mat-card>
-    </ng-container>
+  <!-- Review Form -->
+  <div *ngIf="showForm" class="mb-6 p-4 border rounded-lg space-y-4">
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Your Name</mat-label>
+      <input
+        matInput
+        [(ngModel)]="newReview.reviewerName"
+        required
+        readonly
+      />
+    </mat-form-field>
+
+    <div class="flex items-center gap-2">
+      <span class="font-semibold">Your Rating:</span>
+      <ng-container *ngFor="let star of [1,2,3,4,5]">
+        <mat-icon
+          class="cursor-pointer"
+          [ngClass]="newReview.rating! >= star ? 'text-yellow-500' : 'text-gray-400'"
+          (click)="newReview.rating = star"
+        >
+          {{ newReview.rating! >= star ? 'star' : 'star_border' }}
+        </mat-icon>
+      </ng-container>
+    </div>
+
+    <mat-form-field appearance="fill" class="w-full">
+      <mat-label>Your Review</mat-label>
+      <textarea matInput rows="4" [(ngModel)]="newReview.comment" required></textarea>
+    </mat-form-field>
+
+    <div class="text-right">
+      <button mat-flat-button color="primary" (click)="submitReview()">Submit</button>
+    </div>
   </div>
 
-  <!-- Daha Fazla Yükle -->
-  <div class="load-more text-center mt-8">
-    <button
-      *ngIf="displayCount < reviews.length"
-      mat-stroked-button
-      (click)="loadMore()"
-    >
+  <!-- Yorum Kartları -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <mat-card *ngFor="let r of sortedReviews | slice: 0:displayCount" class="shadow-sm">
+      <mat-card-header>
+        <mat-card-title>{{ r.reviewerName }}</mat-card-title>
+        <mat-card-subtitle>{{ r.date | date:'mediumDate' }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="stars mb-2">
+          <ng-container *ngFor="let _ of [].constructor(r.rating)">
+            <mat-icon class="text-yellow-500">star</mat-icon>
+          </ng-container>
+          <ng-container *ngFor="let _ of [].constructor(5 - r.rating)">
+            <mat-icon class="text-gray-400">star_border</mat-icon>
+          </ng-container>
+        </div>
+        <p>{{ r.comment }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Load More -->
+  <div class="flex justify-center mt-8" *ngIf="canLoadMore">
+    <button mat-stroked-button color="primary" (click)="loadMore()">
       Load More Reviews
     </button>
   </div>
-</div>
+</section>
