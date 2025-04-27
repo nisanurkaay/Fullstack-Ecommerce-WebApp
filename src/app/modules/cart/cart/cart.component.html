@@ -1,4 +1,3 @@
-<!-- src/app/modules/cart/cart/cart.component.html -->
 <div class="p-6 space-y-4">
   <h2 class="text-2xl font-semibold">Your Cart</h2>
 
@@ -6,7 +5,7 @@
     Sepetiniz boş.
   </div>
 
-  <div *ngFor="let item of cartItems; let i = index" class="flex items-center border rounded p-4">
+  <div *ngFor="let item of cartItems" class="flex items-center border rounded p-4">
     <img [src]="item.product.image"
          [alt]="item.product.title"
          class="w-20 h-20 object-contain mr-4" />
@@ -14,22 +13,46 @@
     <div class="flex-1">
       <h3 class="font-semibold">{{ item.product.title }}</h3>
       <p class="text-gray-600">{{ item.product.price | currency:'USD' }}</p>
-      <p class="mt-1">Adet: <strong>{{ item.quantity }}</strong></p>
+
+      <div class="flex items-center mt-2">
+        <button
+          class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 transition"
+          (click)="decrementQuantity(item.product.id)"
+        >
+          -
+        </button>
+
+        <span class="mx-3 font-semibold">{{ item.quantity }}</span>
+
+        <button
+          class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 transition"
+          (click)="incrementQuantity(item.product.id)"
+        >
+          +
+        </button>
+      </div>
+
+      <p class="mt-2 text-sm text-gray-600">Subtotal: {{ item.product.price * item.quantity | currency:'USD' }}</p>
     </div>
 
     <button
-      class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
-      (click)="removeOne(item.product.id)"
+      class="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+      (click)="removeItem(item.product.id)"
     >
-      – 1
+      Ürünü Kaldır
     </button>
   </div>
 
-  <button
-    *ngIf="cartItems.length > 0"
-    class="mt-4 px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
-    (click)="clearAll()"
-  >
-    Sepeti Temizle
-  </button>
+  <div *ngIf="cartItems.length > 0" class="mt-6 flex justify-between items-center">
+    <div class="text-lg font-semibold">
+      Toplam: {{ getTotal() | currency:'USD' }}
+    </div>
+
+    <button
+      class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
+      (click)="clearAll()"
+    >
+      Sepeti Temizle
+    </button>
+  </div>
 </div>

@@ -1,32 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../../core/models/product.model';
-import { CartService } from '../../../core/services/cart.service';
+import { CartService, CartItem } from '../../../core/services/cart.service'; // kendi proje yapına göre yolu düzelt
 
 @Component({
   selector: 'app-cart',
+  standalone:false,
   templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.css']
+  styleUrls: ['./cart.component.css'] // Eğer style kullanıyorsan
 })
 export class CartComponent implements OnInit {
-  cartItems: Product[] = [];
+  cartItems: CartItem[] = [];
 
   constructor(private cartService: CartService) {}
 
   ngOnInit(): void {
-    this.cartService.getCart().subscribe(items => {
+    this.cartService.cart$.subscribe(items => {
       this.cartItems = items;
     });
   }
 
-  removeItem(index: number): void {
-    this.cartService.removeFromCart(index);
+  incrementQuantity(productId: number): void {
+    this.cartService.incrementQuantity(productId);
   }
 
-  clearCart(): void {
+  decrementQuantity(productId: number): void {
+    this.cartService.decrementQuantity(productId);
+  }
+
+  removeItem(productId: number): void {
+    this.cartService.removeItem(productId);
+  }
+
+  clearAll(): void {
     this.cartService.clearCart();
   }
 
-  get total(): number {
-    return this.cartItems.reduce((sum, p) => sum + p.price, 0);
+  getTotal(): number {
+    return this.cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
   }
 }

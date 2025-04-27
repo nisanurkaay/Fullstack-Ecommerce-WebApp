@@ -1,22 +1,59 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Product } from '../models/product.model';
+import { BehaviorSubject } from 'rxjs';
+import { Product } from '../../core/models/product.model'; // doğru yoldan importla
 
-@Injectable({ providedIn: 'root' })
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 export class CartService {
-  private itemsSubject = new BehaviorSubject<Product[]>([]);
-  getCart(): Observable<Product[]> {
-    return this.itemsSubject.asObservable();
+  private cartItems: CartItem[] = [];
+  private cartSubject = new BehaviorSubject<CartItem[]>([]);
+  cart$ = this.cartSubject.asObservable();
+
+  addToCart(product: Product) {
+    const existingItem = this.cartItems.find(item => item.product.id === product.id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      this.cartItems.push({ product, quantity: 1 });
+    }
+    this.cartSubject.next(this.cartItems);
   }
-  addToCart(product: Product): void {
-    const items = this.itemsSubject.value;
-    this.itemsSubject.next([...items, product]);
+
+  incrementQuantity(productId: number) {
+    const item = this.cartItems.find(i => i.product.id === productId);
+    if (item) {
+      item.quantity++;
+      this.cartSubject.next(this.cartItems);
+    }
   }
-  removeFromCart(index: number): void {
-    const items = this.itemsSubject.value.filter((_, i) => i !== index);
-    this.itemsSubject.next(items);
+
+  decrementQuantity(productId: number) {
+    const item = this.cartItems.find(i => i.product.id === productId);
+    if (item && item.quantity > 1) {
+      item.quantity--;
+      this.cartSubject.next(this.cartItems);
+    } else if (item) {
+      this.removeItem(productId);
+    }
   }
-  clearCart(): void {
-    this.itemsSubject.next([]);
+
+  removeItem(productId: number) {
+    this.cartItems = this.cartItems.filter(i => i.product.id !== productId);
+    this.cartSubject.next(this.cartItems);
+  }
+
+  clearCart() {
+    this.cartItems = [];
+    this.cartSubject.next(this.cartItems);
+  }
+
+  getTotalPrice(): number {
+    return this.cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
   }
 }

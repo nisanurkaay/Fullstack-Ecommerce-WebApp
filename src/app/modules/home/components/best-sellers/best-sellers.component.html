@@ -8,23 +8,11 @@
     class="flex space-x-4 overflow-x-auto no-scrollbar scroll-smooth"
   >
     <!-- Product Cards -->
-    <div
+    <app-product-card
       *ngFor="let product of bestSellers"
-      class="min-w-[200px] max-w-[200px] bg-white border p-3 rounded shadow-sm flex-shrink-0"
-    >
-      <img
-        [src]="product.image"
-        [alt]="product.title"
-        class="w-full h-36 object-contain mb-2"
-      />
-      <div class="font-medium text-sm line-clamp-2">{{ product.title }}</div>
-      <div class="text-sm text-gray-500 mb-1">${{ product.price }}</div>
-      <button
-        class="mt-1 bg-orange-500 hover:bg-orange-600 text-white text-xs px-3 py-1 rounded w-full"
-      >
-        Add to Cart
-      </button>
-    </div>
+      [product]="product"
+      class="min-w-[200px] max-w-[200px] flex-shrink-0"
+    ></app-product-card>
 
     <!-- View All Card -->
     <div

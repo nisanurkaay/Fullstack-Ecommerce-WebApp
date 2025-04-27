@@ -5,7 +5,7 @@ import { HeroCarouselComponent } from './components/hero-carousel/hero-carousel.
 import { HomeRoutingModule } from './home-routing.module';
 import { CategoryQuickLinksComponent } from './components/category-quick-links/category-quick-links.component';
 import { BestSellersComponent } from './components/best-sellers/best-sellers.component';
-
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +17,8 @@ import { BestSellersComponent } from './components/best-sellers/best-sellers.com
   ],
   imports: [
     CommonModule,
-    HomeRoutingModule
+    HomeRoutingModule,
+    SharedModule
   ]
 })
 export class HomeModule { }
