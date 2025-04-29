@@ -1,0 +1,84 @@
+/* src/app/modules/auth/profile/profile.component.css */
+
+/* Kart kapsayıcısı */
+.profile-card {
+  background: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* Başlık bölümü */
+.profile-card__header {
+  background: #081f31;        /* Lacivert ana ton */
+  color: #eff1f6;
+  padding: 1rem 1.5rem;
+}
+
+/* Formun gövdesi */
+.profile-card__body {
+  padding: 1.5rem;
+}
+
+/* Ortak form grubu */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #53607e;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="date"] {
+  padding: 0.75rem 1rem;
+  border: 1px solid #b7c1d9;
+  border-radius: 1rem;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #464d58;
+}
+
+/* Checkbox grubu */
+.form-group--checkbox {
+  flex-direction: row;
+  align-items: center;
+}
+
+.form-group--checkbox input {
+  margin-right: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+/* Buton stili */
+.btn-primary {
+  background-color: #122046;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-primary:disabled {
+  background-color: #f3f3f3;
+  cursor: not-allowed;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #566782;
+  transform: translateY(-1px);
+}

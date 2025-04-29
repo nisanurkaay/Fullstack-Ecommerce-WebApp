@@ -12,13 +12,15 @@ import { RouterModule } from '@angular/router';
 import { AuthComponent } from './auth.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
+import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
 @NgModule({
   declarations: [
     AuthComponent,
     LoginComponent,
     RegisterComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,

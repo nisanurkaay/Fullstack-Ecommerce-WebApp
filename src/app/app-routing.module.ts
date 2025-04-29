@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ProfileComponent } from '@modules/auth/profile/profile.component';
 import { AuthGuard } from './core/guards/auth.guard';
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'orders', loadChildren: () => import('./modules/order/order.module').then(m => m.OrderModule), canActivate: [AuthGuard] },
   { path: 'admin', loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule)},
   { path: 'seller', loadChildren: () => import('./modules/seller/seller.module').then(m => m.SellerModule) },
+  { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
 
   { path: '**', redirectTo: '' }
 ];

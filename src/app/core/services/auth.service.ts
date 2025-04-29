@@ -9,27 +9,33 @@ export interface User {
   email: string;
   password?: string;
   role: Role;
+  phone?: string;
+  birthDate?: string;
+  corporate?: boolean;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // 1) Uygulama genelinde o anki user’ı yayınlamak için BehaviorSubject
+  /** O anki user’ı uygulamanın her yerinde yayınlamak için */
   private currentUser$$ = new BehaviorSubject<User | null>(null);
 
-  // 2) Şimdilik bellekte bir kullanıcı listesi (gerçek projede API’den gelir)
+  /** Subscribe etmek isteyen bileşenler için */
+  public currentUser$ = this.currentUser$$.asObservable();
+
+  /** Sahte kullanıcı havuzu (back-end yerine) */
   private users: User[] = [
     { name: 'Admin',  email: 'admin@shopago.com',  password: 'admin123',  role: 'admin' },
     { name: 'Seller', email: 'seller@shopago.com', password: 'seller123', role: 'seller' },
-    // register ile eklenecek customer’lar da burada tutulur
+    // register ile eklenen customer’lar da eklenecek
   ];
 
   constructor() {
-    // sayfa yenilenince localStorage’den oku
-    const stored = localStorage.getItem('user');
-    if (stored) {
-      this.currentUser$$.next(JSON.parse(stored));
+    // Sayfa yenilenince localStorage’den oku, BehaviorSubject’i güncelle
+    const raw = localStorage.getItem('user');
+    if (raw) {
+      this.currentUser$$.next(JSON.parse(raw));
     }
   }
 
@@ -42,12 +48,10 @@ export class AuthService {
       return throwError(() => new Error('Invalid email or password'));
     }
 
-    // basit "token"
     const token = 'fake-jwt-token';
-    // localStorage’a kaydet
     localStorage.setItem('token', token);
+    // Sadece posta/parola değil, tüm user bilgisini saklıyoruz
     localStorage.setItem('user', JSON.stringify(found));
-    // BehaviorSubject'e bildir
     this.currentUser$$.next(found);
 
     return of({ token, user: found });
@@ -63,7 +67,7 @@ export class AuthService {
     return of({ success: true });
   }
 
-  /** Çıkış yap */
+  /** Oturumu kapat */
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -75,12 +79,7 @@ export class AuthService {
     return !!localStorage.getItem('token');
   }
 
-  /** Observable olarak o anki kullanıcıyı dinle */
-  currentUser$(): Observable<User | null> {
-    return this.currentUser$$.asObservable();
-  }
-
-  /** Senkron olarak anlık kullanıcıyı döner */
+  /** Anlık user bilgisini senkron döner */
   getCurrentUser(): User | null {
     return this.currentUser$$.value;
   }
@@ -92,7 +91,20 @@ export class AuthService {
 
   /** Şifre unutma (dummy) */
   forgotPassword(email: string): Observable<{ success: boolean }> {
-    // gerçekte e-posta ile token atarsın
     return of({ success: true });
+  }
+
+  /**
+   * Profili günceller
+   * - LocalStorage’a yazar
+   * - BehaviorSubject’e next() ile yeni user’ı iter
+   */
+  updateProfile(updates: Partial<Pick<User, 'name' | 'email' | 'phone' | 'birthDate' | 'corporate'>>): void {
+    const raw = localStorage.getItem('user');
+    if (!raw) return;
+    const user: User = JSON.parse(raw);
+    const updated: User = { ...user, ...updates };
+    localStorage.setItem('user', JSON.stringify(updated));
+    this.currentUser$$.next(updated);
   }
 }
