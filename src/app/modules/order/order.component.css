@@ -1,0 +1,104 @@
+/* src/app/modules/order/order.component.css */
+
+/* Genel container */
+.orders.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Başlık */
+.orders h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+/* Kart stili: hem tabloyu hem de boş liste mesajını saracak */
+.orders .card-wrapper {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+}
+
+/* Yükleniyor ve boş liste alert’leri */
+.orders .alert {
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Boş liste alert’ini biraz daha nötr yapalım */
+.orders .alert-secondary {
+  background-color: #f8f9fa;
+  border-color: #f0f0f0;
+  color: #555;
+}
+
+/* Tablo stili */
+.orders table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 0.5rem;
+}
+
+/* Satır kart gibi görünsün */
+.orders table tbody tr {
+  background: #fafafa;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+/* Hücre aralığı, iç boşluk */
+.orders table td,
+.orders table th {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
+/* Başlık hücreleri biraz koyu */
+.orders table thead th {
+  background: transparent;
+  color: #666;
+  font-weight: 600;
+  border-bottom: none;
+}
+
+/* Satır altındaki çizgiyi kaldıralım */
+.orders table tbody tr + tr td {
+  border-top: none;
+}
+
+/* Responsive davranış */
+@media (max-width: 768px) {
+  .orders table,
+  .orders table thead,
+  .orders table tbody,
+  .orders table th,
+  .orders table td,
+  .orders table tr {
+    display: block;
+  }
+  .orders table thead {
+    display: none;
+  }
+  .orders table tr {
+    margin-bottom: 1rem;
+  }
+  .orders table td {
+    padding-left: 50%;
+    position: relative;
+    text-align: right;
+  }
+  .orders table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 1rem;
+    width: calc(50% - 2rem);
+    white-space: nowrap;
+    text-align: left;
+    font-weight: 600;
+    color: #555;
+  }
+}

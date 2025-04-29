@@ -40,10 +40,10 @@ export class CheckoutComponent implements OnInit {
 
     this.orderService.createOrder(this.checkoutForm.value).subscribe({
       next: () => {
-        // ① Ödeme onayı bildirimi
+        // Ödeme onayı bildirimi
         window.alert('🎉 Ödemeniz onaylandı!');
-        // ② Ana sayfaya dön
-        this.router.navigate(['/']);
+        //  → Burayı /orders sayfasına yönlendirecek şekilde değiştirdik:
+        this.router.navigate(['/orders']);
       },
       error: err => {
         console.error(err);
