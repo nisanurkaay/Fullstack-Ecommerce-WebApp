@@ -1,37 +1,61 @@
+// src/app/core/services/auth.service.ts
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 
-interface User {
+export type Role = 'customer' | 'seller' | 'admin';
+
+export interface User {
   name: string;
   email: string;
   password?: string;
-  role: string;
+  role: Role;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private users: User[] = [];
+  // 1) Uygulama genelinde o anki user’ı yayınlamak için BehaviorSubject
+  private currentUser$$ = new BehaviorSubject<User | null>(null);
 
-  constructor() {}
+  // 2) Şimdilik bellekte bir kullanıcı listesi (gerçek projede API’den gelir)
+  private users: User[] = [
+    { name: 'Admin',  email: 'admin@shopago.com',  password: 'admin123',  role: 'admin' },
+    { name: 'Seller', email: 'seller@shopago.com', password: 'seller123', role: 'seller' },
+    // register ile eklenecek customer’lar da burada tutulur
+  ];
 
-  login(credentials: { email: string; password: string }): Observable<any> {
-    const user = this.users.find(
-      u => u.email === credentials.email && u.password === credentials.password
-    );
-    if (user) {
-      const token = 'fake-jwt-token';
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      return of({ token, user });
+  constructor() {
+    // sayfa yenilenince localStorage’den oku
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      this.currentUser$$.next(JSON.parse(stored));
     }
-    return throwError(() => new Error('Invalid email or password'));
   }
 
-  register(userData: { name: string; email: string; password: string }): Observable<any> {
-    const exists = this.users.some(u => u.email === userData.email);
-    if (exists) {
+  /** Oturum aç */
+  login(credentials: { email: string; password: string }): Observable<{ token: string; user: User }> {
+    const found = this.users.find(u =>
+      u.email === credentials.email && u.password === credentials.password
+    );
+    if (!found) {
+      return throwError(() => new Error('Invalid email or password'));
+    }
+
+    // basit "token"
+    const token = 'fake-jwt-token';
+    // localStorage’a kaydet
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(found));
+    // BehaviorSubject'e bildir
+    this.currentUser$$.next(found);
+
+    return of({ token, user: found });
+  }
+
+  /** Kayıt ol (default rol customer) */
+  register(userData: { name: string; email: string; password: string }): Observable<{ success: boolean }> {
+    if (this.users.some(u => u.email === userData.email)) {
       return throwError(() => new Error('User already exists'));
     }
     const newUser: User = { ...userData, role: 'customer' };
@@ -39,25 +63,36 @@ export class AuthService {
     return of({ success: true });
   }
 
+  /** Çıkış yap */
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    this.currentUser$$.next(null);
   }
 
+  /** Oturum açık mı? */
   isLoggedIn(): boolean {
     return !!localStorage.getItem('token');
   }
 
-  getCurrentUser(): User | null {
-    const data = localStorage.getItem('user');
-    return data ? JSON.parse(data) : null;
+  /** Observable olarak o anki kullanıcıyı dinle */
+  currentUser$(): Observable<User | null> {
+    return this.currentUser$$.asObservable();
   }
 
-  getUserRole(): string {
-    const user = this.getCurrentUser();
-    return user?.role || '';
+  /** Senkron olarak anlık kullanıcıyı döner */
+  getCurrentUser(): User | null {
+    return this.currentUser$$.value;
   }
-  forgotPassword(email: string): Observable<any> {
+
+  /** Kullanıcının rolünü döner */
+  getUserRole(): Role {
+    return this.getCurrentUser()?.role || 'customer';
+  }
+
+  /** Şifre unutma (dummy) */
+  forgotPassword(email: string): Observable<{ success: boolean }> {
+    // gerçekte e-posta ile token atarsın
     return of({ success: true });
   }
 }

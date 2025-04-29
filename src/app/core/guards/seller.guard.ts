@@ -1,13 +1,13 @@
-// src/app/core/guards/admin.guard.ts
+// src/app/core/guards/seller.guard.ts
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
-export class AdminGuard implements CanActivate {
+export class SellerGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
   canActivate(): boolean {
-    if (this.auth.getUserRole() !== 'admin') {
+    if (this.auth.getUserRole() !== 'seller') {
       this.router.navigate(['/']);
       return false;
     }
