@@ -1,17 +1,17 @@
 <!-- src/app/modules/order/order.component.html -->
 <section class="orders container my-5">
-  <h2 class="mb-4">Siparişler</h2>
+  <h2 class="mb-4">Orders</h2>
 
   <!-- 1) Yükleniyor -->
   <div *ngIf="loading" class="alert alert-info">
-    Yükleniyor…
+   Loading…
   </div>
 
   <!-- wrapping both empty & table states -->
   <div class="card-wrapper" *ngIf="!loading">
     <!-- 2) Boş liste -->
     <div *ngIf="orders.length === 0" class="alert alert-secondary">
-      Henüz sipariş oluşturmadınız.
+      You haven't created an order yet.
     </div>
 
     <!-- 3) Liste doluysa tablo -->
