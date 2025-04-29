@@ -1,0 +1,142 @@
+/* src/app/modules/cart/checkout/checkout.component.css */
+
+:root {
+  --primary: #2d8cf0;
+  --primary-dark: #1c6bb8;
+  --accent: #ff6b6b;       /* ← yeni accent */
+  --border: #e0e0e0;
+  --error: #e74c3c;
+  --bg-page: #f5f5f5;
+  --bg-card: #ffffff;
+}
+
+.checkout {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-page);
+  padding: 2rem 1rem;
+}
+
+/* Kart kapsayıcı */
+.checkout-card {
+  background: var(--bg-card);
+  border-left: 6px solid var(--accent);   /* ← accent kenarlık */
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  max-width: 420px;
+  width: 100%;
+  padding: 2rem;
+  position: relative;
+}
+
+/* Başlık */
+.card-title {
+  text-align: center;
+  color: var(--accent);     /* ← accent başlık */
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Bootstrap alert */
+.alert-success {
+  position: absolute;
+  top: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% + 4rem);
+  margin-left: -2rem;
+  border-radius: 0.25rem;
+}
+
+/* Form grubu */
+.form-group {
+  margin-bottom: 1.25rem;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 500;
+}
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: border-color 0.2s;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent);   /* ← accent focus */
+}
+
+/* Yatay satır */
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+.form-group.half {
+  flex: 1 1 0;
+}
+.form-group.third {
+  flex: 1 1 calc(33.333% - 0.67rem);
+}
+
+/* Hata mesajı */
+.error {
+  margin-top: 0.25rem;
+  color: var(--error);
+  font-size: 0.85rem;
+}
+
+/* Submit butonu */
+.btn-submit {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background: var(--accent);     /* ← accent buton */
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.btn-submit:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+.btn-submit:not(:disabled):hover {
+  background: #e05a5a;          /* biraz koyu hover */
+}
+
+/* Mobilde alt alta */
+@media (max-width: 576px) {
+  .form-row {
+    flex-direction: column;
+  }
+}
+/* Sepete Geri Dön container’ı */
+.back-to-cart {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+/* Buton stili */
+.btn-back {
+  background: transparent;
+  border: none;
+  color: var(--accent, #ff6b6b);
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0;
+}
+.btn-back:hover {
+  text-decoration: underline;
+}
