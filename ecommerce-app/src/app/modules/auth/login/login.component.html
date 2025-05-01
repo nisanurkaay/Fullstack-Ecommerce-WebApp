@@ -2,7 +2,7 @@
   <div class="auth-content">
     <h2 class="auth-title">Login</h2>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
       <div class="form-group">
         <label for="email" class="form-label">Email</label>
         <input
@@ -12,6 +12,9 @@
           class="form-control"
           placeholder="Enter your email"
         />
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+          Valid email required.
+        </div>
       </div>
 
       <div class="form-group">
@@ -23,19 +26,17 @@
           class="form-control"
           placeholder="Enter your password"
         />
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
+          Password is required.
+        </div>
       </div>
 
       <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
 
-      <button
-        type="submit"
-        class="btn-submit"
-        [disabled]="loginForm.invalid"
-      >
+      <button type="submit" class="btn-submit" [disabled]="loginForm.invalid">
         Login
       </button>
     </form>
-
 
     <p class="footer-link" style="margin-top: 1rem;">
       <a routerLink="/auth/forgot-password">Forgot password?</a>

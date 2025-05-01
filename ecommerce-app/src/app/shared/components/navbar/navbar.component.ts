@@ -14,6 +14,7 @@ export class NavbarComponent implements OnInit {
   filteredOptions: string[] = [];
   cartCount = 0;
   cartItems: CartItem[] = [];
+  userName: string = '';
 
   constructor(
     public auth: AuthService,
@@ -24,9 +25,24 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
     this.cartService.cart$.subscribe(items => {
       this.cartItems = items;
-      // toplam ürün adedini quantity'lerden toplayarak bulacağız
       this.cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
     });
+
+    this.auth.currentUser$.subscribe(user => {
+      this.userName = user?.name ?? '';
+    });
+  }
+
+
+  // Diğer metotlar aynı kalır...
+
+  get isLoggedIn(): boolean {
+    return this.auth.isLoggedIn();
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/auth/login']);
   }
 
   onSearch(): void {
@@ -42,20 +58,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/products'], { queryParams: {} });
   }
 
-  logout(): void {
-    this.auth.logout();
-    this.router.navigate(['/auth/login']);
-  }
-
-  get isLoggedIn(): boolean {
-    return this.auth.isLoggedIn();
-  }
-
   removeFromCart(productId: number): void {
     this.cartService.removeItem(productId);
-  }
-
-  get currentUserName(): string {
-    return this.auth.getCurrentUser()?.name || '';
   }
 }

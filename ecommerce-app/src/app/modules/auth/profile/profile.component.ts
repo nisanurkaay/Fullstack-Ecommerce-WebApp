@@ -8,24 +8,28 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
-  standalone:false
+  standalone: false
 })
 export class ProfileComponent implements OnInit {
   profileForm!: FormGroup;
   user!: User;
+  isSeller = false;
 
   constructor(private fb: FormBuilder, private auth: AuthService) {}
 
   ngOnInit(): void {
-    const u = this.auth.getCurrentUser();
-    if (!u) throw new Error('Yetkisiz');
-    this.user = u;
-    this.profileForm = this.fb.group({
-      name:      [u.name,       Validators.required],
-      email:     [u.email,      [Validators.required, Validators.email]],
-      phone:     [u.phone||'',  Validators.pattern(/^\+?\d{7,15}$/)],
-      birthDate: [u.birthDate||'', Validators.required],
-      corporate: [!!u.corporate],
+    this.auth.getCurrentUser().subscribe({
+      next: user => {
+        this.user = user;
+        this.isSeller = user.role === 'ROLE_SELLER';
+
+        this.profileForm = this.fb.group({
+          name: [user.name, Validators.required],
+          email: [user.email, [Validators.required, Validators.email]],
+          corporate: [user.corporate || '']
+        });
+      },
+      error: () => alert('Yetkisiz erişim!')
     });
   }
 
@@ -34,7 +38,13 @@ export class ProfileComponent implements OnInit {
       this.profileForm.markAllAsTouched();
       return;
     }
-    this.auth.updateProfile(this.profileForm.value);
-    alert('Profiliniz başarıyla güncellendi.');
+
+    const updates = this.profileForm.value;
+    if (!this.isSeller) delete updates.corporate;
+
+    this.auth.updateProfile(updates).subscribe({
+      next: () => alert('Profil güncellendi'),
+      error: () => alert('Profil güncellenirken hata oluştu.')
+    });
   }
 }

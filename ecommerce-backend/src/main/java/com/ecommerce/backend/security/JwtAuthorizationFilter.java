@@ -34,10 +34,11 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         // 🔐 Login, register gibi yolları filtreleme
         String path = request.getRequestURI();
-        if (path.startsWith("/api/auth")) {
+        if (path.equals("/api/auth/login") || path.equals("/api/auth/register")) {
             filterChain.doFilter(request, response);
             return;
         }
+        
 
         // 🔐 Token doğrulama
         String token = parseJwt(request);

@@ -8,70 +8,87 @@ import com.ecommerce.backend.entity.Role;
 import com.ecommerce.backend.entity.UserStatus;
 import com.ecommerce.backend.repository.UserRepository;
 import com.ecommerce.backend.security.JwtUtils;
-import lombok.RequiredArgsConstructor;
+import com.ecommerce.backend.service.RefreshTokenService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenService refreshTokenService;
 
-    public void register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already taken");
+    // 🔧 Lombok yoksa constructor'ı elle yazmak zorundasın:
+    public AuthService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       JwtUtils jwtUtils,
+                       AuthenticationManager authenticationManager,
+                       RefreshTokenService refreshTokenService) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtils = jwtUtils;
+        this.authenticationManager = authenticationManager;
+        this.refreshTokenService = refreshTokenService;
+    }
+    public AuthResponse login(LoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    request.getEmail(),
+                    request.getPassword()
+                )
+            );
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect email or password");
         }
-
+    
+        User user = userRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    
+        String accessToken = jwtUtils.generateJwtToken(user.getEmail(), user.getRole().name());
+        String refreshToken = refreshTokenService.createRefreshToken(user.getId()).getToken();
+    
+        return new AuthResponse(accessToken, refreshToken, user.getName(), user.getRole().name());
+    }
+    
+    public void register(RegisterRequest request) {
         User user = new User();
+        user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setName(request.getName());
-        user.setRole(Role.ROLE_USER);
+        user.setRole(request.getRole() != null ? request.getRole() : Role.ROLE_USER);
         user.setUserStatus(UserStatus.ACTIVE);
-
         userRepository.save(user);
     }
 
-    public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        String token = jwtUtils.generateJwtToken(user.getEmail(), user.getRole().name());
-
-        return new AuthResponse(token, user.getEmail(), user.getRole().name());
-    }
     public void registerSeller(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already taken");
-        }
-
-        User seller = new User();
-        seller.setEmail(request.getEmail());
-        seller.setPassword(passwordEncoder.encode(request.getPassword()));
-        seller.setName(request.getName());
-        seller.setRole(Role.ROLE_SELLER);
-        seller.setUserStatus(UserStatus.ACTIVE);
-
-        userRepository.save(seller);
+        User user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(Role.ROLE_SELLER);
+        user.setUserStatus(UserStatus.ACTIVE);
+        user.setCorporate(request.getCorporate());
+        userRepository.save(user);
     }
 
     public Optional<User> getCurrentUser(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public void logout(String email) {
+        userRepository.findByEmail(email)
+            .ifPresent(user -> refreshTokenService.deleteByUserId(user.getId()));
     }
 }

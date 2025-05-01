@@ -1,0 +1,96 @@
+
+<!-- src/app/modules/auth/register/register.component.html -->
+<div class="auth-box">
+  <div class="auth-content">
+    <h2 class="auth-title">Sign Up</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+
+      <div class="radio-group">
+        <label>
+          <input type="radio" formControlName="isIndividual" [value]="true" /> Yes
+        </label>
+        <label>
+          <input type="radio" formControlName="isIndividual" [value]="false" /> No
+        </label>
+      </div>
+
+
+    <!-- Şirket alanı sadece bireysel değilse gösterilir -->
+    <div class="form-group" *ngIf="!registerForm.get('isIndividual')?.value">
+      <label for="corporate">Company Name</label>
+      <input
+        id="corporate"
+        type="text"
+        class="form-control"
+        formControlName="corporate"
+        placeholder="Enter your company name"
+      />
+    </div>
+
+      <div class="form-group">
+        <label for="name" class="form-label">Full Name</label>
+        <input
+          id="name"
+          formControlName="name"
+          type="text"
+          class="form-control"
+          placeholder="Enter your full name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <input
+          id="email"
+          formControlName="email"
+          type="email"
+          class="form-control"
+          placeholder="Enter your email"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input
+          id="password"
+          formControlName="password"
+          type="password"
+          class="form-control"
+          placeholder="Enter your password"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword" class="form-label">Confirm Password</label>
+        <input
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          type="password"
+          class="form-control"
+          placeholder="Repeat your password"
+        />
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+      <button
+        type="submit"
+        class="btn btn-primary btn-submit"
+        [disabled]="registerForm.invalid"
+      >
+        Register
+      </button>
+
+
+
+    </form>
+
+    <div class="divider"><span>or</span></div>
+
+    <p class="footer-link">
+      Already have an account?
+      <a routerLink="/auth/login">Login</a>
+    </p>
+  </div>
+</div>

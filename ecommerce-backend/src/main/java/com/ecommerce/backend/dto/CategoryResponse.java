@@ -1,12 +1,10 @@
 package com.ecommerce.backend.dto;
-import lombok.Data;
 
-@Data
 public class CategoryResponse {
     private Long id;
     private String name;
 
-    // Getter - Setter
+
 
     public String getName() {
         return name;

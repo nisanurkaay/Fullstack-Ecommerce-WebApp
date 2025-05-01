@@ -14,13 +14,15 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { LoginComponent } from './login/login.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
+import { RegisterSellerComponent } from './register-seller/register-seller.component';
 @NgModule({
   declarations: [
     AuthComponent,
     LoginComponent,
     RegisterComponent,
     ForgotPasswordComponent,
-    ProfileComponent
+    ProfileComponent,
+    RegisterSellerComponent
   ],
   imports: [
     CommonModule,

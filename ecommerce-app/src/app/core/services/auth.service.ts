@@ -1,110 +1,98 @@
-// src/app/core/services/auth.service.ts
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-
-export type Role = 'customer' | 'seller' | 'admin';
-
-export interface User {
-  name: string;
-  email: string;
-  password?: string;
-  role: Role;
-  phone?: string;
-  birthDate?: string;
-  corporate?: boolean;
-}
-
-@Injectable({
-  providedIn: 'root'
-})
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
+import { User, Role } from '../models/user.model';
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  /** O anki user’ı uygulamanın her yerinde yayınlamak için */
   private currentUser$$ = new BehaviorSubject<User | null>(null);
-
-  /** Subscribe etmek isteyen bileşenler için */
   public currentUser$ = this.currentUser$$.asObservable();
+  public readonly apiUrl = `${environment.apiUrl}/auth`;
 
-  /** Sahte kullanıcı havuzu (back-end yerine) */
-  private users: User[] = [
-    { name: 'Admin',  email: 'admin@shopago.com',  password: 'admin123',  role: 'admin' },
-    { name: 'Seller', email: 'seller@shopago.com', password: 'seller123', role: 'seller' },
-    // register ile eklenen customer’lar da eklenecek
-  ];
-
-  constructor() {
-    // Sayfa yenilenince localStorage’den oku, BehaviorSubject’i güncelle
+  constructor(private http: HttpClient) {
+    console.log('✅ AuthService initialized');
     const raw = localStorage.getItem('user');
-    if (raw) {
-      this.currentUser$$.next(JSON.parse(raw));
+    if (raw && raw !== 'undefined' && raw !== 'null') {
+      try {
+        const user = JSON.parse(raw);
+        if (user?.name) this.currentUser$$.next(user);
+      } catch (e) {
+        localStorage.removeItem('user');
+      }
     }
+
   }
 
-  /** Oturum aç */
-  login(credentials: { email: string; password: string }): Observable<{ token: string; user: User }> {
-    const found = this.users.find(u =>
-      u.email === credentials.email && u.password === credentials.password
+  // 🔐 LOGIN
+  login(credentials: { email: string; password: string }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
+      tap(res => {
+        localStorage.setItem('accessToken', res.token);
+
+        localStorage.setItem('refreshToken', res.refreshToken);
+        const user = { name: res.name, role: res.role, email: credentials.email };
+        localStorage.setItem('user', JSON.stringify(user));
+        this.currentUser$$.next(user);
+      })
     );
-    if (!found) {
-      return throwError(() => new Error('Invalid email or password'));
-    }
-
-    const token = 'fake-jwt-token';
-    localStorage.setItem('token', token);
-    // Sadece posta/parola değil, tüm user bilgisini saklıyoruz
-    localStorage.setItem('user', JSON.stringify(found));
-    this.currentUser$$.next(found);
-
-    return of({ token, user: found });
   }
 
-  /** Kayıt ol (default rol customer) */
-  register(userData: { name: string; email: string; password: string }): Observable<{ success: boolean }> {
-    if (this.users.some(u => u.email === userData.email)) {
-      return throwError(() => new Error('User already exists'));
-    }
-    const newUser: User = { ...userData, role: 'customer' };
-    this.users.push(newUser);
-    return of({ success: true });
+  // 🆕 REGISTER
+  register(data: { name: string; email: string; password: string; corporate?: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, data);
+  }
+  registerSeller(data: { name: string; email: string; password: string; corporate: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register-seller`, data);
+  }
+  // 🔁 REFRESH TOKEN
+  refreshToken(): Observable<any> {
+    const refreshToken = this.getRefreshToken();
+    return this.http.post(`${this.apiUrl}/refresh-token`, { refreshToken });
   }
 
-  /** Oturumu kapat */
+  // 📄 GET CURRENT USER
+  getCurrentUser(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/me`);
+  }
+
+  // 📝 UPDATE PROFILE
+  updateProfile(updates: Partial<User>): Observable<any> {
+    return this.http.put(`${this.apiUrl}/me`, updates);
+  }
+
+  // 📧 FORGOT PASSWORD
+  forgotPassword(email: string): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  // 🔓 LOGOUT
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.clear();
     this.currentUser$$.next(null);
   }
 
-  /** Oturum açık mı? */
+  // 🚦 IS LOGGED IN
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return !!this.getAccessToken();
   }
 
-  /** Anlık user bilgisini senkron döner */
-  getCurrentUser(): User | null {
-    return this.currentUser$$.value;
+  // 📦 TOKENS
+  getAccessToken(): string | null {
+    return localStorage.getItem('accessToken');
   }
 
-  /** Kullanıcının rolünü döner */
+  setAccessToken(token: string): void {
+    localStorage.setItem('accessToken', token);
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
+  }
+
+  // 👤 GET USER ROLE
   getUserRole(): Role {
-    return this.getCurrentUser()?.role || 'customer';
-  }
-
-  /** Şifre unutma (dummy) */
-  forgotPassword(email: string): Observable<{ success: boolean }> {
-    return of({ success: true });
-  }
-
-  /**
-   * Profili günceller
-   * - LocalStorage’a yazar
-   * - BehaviorSubject’e next() ile yeni user’ı iter
-   */
-  updateProfile(updates: Partial<Pick<User, 'name' | 'email' | 'phone' | 'birthDate' | 'corporate'>>): void {
-    const raw = localStorage.getItem('user');
-    if (!raw) return;
-    const user: User = JSON.parse(raw);
-    const updated: User = { ...user, ...updates };
-    localStorage.setItem('user', JSON.stringify(updated));
-    this.currentUser$$.next(updated);
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user).role : 'ROLE_USER';
   }
 }

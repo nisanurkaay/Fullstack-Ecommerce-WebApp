@@ -7,13 +7,16 @@ import { AuthService } from '../../../core/services/auth.service';
 @Component({
   selector: 'app-register',
   standalone:false,
-    templateUrl: './register.component.html',
+  templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   errorMessage = '';
   successMessage = '';
+  passwordMatchValidator(form: FormGroup) {
+    return form.get('password')?.value === form.get('confirmPassword')?.value ? null : { mismatch: true };
+  }
 
   constructor(
     private fb: FormBuilder,
@@ -23,36 +26,27 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      name:            ['', Validators.required],
-      email:           ['', [Validators.required, Validators.email]],
-      password:        ['', Validators.required],
-      confirmPassword: ['', Validators.required]
-    }, {
-      validators: this.passwordsMatch
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
+      corporate: [''] // seller için şirket adı
+    },{
+      validators: this.passwordMatchValidator
     });
-  }
 
-  private passwordsMatch(form: FormGroup) {
-    return form.get('password')?.value === form.get('confirmPassword')?.value
-      ? null
-      : { mismatch: true };
   }
 
   onRegister(): void {
-    if (this.registerForm.invalid) {
-      this.errorMessage = 'Please fix the errors above.';
-      return;
-    }
+    if (this.registerForm.invalid) return;
 
-    this.errorMessage = '';
-    const { name, email, password } = this.registerForm.value;
-
-    this.auth.register({ name, email, password }).subscribe({
+    this.auth.register(this.registerForm.value).subscribe({
       next: () => {
-        this.successMessage = 'Registered successfully! Redirecting…';
-        setTimeout(() => this.router.navigateByUrl('/auth/login'), 1500);
+        this.successMessage = 'Registered successfully!';
+        setTimeout(() => this.router.navigate(['/auth/login']), 1500);
       },
-      error: err => this.errorMessage = err.message || 'Registration failed.'
-    });
+      error: err => {
+        this.errorMessage = err.error?.message || err.statusText || 'Registration failed';
+      }  });
   }
 }

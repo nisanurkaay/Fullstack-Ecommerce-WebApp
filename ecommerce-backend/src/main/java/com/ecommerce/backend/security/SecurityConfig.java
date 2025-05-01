@@ -19,26 +19,35 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
-@RequiredArgsConstructor
+
 public class SecurityConfig {
 
     private final JwtUtils jwtUtils;
     private final UserDetailsService userDetailsService;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    public SecurityConfig(JwtUtils jwtUtils,
+    UserDetailsService userDetailsService,
+    CustomAuthenticationEntryPoint authenticationEntryPoint) {
+this.jwtUtils = jwtUtils;
+this.userDetailsService = userDetailsService;
+this.authenticationEntryPoint = authenticationEntryPoint;
+}
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll() // herkes erişebilir
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // sadece admin erişebilir
-                        .anyRequest().authenticated() // diğer tüm istekler sadece login olanlara açık
-                )
-                .sessionManagement(sess -> sess
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(new JwtAuthorizationFilter(jwtUtils, userDetailsService),
-                        UsernamePasswordAuthenticationFilter.class)
-                .build();
+        .csrf(csrf -> csrf.disable())
+        .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint)) // 💥 BURASI
+        .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/api/auth/**").permitAll()
+                .anyRequest().authenticated()
+        )
+        .sessionManagement(sess -> sess
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(new JwtAuthorizationFilter(jwtUtils, userDetailsService),
+                UsernamePasswordAuthenticationFilter.class)
+        .build();
     }
 
 

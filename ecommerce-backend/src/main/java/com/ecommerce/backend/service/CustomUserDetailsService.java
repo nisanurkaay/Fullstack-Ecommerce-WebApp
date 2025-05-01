@@ -11,10 +11,15 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Primary
 @Service
-@RequiredArgsConstructor
+
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    
+    // 🔧 Constructor elle tanımlandı
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

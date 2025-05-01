@@ -7,7 +7,7 @@ import { AuthService } from '../services/auth.service';
 export class SellerGuard implements CanActivate {
   constructor(private auth: AuthService, private router: Router) {}
   canActivate(): boolean {
-    if (this.auth.getUserRole() !== 'seller') {
+    if (this.auth.getUserRole() !== 'ROLE_SELLER') {
       this.router.navigate(['/']);
       return false;
     }
