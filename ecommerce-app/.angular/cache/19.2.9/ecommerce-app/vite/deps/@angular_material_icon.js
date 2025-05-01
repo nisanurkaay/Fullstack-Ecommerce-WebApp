@@ -2,14 +2,14 @@ import {
   DomSanitizer
 } from "./chunk-NRO5QWPU.js";
 import {
-  MatCommonModule
-} from "./chunk-T2FVGIRL.js";
-import "./chunk-TITWNDOM.js";
-import "./chunk-7P5WSSQN.js";
-import "./chunk-UIPE5V3J.js";
-import {
   HttpClient
 } from "./chunk-ZQ7XENCY.js";
+import {
+  MatCommonModule
+} from "./chunk-JRX2BIDI.js";
+import "./chunk-TITWNDOM.js";
+import "./chunk-UIPE5V3J.js";
+import "./chunk-7P5WSSQN.js";
 import "./chunk-VOSIYPZB.js";
 import {
   DOCUMENT
