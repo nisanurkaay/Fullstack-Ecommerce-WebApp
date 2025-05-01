@@ -1,46 +1,39 @@
 <header class="bg-white shadow-md sticky top-0 z-50 w-full">
   <div class="flex items-center px-4 py-2">
     <!-- Logo -->
-    <span class="text-2xl logo poppins-extrabold cursor-pointer" routerLink="/">
+    <span class="text-2xl logo font-extrabold cursor-pointer" routerLink="/">
       SHOPAGO
     </span>
 
     <!-- Desktop: Categories + Search -->
     <div class="hidden md:flex flex-1 justify-center items-center space-x-4">
       <!-- Categories -->
-      <button
-        mat-button
-        routerLink="/categories"
-        class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
-        aria-label="Categories"
-      >
+      <button mat-button routerLink="/categories" class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
         <mat-icon>list</mat-icon>
         <span class="text-sm">Categories</span>
       </button>
 
       <!-- Search Form -->
-      <form (submit)="onSearch()" class="form w-auto">
-        <button type="submit" aria-label="Search">
-          <!-- svg icon -->
-        </button>
+      <form (submit)="onSearch()" class="form flex items-center gap-2">
         <input
-          class="input"
+          class="input px-2 py-1 border rounded"
           placeholder="Type your text"
-          required
           [(ngModel)]="searchQuery"
           name="search"
           type="text"
-          (input)="onSearch()"
         />
-        <button type="reset" class="reset" aria-label="Clear" (click)="onReset()">
-          <!-- svg icon -->
+        <button type="submit" aria-label="Search">
+          <mat-icon>search</mat-icon>
+        </button>
+        <button type="reset" aria-label="Clear" (click)="onReset()">
+          <mat-icon>close</mat-icon>
         </button>
       </form>
     </div>
 
-    <!-- Icons (sağda) -->
+    <!-- Icons (Right) -->
     <div class="flex items-center space-x-4 ml-auto">
-      <!-- Profile Menu Trigger -->
+      <!-- Profile -->
       <button mat-button [matMenuTriggerFor]="userMenu" class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
         <mat-icon>account_circle</mat-icon>
         <span class="hidden md:inline text-sm">
@@ -55,14 +48,9 @@
         <span class="hidden md:inline text-sm">Wishlist</span>
       </button>
 
-      <!-- Cart Mini-Menu Trigger -->
-      <button
-        mat-button
-        [matMenuTriggerFor]="cartMenu"
-        [matBadge]="cartCount"
-        matBadgeColor="warn"
-        class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
-      >
+      <!-- Cart -->
+      <button mat-button [matMenuTriggerFor]="cartMenu" [matBadge]="cartCount" matBadgeColor="warn"
+              class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
         <mat-icon>shopping_cart</mat-icon>
         <span class="hidden md:inline text-sm">Cart</span>
       </button>
@@ -71,64 +59,64 @@
 
   <!-- Mobile Search -->
   <div class="block md:hidden px-4 pb-2">
-    <form (submit)="onSearch()" class="form w-full">
-      <!-- aynı search içeriği -->
+    <form (submit)="onSearch()" class="form flex items-center gap-2">
+      <input
+        class="input w-full px-2 py-1 border rounded"
+        placeholder="Search"
+        [(ngModel)]="searchQuery"
+        name="searchMobile"
+        type="text"
+      />
+      <button type="submit" aria-label="Search">
+        <mat-icon>search</mat-icon>
+      </button>
+      <button type="reset" aria-label="Clear" (click)="onReset()">
+        <mat-icon>close</mat-icon>
+      </button>
     </form>
   </div>
 
-  <!-- Profile Menüsü -->
+  <!-- Profile Menu -->
   <mat-menu #userMenu="matMenu">
     <ng-container *ngIf="isLoggedIn; else guestLinks">
       <button mat-menu-item routerLink="/profile">
-        <mat-icon>person</mat-icon>
-        <span *ngIf="isLoggedIn">{{ userName }}!</span>
+        <mat-icon>person</mat-icon> Profile
       </button>
       <button mat-menu-item routerLink="/orders">
-        <mat-icon>assignment</mat-icon>Orders
+        <mat-icon>assignment</mat-icon> Orders
       </button>
       <button mat-menu-item (click)="logout()">
-        <mat-icon>logout</mat-icon>Logout
+        <mat-icon>logout</mat-icon> Logout
       </button>
     </ng-container>
     <ng-template #guestLinks>
       <button mat-menu-item routerLink="/auth/login">
-        <mat-icon>login</mat-icon>Login
+        <mat-icon>login</mat-icon> Login
       </button>
       <button mat-menu-item routerLink="/auth/register">
-        <mat-icon>person_add</mat-icon>Register
+        <mat-icon>person_add</mat-icon> Register
       </button>
     </ng-template>
   </mat-menu>
 
-  <!-- Cart Mini-Menu -->
+  <!-- Cart Menu -->
   <mat-menu #cartMenu="matMenu" class="cart-menu-panel">
     <ng-container *ngIf="cartItems.length; else emptyCart">
       <ng-container *ngFor="let item of cartItems">
         <button mat-menu-item class="flex items-center gap-3">
-          <img
-            [src]="item.product.image"
-            alt="{{ item.product.title }}"
-            class="w-10 h-10 object-cover rounded"
-          />
+          <img [src]="item.product.image" alt="{{ item.product.title }}" class="w-10 h-10 object-cover rounded" />
           <div class="flex-1 text-left">
             <p class="font-medium">{{ item.product.title }}</p>
-            <p class="text-sm text-gray-600">
-              ${{ item.product.price }} x {{ item.quantity }}
-            </p>
+            <p class="text-sm text-gray-600">${{ item.product.price }} x {{ item.quantity }}</p>
           </div>
           <button mat-icon-button (click)="removeFromCart(item.product.id)">
             <mat-icon>delete</mat-icon>
           </button>
         </button>
       </ng-container>
-
       <mat-divider></mat-divider>
-
-      <button mat-menu-item routerLink="/cart" class="justify-center">
-        View Full Cart
-      </button>
+      <button mat-menu-item routerLink="/cart" class="justify-center">View Full Cart</button>
     </ng-container>
-
     <ng-template #emptyCart>
       <button mat-menu-item disabled>Cart is empty</button>
     </ng-template>
