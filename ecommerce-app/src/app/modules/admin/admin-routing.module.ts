@@ -8,6 +8,7 @@ import { AdminComponent } from './admin.component';
 import { OrderMgmtComponent } from './order-mgmt/order-mgmt.component';
 import { ProductMgmtComponent } from './product-mgmt/product-mgmt.component';
 import { UserMgmtComponent } from './user-mgmt/user-mgmt.component';
+import { CategoryMgmtComponent } from './category-mgmt/category-mgmt.component';
 
 const routes: Routes = [
   {
@@ -20,6 +21,7 @@ const routes: Routes = [
       { path: 'order-mgmt', component: OrderMgmtComponent },
       { path: 'product-mgmt', component: ProductMgmtComponent },
       { path: 'user-mgmt', component: UserMgmtComponent },
+      { path: 'category-mgmt', component: CategoryMgmtComponent },
     ]
   }
 ];

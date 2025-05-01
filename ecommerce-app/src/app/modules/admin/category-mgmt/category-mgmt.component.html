@@ -1,0 +1,61 @@
+<div class="p-4">
+  <button mat-raised-button color="primary" (click)="toggleForm()">Add New Category</button>
+
+  <div *ngIf="showForm" class="mt-4 border p-4 rounded shadow-md bg-white max-w-xl">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <mat-slide-toggle formControlName="isSubCategory">Is this a subcategory?</mat-slide-toggle>
+
+      <div *ngIf="form.value.isSubCategory" class="mt-4">
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Select Parent Category</mat-label>
+          <mat-select formControlName="parentCategoryId" required>
+            <mat-option *ngFor="let cat of getParentCategories()" [value]="cat.id">{{ cat.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="fill" class="w-full mt-4">
+        <mat-label>Category Name</mat-label>
+        <input matInput formControlName="name" required />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="w-full mt-4">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
+
+      <div class="mt-4 flex gap-2">
+        <button mat-flat-button color="primary" type="submit" [disabled]="form.invalid">Save</button>
+        <button mat-stroked-button color="warn" type="button" (click)="toggleForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Category List -->
+  <div class="mt-6">
+    <div class="bg-gray-100 p-3 rounded font-bold grid grid-cols-3">
+      <span>Name</span>
+      <span>Description</span>
+      <span>Actions</span>
+    </div>
+
+    <div *ngFor="let cat of getParentCategories()" class="border-b p-3 grid grid-cols-3 items-center">
+      <div>{{ cat.name }}</div>
+      <div>{{ cat.description || '-' }}</div>
+      <div>
+        <button mat-button (click)="toggleSubcategories(cat.id!)">
+          {{ expandedCategoryId === cat.id ? 'Hide' : 'View' }} Subcategories
+        </button>
+      </div>
+
+      <div *ngIf="expandedCategoryId === cat.id" class="col-span-3 mt-2 pl-6 space-y-2">
+        <div *ngFor="let sub of getSubcategories(cat.id!)" class="border rounded p-2 bg-gray-50">
+          → {{ sub.name }}
+          <span class="text-sm text-gray-500 ml-2">
+            ({{ sub.description || 'No description' }})
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
