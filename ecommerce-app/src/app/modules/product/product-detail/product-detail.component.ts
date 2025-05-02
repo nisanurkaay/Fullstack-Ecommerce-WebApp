@@ -11,12 +11,12 @@ import { ReviewService } from '../../../core/services/review.service';
   selector: 'app-product-detail',
   standalone: false,
   templateUrl: './product-detail.component.html',
-  styleUrls: ['./product-detail.component.css']   // <-- çoğul
+  styleUrls: ['./product-detail.component.css']
 })
 export class ProductDetailComponent implements OnInit {
   productId!: number;
   product!: Product;
-  productReviews: Review[] = [];                  // tipi Review[]
+  productReviews: Review[] = [];
   sizes: string[] = ['S', 'M', 'L', 'XL'];
   colors: string[] = ['black', 'green', 'blue'];
 
@@ -24,22 +24,22 @@ export class ProductDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private productService: ProductService,
     private reviewService: ReviewService,
-    private cartService: CartService             // CartService inject
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
-    this.productService.getProduct(this.productId).subscribe({
-      next: prod => this.product = prod,
-      error: e => console.error(e)
+    this.productService.getById(this.productId).subscribe({
+      next: (prod: Product) => this.product = prod,
+      error: (e: any) => console.error(e)
     });
+
     this.reviewService.getReviewsByProductId(this.productId).subscribe({
-      next: revs => this.productReviews = revs,
-      error: e => console.error(e)
+      next: (revs: Review[]) => this.productReviews = revs,
+      error: (e: any) => console.error(e)
     });
   }
 
-  /** Sepete ürün ekle */
   addToCart(product: Product): void {
     this.cartService.addToCart(this.product);
   }

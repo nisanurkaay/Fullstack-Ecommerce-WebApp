@@ -16,7 +16,7 @@ public interface ProductService {
     void adminBanProduct(Long id);
 
     ProductResponse getProductById(Long id);
-
+     ProductResponse approveProduct(Long id);
     List<ProductResponse> getAllActiveProducts();
     ProductResponse activateProduct(Long id, Long userId);
 }

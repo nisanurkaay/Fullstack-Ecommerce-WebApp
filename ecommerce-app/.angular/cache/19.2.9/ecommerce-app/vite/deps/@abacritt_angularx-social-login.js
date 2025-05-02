@@ -122,7 +122,7 @@ var GoogleLoginProvider = class _GoogleLoginProvider extends BaseLoginProvider {
                     uri: tokenResponse.error_uri
                   });
                 } else {
-                  this._accessToken.next(tokenResponse.access_token);
+                  this._accessToken.next(tokenResponse.accessToken);
                 }
               }
             });
@@ -228,7 +228,7 @@ var SocialAuthService = class _SocialAuthService {
     this.ERR_NOT_SUPPORTED_FOR_REFRESH_TOKEN = "Chosen login provider is not supported for refreshing a token";
   }
   static {
-    this.ERR_NOT_SUPPORTED_FOR_ACCESS_TOKEN = "Chosen login provider is not supported for getting an access token";
+    this.ERR_NOT_SUPPORTED_FOR_accessToken = "Chosen login provider is not supported for getting an access token";
   }
   /** An `Observable` that one can subscribe to get the current logged in user information */
   get authState() {
@@ -312,7 +312,7 @@ var SocialAuthService = class _SocialAuthService {
       } else if (!providerObject) {
         throw _SocialAuthService.ERR_LOGIN_PROVIDER_NOT_FOUND;
       } else if (!(providerObject instanceof GoogleLoginProvider)) {
-        throw _SocialAuthService.ERR_NOT_SUPPORTED_FOR_ACCESS_TOKEN;
+        throw _SocialAuthService.ERR_NOT_SUPPORTED_FOR_accessToken;
       }
       return yield providerObject.getAccessToken();
     });
@@ -593,7 +593,7 @@ var FacebookLoginProvider = class _FacebookLoginProvider extends BaseLoginProvid
             user.id = fbUser.id;
             user.name = fbUser.name;
             user.email = fbUser.email;
-            user.photoUrl = "https://graph.facebook.com/" + fbUser.id + "/picture?type=normal&access_token=" + authResponse.accessToken;
+            user.photoUrl = "https://graph.facebook.com/" + fbUser.id + "/picture?type=normal&accessToken=" + authResponse.accessToken;
             user.firstName = fbUser.first_name;
             user.lastName = fbUser.last_name;
             user.authToken = authResponse.accessToken;
@@ -703,14 +703,14 @@ var AmazonLoginProvider = class _AmazonLoginProvider extends BaseLoginProvider {
         if (authResponse.error) {
           reject(authResponse.error);
         } else {
-          amazon.Login.retrieveProfile(authResponse.access_token, (response) => {
+          amazon.Login.retrieveProfile(authResponse.accessToken, (response) => {
             let user = new SocialUser();
             user.id = response.profile.CustomerId;
             user.name = response.profile.Name;
             user.email = response.profile.PrimaryEmail;
-            user.authToken = authResponse.access_token;
+            user.authToken = authResponse.accessToken;
             user.response = response.profile;
-            this.persistToken(authResponse.access_token);
+            this.persistToken(authResponse.accessToken);
             resolve(user);
           });
         }

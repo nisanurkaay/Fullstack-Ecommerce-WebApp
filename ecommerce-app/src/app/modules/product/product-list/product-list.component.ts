@@ -10,34 +10,32 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })
+export class ProductListComponent implements OnInit {
+  products: Product[] = [];
+  filteredProducts: Product[] = [];
+  isLoading = true;
+  error: string | null = null;
 
-  export class ProductListComponent implements OnInit {
-    products: Product[] = [];
-    filteredProducts: Product[] = [];
-    isLoading = true;
-    error: string | null = null;
+  constructor(private productService: ProductService, private route: ActivatedRoute) {}
 
-    constructor(private productService: ProductService, private route: ActivatedRoute) {}
+  ngOnInit() {
+    this.route.queryParamMap.subscribe(params => {
+      const query = params.get('q')?.toLowerCase() || '';
 
-    ngOnInit() {
-      this.route.queryParamMap.subscribe(params => {
-        const query = params.get('q')?.toLowerCase() || '';
-
-        this.isLoading = true;
-        this.productService.getProducts().subscribe({
-          next: data => {
-            this.products = data;
-            this.filteredProducts = query
-              ? data.filter(p => p.title.toLowerCase().includes(query))
-              : data; // 👈 boşsa hepsini göster
-            this.isLoading = false;
-          },
-          error: err => {
-            this.error = 'Hata oluştu';
-            this.isLoading = false;
-          }
-        });
+      this.isLoading = true;
+      this.productService.getAll().subscribe({
+        next: (data: Product[]) => {
+          this.products = data;
+          this.filteredProducts = query
+            ? data.filter((p: Product) => p.name.toLowerCase().includes(query))
+            : data;
+          this.isLoading = false;
+        },
+        error: (err: any) => {
+          this.error = 'Hata oluştu';
+          this.isLoading = false;
+        }
       });
-    }
-
+    });
   }
+}

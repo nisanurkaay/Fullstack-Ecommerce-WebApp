@@ -46,10 +46,9 @@ public class ProductServiceImpl implements ProductService {
         product.setStockQuantity(request.getStockQuantity());
         product.setCategory(category);
         product.setSeller(seller);
-        product.setProductStatus(ProductStatus.INACTIVE); // Yeni ürün satışta değil
+        product.setProductStatus(ProductStatus.PENDING); // ürün onay bekleyecek
 
         productRepository.save(product);
-
         return mapToResponse(product);
     }
 
@@ -60,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         if (!product.getSeller().getId().equals(userId)) {
-            throw new RuntimeException("You are not authorized to update this product.");
+            throw new RuntimeException("Unauthorized");
         }
 
         Category category = categoryRepository.findById(request.getCategoryId())
@@ -72,10 +71,27 @@ public class ProductServiceImpl implements ProductService {
         product.setStockQuantity(request.getStockQuantity());
         product.setCategory(category);
 
-        productRepository.save(product);
+        // Stok artırımı varsa ve daha önce INACTIVE ise tekrar ACTIVE yapabilir
+        if (product.getProductStatus() == ProductStatus.INACTIVE &&
+                product.getStockQuantity() > 0) {
+            product.setProductStatus(ProductStatus.ACTIVE);
+        }
 
-        return mapToResponse(product);
+        return mapToResponse(productRepository.save(product));
     }
+
+    @Transactional
+public ProductResponse approveProduct(Long id) {
+    Product product = productRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Product not found"));
+
+    if (product.getProductStatus() != ProductStatus.PENDING) {
+        throw new RuntimeException("Only PENDING products can be approved.");
+    }
+
+    product.setProductStatus(ProductStatus.INACTIVE); // ✅ yayına almıyoruz
+    return mapToResponse(productRepository.save(product));
+}
 
     @Override
     @Transactional
@@ -84,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         if (!product.getSeller().getId().equals(userId)) {
-            throw new RuntimeException("You are not authorized to delete this product.");
+            throw new RuntimeException("Unauthorized");
         }
 
         product.setProductStatus(ProductStatus.INACTIVE);
@@ -108,17 +124,15 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         if (!product.getSeller().getId().equals(userId)) {
-            throw new RuntimeException("You are not authorized to activate this product.");
+            throw new RuntimeException("Unauthorized");
         }
 
         if (product.getStockQuantity() == 0) {
-            throw new RuntimeException("Cannot activate product with 0 stock.");
+            throw new RuntimeException("Cannot activate with 0 stock.");
         }
 
         product.setProductStatus(ProductStatus.ACTIVE);
-        productRepository.save(product);
-
-        return mapToResponse(product);
+        return mapToResponse(productRepository.save(product));
     }
 
     @Override
@@ -133,22 +147,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllActiveProducts() {
-        List<Product> products = productRepository.findByProductStatus(ProductStatus.ACTIVE);
-        return products.stream()
-                .map(this::mapToResponse)
-                .toList();
+        return productRepository.findByProductStatus(ProductStatus.ACTIVE)
+                .stream().map(this::mapToResponse).toList();
     }
 
     private ProductResponse mapToResponse(Product product) {
-        ProductResponse response = new ProductResponse();
-        response.setId(product.getId());
-        response.setName(product.getName());
-        response.setDescription(product.getDescription());
-        response.setPrice(product.getPrice());
-        response.setStockQuantity(product.getStockQuantity());
-        response.setCategoryName(product.getCategory().getName());
-        response.setSellerName(product.getSeller().getName());
-        response.setProductStatus(product.getProductStatus());
-        return response;
+        ProductResponse res = new ProductResponse();
+        res.setId(product.getId());
+        res.setName(product.getName());
+        res.setDescription(product.getDescription());
+        res.setPrice(product.getPrice());
+        res.setStockQuantity(product.getStockQuantity());
+        res.setCategoryName(product.getCategory().getName());
+        res.setSellerName(product.getSeller().getName());
+        res.setProductStatus(product.getProductStatus());
+        return res;
     }
 }

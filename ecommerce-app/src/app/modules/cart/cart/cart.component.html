@@ -6,18 +6,18 @@
   </div>
 
   <div *ngFor="let item of cartItems" class="flex items-center border rounded p-4">
-    <img [src]="item.product.image"
-         [alt]="item.product.title"
+    <img [src]="item.product.imageUrl"
+         [alt]="item.product.name"
          class="w-20 h-20 object-contain mr-4" />
 
     <div class="flex-1">
-      <h3 class="font-semibold">{{ item.product.title }}</h3>
+      <h3 class="font-semibold">{{ item.product.name }}</h3>
       <p class="text-gray-600">{{ item.product.price | currency:'USD' }}</p>
 
       <div class="flex items-center mt-2">
         <button
           class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 transition"
-          (click)="decrementQuantity(item.product.id)"
+          (click)="decrementQuantity(item.product.id!)"
         >
           -
         </button>
@@ -26,7 +26,7 @@
 
         <button
           class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 transition"
-          (click)="incrementQuantity(item.product.id)"
+          (click)="incrementQuantity(item.product.id!)"
         >
           +
         </button>
@@ -37,7 +37,7 @@
 
     <button
       class="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
-      (click)="removeItem(item.product.id)"
+      (click)="removeItem(item.product.id!)"
     >
       Ürünü Kaldır
     </button>

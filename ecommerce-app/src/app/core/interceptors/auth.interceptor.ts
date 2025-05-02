@@ -16,11 +16,14 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getAccessToken();
+    console.log('[INTERCEPTOR] Token being attached:', token);
+
     let authReq = req;
     if (token) {
       authReq = this.addTokenHeader(req, token);
     }
 
+    // 👇 Sadece hata durumunda refresh deneyelim
     return next.handle(authReq).pipe(
       catchError(error => {
         if (
@@ -31,10 +34,12 @@ export class AuthInterceptor implements HttpInterceptor {
         ) {
           return this.handle401Error(authReq, next);
         }
+
         return throwError(() => error);
       })
     );
   }
+
 
   private addTokenHeader(request: HttpRequest<any>, token: string): HttpRequest<any> {
     return request.clone({
@@ -50,9 +55,10 @@ export class AuthInterceptor implements HttpInterceptor {
       return this.authService.refreshToken().pipe(
         switchMap((res: any) => {
           this.isRefreshing = false;
-          this.authService.setAccessToken(res.accessToken);
-          this.refreshTokenSubject.next(res.accessToken);
-          return next.handle(this.addTokenHeader(request, res.accessToken));
+          this.authService.setAccessToken(res.token); // BACKEND "token" dönüyor
+this.refreshTokenSubject.next(res.token);
+return next.handle(this.addTokenHeader(request, res.token));
+
         }),
         catchError(err => {
           this.isRefreshing = false;

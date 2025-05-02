@@ -16,15 +16,16 @@ export class BestSellersComponent implements OnInit {
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe({
-      next: (products) => {
-        this.bestSellers = products.slice(0, 10); // Fake slicing
+    this.productService.getAll().subscribe({
+      next: (products: Product[]) => {
+        this.bestSellers = products.slice(0, 10); // örnek
         this.isLoading = false;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Error fetching best sellers:', err);
         this.isLoading = false;
       }
     });
+
   }
 }

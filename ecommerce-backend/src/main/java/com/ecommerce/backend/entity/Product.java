@@ -23,6 +23,14 @@ public class Product {
     private String description;
     private Double price;
     private Integer stockQuantity;
+    private String imageUrl;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
@@ -34,7 +42,6 @@ public class Product {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-        this.productStatus = ProductStatus.ACTIVE;
     }
 
     @PreUpdate

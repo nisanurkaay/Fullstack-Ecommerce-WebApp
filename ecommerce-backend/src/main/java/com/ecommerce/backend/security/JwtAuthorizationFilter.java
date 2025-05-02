@@ -30,6 +30,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+                System.out.println("Authorization header: " + request.getHeader("Authorization"));
+
         System.out.println("Request URI: " + request.getRequestURI());
 
         // 🔐 Login, register gibi yolları filtreleme
@@ -47,11 +49,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
             // 🔧 BURASI: Kullanıcıyı veritabanından çekiyoruz
             var userDetails = userDetailsService.loadUserByUsername(username);
+            System.out.println("Granted Authorities: " + userDetails.getAuthorities());
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
+                            
                             userDetails.getAuthorities() // 🔥 yetkileri buradan alıyoruz
                     );
 

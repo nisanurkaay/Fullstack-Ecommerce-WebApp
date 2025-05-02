@@ -25,6 +25,12 @@ public class ProductController {
                                                          @RequestParam Long sellerId) {
         return ResponseEntity.ok(productService.createProduct(request, sellerId));
     }
+    @PutMapping("/{id}/approve")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ProductResponse> approveProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.approveProduct(id));
+    }
+    
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")

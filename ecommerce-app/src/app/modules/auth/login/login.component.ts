@@ -29,26 +29,32 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     this.auth.login(this.loginForm.value).subscribe({
       next: res => {
-        const role = res.role || JSON.parse(localStorage.getItem('user') || '{}').role;
+        console.log('Login response:', res); // ✅
+        localStorage.setItem('userId', res.id.toString());
+        localStorage.setItem('accessToken', res.token); // ✅ Bu satır olmazsa interceptor çalışmaz!
+        localStorage.setItem('user', JSON.stringify({
+          id: res.id,
+          name: res.name,
+          role: res.role
+        }));
+
+        this.auth.setRefreshToken(res.refreshToken); // varsa
+        const role = res.role;
 
         if (role === 'ROLE_SELLER') {
           this.router.navigate(['/seller/dashboard']);
-        }
-        else if (role === 'ROLE_ADMIN') {
+        } else if (role === 'ROLE_ADMIN') {
           this.router.navigate(['/admin/dashboard']);
-        }
-        else {
+        } else {
           this.router.navigate(['/']);
         }
       },
       error: err => {
-        if (err.status === 401) {
-          this.error = err.error?.message || 'Invalid credentials'; }
-          else {
-        this.error = err.message || 'Login failed';}
+        this.error = err.status === 401
+          ? err.error?.message || 'Invalid credentials'
+          : err.message || 'Login failed';
       }
     });
-
   }
 
 }

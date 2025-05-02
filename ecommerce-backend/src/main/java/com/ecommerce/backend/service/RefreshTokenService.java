@@ -31,8 +31,10 @@ public class RefreshTokenService {
     }
 
     public Optional<RefreshToken> findByToken(String token) {
+        System.out.println("🔍 Looking up refresh token: " + token); // BU SATIRI EKLE
         return refreshTokenRepository.findByToken(token);
     }
+    
 
     public RefreshToken verifyExpiration(RefreshToken token) {
         if (token.getExpiryDate().compareTo(Instant.now()) < 0) {

@@ -1,9 +1,14 @@
+export type ProductStatus = 'PENDING' | 'ACTIVE' | 'INACTIVE' | 'BANNED';
 
 export interface Product {
-  id:       number;
-  title:    string;
-  price:    number;
+  id?: number;
+  name: string;
   description: string;
-  category: string;
-  image:    string;
+  price: number;
+  stockQuantity: number;
+  categoryId: number;
+  productStatus?: ProductStatus;
+  categoryName?: string;
+  sellerName?: string;
+  imageUrl?: string;
 }

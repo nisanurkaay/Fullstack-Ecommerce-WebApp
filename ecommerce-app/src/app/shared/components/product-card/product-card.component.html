@@ -2,8 +2,8 @@
 <div class="relative flex flex-col border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
   <!-- Detay sayfasına yönlendirmek istersen görsele tıklatabilirsin -->
   <img
-    [src]="product.image"
-    [alt]="product.title"
+    [src]="product.imageUrl"
+    [alt]="product.name"
     class="h-48 object-contain mb-4 cursor-pointer"
     (click)="viewDetails()"
   />
@@ -28,7 +28,7 @@
     class="text-md font-semibold mb-2 line-clamp-2 cursor-pointer"
     (click)="viewDetails()"
   >
-    {{ product.title }}
+    {{ product.name }}
   </h3>
 
   <!-- Açıklama -->

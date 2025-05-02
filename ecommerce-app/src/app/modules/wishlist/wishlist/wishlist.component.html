@@ -2,13 +2,13 @@
 <div *ngIf="wishlist.length > 0; else emptyTpl" class="p-6 space-y-6">
   <div *ngFor="let p of wishlist" class="flex flex-col md:flex-row border rounded-lg overflow-hidden">
     <img
-      [src]="p.image"
-      [alt]="p.title"
+      [src]="p.imageUrl"
+      [alt]="p.name"
       class="w-full md:w-48 h-48 object-contain bg-gray-50"
     />
     <div class="flex-1 p-4 flex flex-col justify-between">
       <div>
-        <h3 class="text-lg font-semibold">{{ p.title }}</h3>
+        <h3 class="text-lg font-semibold">{{ p.name }}</h3>
         <p class="text-sm text-gray-600 mt-1 line-clamp-3">{{ p.description }}</p>
       </div>
       <div class="mt-4 flex items-center justify-between">
