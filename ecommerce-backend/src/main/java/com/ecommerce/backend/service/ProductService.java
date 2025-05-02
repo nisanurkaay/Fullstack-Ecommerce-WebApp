@@ -13,6 +13,7 @@ public interface ProductService {
     ProductResponse updateProduct(Long id, ProductRequest request, Long userId);
 
     void deleteProduct(Long id, Long userId);
+    List<ProductResponse> getProductsBySeller(Long sellerId) ;
 
     void adminBanProduct(Long id);
     List<ProductResponse> getAllPendingProducts();

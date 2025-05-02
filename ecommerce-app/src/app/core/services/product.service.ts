@@ -59,4 +59,8 @@ export class ProductService {
   getPending(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/pending`);
   }
+  getMyProducts(sellerId: number): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/my?sellerId=${sellerId}`);
+  }
+
 }

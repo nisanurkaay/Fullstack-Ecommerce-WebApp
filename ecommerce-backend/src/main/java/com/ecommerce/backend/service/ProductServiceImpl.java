@@ -165,7 +165,14 @@ public ProductResponse denyProduct(Long id) {
         return productRepository.findByProductStatus(ProductStatus.PENDING)
                 .stream().map(this::mapToResponse).toList();
     }
-    
+    @Override
+public List<ProductResponse> getProductsBySeller(Long sellerId) {
+    return productRepository.findBySellerId(sellerId)
+            .stream()
+            .map(this::mapToResponse)
+            .toList();
+}
+
     @Override
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllActiveProducts() {

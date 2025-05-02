@@ -67,7 +67,12 @@ public class ProductController {
     public ResponseEntity<List<ProductResponse>> getAllPendingProducts() {
         return ResponseEntity.ok(productService.getAllPendingProducts());
     }
-    
+    @GetMapping("/my")
+@PreAuthorize("hasRole('SELLER')")
+public ResponseEntity<List<ProductResponse>> getMyProducts(@RequestParam Long sellerId) {
+    return ResponseEntity.ok(productService.getProductsBySeller(sellerId));
+}
+
 @PutMapping("/{id}/deny")
 @PreAuthorize("hasRole('ADMIN')")
 public ResponseEntity<ProductResponse> denyProduct(@PathVariable Long id) {
