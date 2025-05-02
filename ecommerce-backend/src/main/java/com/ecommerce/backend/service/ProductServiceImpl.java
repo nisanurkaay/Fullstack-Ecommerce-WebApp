@@ -92,6 +92,22 @@ public ProductResponse approveProduct(Long id) {
     product.setProductStatus(ProductStatus.INACTIVE); // ✅ yayına almıyoruz
     return mapToResponse(productRepository.save(product));
 }
+@Override
+public List<ProductResponse> getProductsByStatus(ProductStatus status) {
+    return productRepository.findByProductStatus(status)
+            .stream()
+            .map(this::mapToResponse)
+            .toList();
+}
+
+@Override
+public ProductResponse denyProduct(Long id) {
+    Product product = productRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Product not found"));
+
+    product.setProductStatus(ProductStatus.BANNED);
+    return mapToResponse(productRepository.save(product));
+}
 
     @Override
     @Transactional
@@ -143,7 +159,13 @@ public ProductResponse approveProduct(Long id) {
 
         return mapToResponse(product);
     }
-
+    @Override
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getAllPendingProducts() {
+        return productRepository.findByProductStatus(ProductStatus.PENDING)
+                .stream().map(this::mapToResponse).toList();
+    }
+    
     @Override
     @Transactional(readOnly = true)
     public List<ProductResponse> getAllActiveProducts() {

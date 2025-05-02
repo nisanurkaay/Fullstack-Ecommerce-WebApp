@@ -33,6 +33,17 @@ export class ProductService {
     return this.http.put<Product>(`${this.apiUrl}/${id}/activate?userId=${userId}`, {});
   }
 
+  getPendingProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/pending`);
+  }
+
+  approveProduct(productId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${productId}/approve`, {});
+  }
+
+  denyProduct(productId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/admin-ban/${productId}`);
+  }
   delete(id: number, userId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}?userId=${userId}`);
   }

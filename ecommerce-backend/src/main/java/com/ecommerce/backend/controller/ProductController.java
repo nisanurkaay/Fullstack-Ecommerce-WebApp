@@ -2,6 +2,7 @@ package com.ecommerce.backend.controller;
 
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.ProductResponse;
+import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,7 +62,17 @@ public class ProductController {
         productService.adminBanProduct(id);
         return ResponseEntity.noContent().build();
     }
-
+    @GetMapping("/pending")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ProductResponse>> getAllPendingProducts() {
+        return ResponseEntity.ok(productService.getAllPendingProducts());
+    }
+    
+@PutMapping("/{id}/deny")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<ProductResponse> denyProduct(@PathVariable Long id) {
+    return ResponseEntity.ok(productService.denyProduct(id));
+}
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(productService.getProductById(id));
