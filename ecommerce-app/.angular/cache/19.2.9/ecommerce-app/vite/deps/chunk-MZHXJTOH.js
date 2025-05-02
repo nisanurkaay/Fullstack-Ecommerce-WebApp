@@ -3,7 +3,7 @@ import {
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader,
   normalizePassiveListenerOptions
-} from "./chunk-T2FVGIRL.js";
+} from "./chunk-JRX2BIDI.js";
 import {
   _CdkPrivateStyleLoader
 } from "./chunk-TITWNDOM.js";
@@ -645,4 +645,4 @@ export {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   MatRipple
 };
-//# sourceMappingURL=chunk-X23WT2MY.js.map
+//# sourceMappingURL=chunk-MZHXJTOH.js.map

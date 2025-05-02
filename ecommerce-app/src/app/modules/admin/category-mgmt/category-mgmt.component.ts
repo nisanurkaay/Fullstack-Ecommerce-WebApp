@@ -1,12 +1,12 @@
-import { CoreModule } from './../../../core/core.module';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../core/models/category.model';
+import { CategoryService } from '../../../core/services/category.service';
 
 @Component({
   selector: 'app-category-mgmt',
   templateUrl: './category-mgmt.component.html',
+  styleUrls: ['./category-mgmt.component.css'],
   standalone:false
 })
 export class CategoryMgmtComponent implements OnInit {
