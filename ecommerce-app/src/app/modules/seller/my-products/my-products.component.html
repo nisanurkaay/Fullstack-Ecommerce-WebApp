@@ -1,41 +1,46 @@
 <div class="my-products-container">
-  <h2 class="text-xl font-bold mb-4">My Products</h2>
+  <h2 class="form-title">My Products</h2>
 
-  <div class="mb-4 flex space-x-2">
-    <button (click)="setFilter('ALL')" [class.bg-blue-500]="filter === 'ALL'" class="px-3 py-1 rounded bg-gray-200">All</button>
-    <button (click)="setFilter('ACTIVE')" [class.bg-blue-500]="filter === 'ACTIVE'" class="px-3 py-1 rounded bg-gray-200">Active</button>
-    <button (click)="setFilter('INACTIVE')" [class.bg-blue-500]="filter === 'INACTIVE'" class="px-3 py-1 rounded bg-gray-200">Inactive</button>
-    <button (click)="setFilter('PENDING')" [class.bg-blue-500]="filter === 'PENDING'" class="px-3 py-1 rounded bg-gray-200">Pending</button>
+  <!-- Filter Buttons -->
+  <div class="filter-buttons">
+    <button (click)="setFilter('ALL')" [class.active-filter]="filter === 'ALL'">All</button>
+    <button (click)="setFilter('ACTIVE')" [class.active-filter]="filter === 'ACTIVE'">Active</button>
+    <button (click)="setFilter('INACTIVE')" [class.active-filter]="filter === 'INACTIVE'">Inactive</button>
+    <button (click)="setFilter('PENDING')" [class.active-filter]="filter === 'PENDING'">Pending</button>
   </div>
 
-  <table class="min-w-full bg-white border border-gray-300">
-    <thead>
-      <tr class="bg-gray-100">
-        <th class="py-2 px-4 border-b">Name</th>
-        <th class="py-2 px-4 border-b">Status</th>
-        <th class="py-2 px-4 border-b">Stock</th>
-        <th class="py-2 px-4 border-b">Price</th>
-        <th class="py-2 px-4 border-b">Category</th>
-        <th class="py-2 px-4 border-b">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let p of filteredProducts">
-        <td class="py-2 px-4 border-b">{{ p.name }}</td>
-        <td class="py-2 px-4 border-b">{{ p.productStatus }}</td>
-        <td class="py-2 px-4 border-b">{{ p.stockQuantity }}</td>
-        <td class="py-2 px-4 border-b">{{ p.price | currency }}</td>
-        <td class="py-2 px-4 border-b">{{ p.categoryName }}</td>
-        <td class="py-2 px-4 border-b">
-          <button *ngIf="p.productStatus === 'ACTIVE'" class="bg-red-500 text-white px-2 py-1 rounded"
-            (click)="deactivateProduct(p.id!)">Satıştan Kaldır</button>
+  <!-- Product Table -->
+  <div class="table-wrapper">
+    <table class="custom-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Stock</th>
+          <th>Price</th>
+          <th>Category</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of filteredProducts">
+          <td>{{ p.name }}</td>
+          <td>{{ p.productStatus }}</td>
+          <td>{{ p.stockQuantity }}</td>
+          <td>{{ p.price | currency }}</td>
+          <td>{{ p.categoryName }}</td>
+          <td>
+            <button *ngIf="p.productStatus === 'ACTIVE'" class="btn-danger" (click)="deactivateProduct(p.id!)">
+              Satıştan Kaldır
+            </button>
+            <button *ngIf="p.productStatus === 'INACTIVE' && p.stockQuantity > 0" class="btn-success" (click)="activateProduct(p.id!)">
+              Yayına Al
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-          <button *ngIf="p.productStatus === 'INACTIVE' && p.stockQuantity > 0" class="bg-green-500 text-white px-2 py-1 rounded"
-            (click)="activateProduct(p.id!)">Yayına Al</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <p *ngIf="filteredProducts.length === 0" class="mt-4 text-gray-500">Bu filtreye uygun ürün yok.</p>
+  <p *ngIf="filteredProducts.length === 0" class="no-products">Bu filtreye uygun ürün yok.</p>
 </div>

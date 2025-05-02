@@ -1,0 +1,96 @@
+/* === Başlık === */
+.form-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #162943;
+  margin-bottom: 1.5rem;
+}
+
+/* === Filtre Butonları === */
+.filter-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.filter-buttons button {
+  padding: 0.5rem 1rem;
+  background-color: #f3f4f6;
+  color: #374151;
+  font-weight: 500;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+.filter-buttons button:hover {
+  background-color: #c4d4f4;
+}
+.filter-buttons .active-filter {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+/* === Tablo Genel === */
+.table-wrapper {
+  overflow-x: auto;
+}
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.custom-table thead {
+  background-color: #3b82f6;
+  font-weight: 600;
+  color: #ffffff;
+}
+.custom-table th,
+.custom-table td {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #d3d6de;
+  font-size: 0.95rem;
+}
+.custom-table tr:hover {
+  background-color: #dff2ff;
+}
+
+/* === Butonlar === */
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+.btn-success {
+  background-color: #22c55e;
+  color: white;
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+.btn-success:hover {
+  background-color: #16a34a;
+}
+
+/* === Uyarı Yazısı === */
+.no-products {
+  margin-top: 1.5rem;
+  color: #6b7280;
+  font-size: 0.95rem;
+  font-style: italic;
+}
