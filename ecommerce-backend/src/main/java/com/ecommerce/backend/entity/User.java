@@ -3,6 +3,8 @@ import jakarta.persistence.*;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "users")
@@ -93,5 +95,15 @@ public void setUserStatus(UserStatus userStatus) {
     this.userStatus = userStatus;
 }
 
+@OneToMany(mappedBy = "seller")
+@JsonIgnore // veya @JsonManagedReference
+private List<Product> products;
 
+public void setProducts(List<Product> products) {
+    this.products = products;
+}
+
+public List<Product> getProducts() {
+    return products;
+}
 }

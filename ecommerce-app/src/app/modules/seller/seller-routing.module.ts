@@ -8,6 +8,7 @@ import { MyProductsComponent } from './my-products/my-products.component';
 import { SellerDashboardComponent } from './seller-dashboard/seller-dashboard.component';
 import { SellerComponent } from './seller.component';
 import { AddProductComponent } from './add-product/add-product.component';
+import { EditProductComponent } from './edit-product/edit-product.component';
 
 const routes: Routes = [{
   path: '',
@@ -20,6 +21,7 @@ const routes: Routes = [{
     { path: 'orders',    component: MyOrdersComponent },
     { path: 'analytics', component: AnalyticsComponent },
     { path: 'add-product', component: AddProductComponent },
+    { path: 'edit-product/:id', component: EditProductComponent }
   ]
 }];
 

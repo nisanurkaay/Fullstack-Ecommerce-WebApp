@@ -13,7 +13,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';         // (opsiyonel, ikon kullanıyorsan)
 import { MatSnackBarModule } from '@angular/material/snack-bar'; // (opsiyonel, bildirim için)
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule , FormsModule} from '@angular/forms';
+import { EditProductComponent } from './edit-product/edit-product.component';
 @NgModule({
   declarations: [
     SellerComponent,
@@ -21,7 +22,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MyProductsComponent,
     MyOrdersComponent,
     AnalyticsComponent,
-    AddProductComponent
+    AddProductComponent,
+    EditProductComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
     MatInputModule,
     MatSelectModule,
-
+    FormsModule,
     MatButtonModule,
     MatIconModule,         // (opsiyonel, ikon kullanıyorsan)
     MatSnackBarModule,    // (opsiyonel, bildirim için)

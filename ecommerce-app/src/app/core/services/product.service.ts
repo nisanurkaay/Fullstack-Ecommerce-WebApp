@@ -2,13 +2,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product } from '../models/product.model';
+import { Product,ProductVariant } from '../models/product.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:8080/api/products';
+  private apiUrl = 'http://localhost:8081/api/products';
 
   constructor(private http: HttpClient) {}
 
@@ -25,9 +25,11 @@ export class ProductService {
   }
 
 
-  update(id: number, product: Product, userId: number): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${id}?userId=${userId}`, product);
+
+  updateRaw(id: number, formData: FormData, sellerId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/products/${id}?sellerId=${sellerId}`, formData);
   }
+
 
   activate(id: number, userId: number): Observable<Product> {
     return this.http.put<Product>(`${this.apiUrl}/${id}/activate?userId=${userId}`, {});
@@ -61,6 +63,12 @@ export class ProductService {
   }
   getMyProducts(sellerId: number): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/my?sellerId=${sellerId}`);
+  }
+  createRaw(formData: FormData, sellerId: number): Observable<Product> {
+    return this.http.post<Product>(`${this.apiUrl}?sellerId=${sellerId}`, formData);
+  }
+  addVariantToProduct(productId: number, variant: ProductVariant): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/${productId}/add-variant`, variant);
   }
 
 }

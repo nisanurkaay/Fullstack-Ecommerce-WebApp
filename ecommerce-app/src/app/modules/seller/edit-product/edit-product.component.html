@@ -1,0 +1,56 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+  <div>
+    <label>Product Name</label>
+    <input formControlName="name" type="text" class="form-input" />
+  </div>
+
+  <div>
+    <label>Description</label>
+    <textarea formControlName="description" class="form-input"></textarea>
+  </div>
+
+  <div>
+    <label>Category</label>
+    <select formControlName="categoryId" class="form-input">
+      <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+    </select>
+  </div>
+
+  <!-- Ana ürün görselleri -->
+  <div *ngIf="!hasVariants">
+    <label>Current Images</label>
+    <div class="flex gap-2">
+      <img *ngFor="let img of existingMainImages" [src]="'http://localhost:8081' + img" class="w-16 h-16 object-cover border rounded" />
+    </div>
+    <label>Upload New Images (Optional - 3 required to replace)</label>
+    <input type="file" multiple accept="image/*" (change)="onNewMainImagesSelected($event)" />
+  </div>
+
+  <!-- Varyantlar -->
+  <div *ngIf="hasVariants">
+    <div *ngFor="let variant of variants; let i = index">
+      <hr />
+      <label>Color</label>
+      <input [(ngModel)]="variant.color" name="color{{ i }}" class="form-input" />
+
+      <label>Size</label>
+      <input [(ngModel)]="variant.size" name="size{{ i }}" class="form-input" />
+
+      <label>Stock</label>
+      <input type="number" [(ngModel)]="variant.stock" name="stock{{ i }}" class="form-input" />
+
+      <label>Price</label>
+      <input type="number" [(ngModel)]="variant.price" name="price{{ i }}" class="form-input" />
+
+      <label>Current Images</label>
+      <div class="flex gap-2">
+        <img *ngFor="let img of variant.imageUrls" [src]="img" class="w-16 h-16 object-cover border rounded" />
+      </div>
+
+      <label>Upload New Images (Optional - 3 required to replace)</label>
+      <input type="file" multiple accept="image/*" (change)="onNewVariantImagesSelected($event, i)" />
+    </div>
+  </div>
+
+  <button type="submit" class="btn-submit">Update</button>
+</form>

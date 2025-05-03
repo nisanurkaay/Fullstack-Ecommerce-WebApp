@@ -1,12 +1,12 @@
 package com.ecommerce.backend.dto;
-
+import java.util.List;
 public class ProductRequest {
     private String name;
     private String description;
     private Double price;
     private Integer stockQuantity;
     private Long categoryId;
-
+    private List<ProductVariantRequest> variants;
 
     public String getName() {
         return name;
@@ -40,5 +40,14 @@ public class ProductRequest {
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
-    
+    public void setVariants(List<ProductVariantRequest> variants) {
+        this.variants = variants;
+    }
+    public List<ProductVariantRequest> getVariants() {
+        return variants;
+    } 
+
+    private List<String> imageUrls;
+    public List<String> getImageUrls() { return imageUrls; }
+    public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
 }

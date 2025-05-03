@@ -1,4 +1,4 @@
-package com.ecommerce.backend;
+package com.ecommerce.ecommerce_backend;
 
 import com.ecommerce.backend.EcommerceBackendApplication;
 import org.junit.jupiter.api.Test;

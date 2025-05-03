@@ -111,7 +111,7 @@
     <ng-container *ngIf="cartItems.length; else emptyCart">
       <ng-container *ngFor="let item of cartItems">
         <button mat-menu-item class="flex items-center gap-3">
-          <img [src]="item.product.imageUrl" alt="{{ item.product.name }}" class="w-10 h-10 object-cover rounded" />
+          <img [src]="" alt="{{ item.product.name }}" class="w-10 h-10 object-cover rounded" />
           <div class="flex-1 text-left">
             <p class="font-medium">{{ item.product.name }}</p>
             <p class="text-sm text-gray-600">${{ item.product.price }} x {{ item.quantity }}</p>

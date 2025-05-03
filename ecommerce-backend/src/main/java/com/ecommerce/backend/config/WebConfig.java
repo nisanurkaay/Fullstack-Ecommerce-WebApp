@@ -2,6 +2,7 @@ package com.ecommerce.backend.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 
+
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     @Override
@@ -12,6 +13,12 @@ public class WebConfig implements WebMvcConfigurer {
             .allowedHeaders("*")
             .exposedHeaders("Authorization")
             .allowCredentials(true);
+    }
+    
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:uploads/"); // klasörün kökü projectRoot/uploads olmalı
     }
 }
 
