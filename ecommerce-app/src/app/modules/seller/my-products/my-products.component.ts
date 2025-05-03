@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Product,ProductVariant } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-products',
@@ -12,7 +13,7 @@ import { ProductService } from '../../../core/services/product.service';
   filter: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING' = 'ALL';
   expandedProductIds: Set<number> = new Set();
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService,  private router:Router) {}
 
   ngOnInit(): void {
     this.loadMyProducts();
@@ -70,6 +71,9 @@ import { ProductService } from '../../../core/services/product.service';
         console.error('Ürün detayları alınamadı:', err);
       }
     });
+  }
+  editProduct(product: Product) {
+    this.router.navigate(['/seller/edit-product', product.id]);
   }
 
   toggleVariants(productId: number): void {

@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import com.ecommerce.backend.service.FileStorageService; // Import the FileStorageService class
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @RestController
@@ -33,42 +34,39 @@ public class ProductController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<ProductResponse> createProduct(
-
-        @RequestPart("product") String productJson,
+        @RequestPart("product") ProductRequest request,
         @RequestPart("files") MultipartFile[] files,
         @RequestParam Long sellerId
     ) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            ProductRequest request = mapper.readValue(productJson, ProductRequest.class);
+        // Dosya sayısı kontrolü
+        int expectedImageCount = request.getVariants() == null || request.getVariants().isEmpty()
+            ? 3 // Ana ürün
+            : request.getVariants().size() * 3;
     
-            List<String> urls = Arrays.stream(files)
-                                      .map(fileStorageService::saveFile)
-                                      .toList();
-    
-            if (request.getVariants() == null || request.getVariants().isEmpty()) {
-                // ✅ Ana ürüne 3 görsel ata
-                request.setImageUrls(urls); // urls zaten 3 adet olmalı
-            } else {
-                int perVariant = 3;
-                List<ProductVariantRequest> variants = request.getVariants();
-                for (int i = 0; i < variants.size(); i++) {
-                    int start = i * perVariant;
-                    int end = Math.min(start + perVariant, urls.size());
-                    List<String> variantUrls = urls.subList(start, end);
-                    variants.get(i).setImageUrls(variantUrls);
-                }
-            }
-    
-            return ResponseEntity.ok(productService.createProduct(request, sellerId));
-        } catch (Exception e) {
-
-
-            e.printStackTrace(); // log hatayı
-            return ResponseEntity.badRequest().build();
+        if (files.length != expectedImageCount) {
+            throw new RuntimeException("Görsel sayısı eşleşmiyor. Her varyant için 3 dosya yüklenmeli.");
         }
-
+    
+        List<String> allImageUrls = fileStorageService.saveAll(files);
+    
+        // 🔀 1. Ana ürün görselleri mi?
+        if (request.getVariants() == null || request.getVariants().isEmpty()) {
+            request.setImageUrls(allImageUrls); // ürünün imageUrls listesine ekle
+        } else {
+            // 🔀 2. Varyantlara göre dağıt
+            List<ProductVariantRequest> variants = request.getVariants();
+            for (int i = 0; i < variants.size(); i++) {
+                int from = i * 3;
+                int to = from + 3;
+                List<String> urls = allImageUrls.subList(from, to);
+                variants.get(i).setImageUrls(urls);
+            }
+        }
+    
+        return ResponseEntity.ok(productService.createProduct(request, sellerId));
     }
+    
+
     @PutMapping("/{id}/approve")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponse> approveProduct(@PathVariable Long id) {
@@ -76,13 +74,35 @@ public class ProductController {
     }
     
 
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SELLER') or hasRole('ADMIN')")
-    public ResponseEntity<ProductResponse> updateProduct(@PathVariable Long id,
-                                                         @RequestBody ProductRequest request,
-                                                         @RequestParam Long userId) {
-        return ResponseEntity.ok(productService.updateProduct(id, request, userId));
+  @PutMapping("/products/{id}")
+public ResponseEntity<ProductResponse> updateProduct(
+    @PathVariable Long id,
+    @RequestPart("product") ProductRequest request,
+    @RequestPart(name = "files", required = false) MultipartFile[] files,
+    @RequestParam Long sellerId
+) {
+    List<String> imageUrls = new ArrayList<>();
+    if (files != null && files.length > 0) {
+        imageUrls = fileStorageService.saveAll(files);
     }
+
+    // Varyantlı mı kontrol et
+    if (request.getVariants() == null || request.getVariants().isEmpty()) {
+        if (!imageUrls.isEmpty()) {
+            request.setImageUrls(imageUrls);
+        }
+    } else {
+        for (int i = 0; i < request.getVariants().size(); i++) {
+            int from = i * 3;
+            int to = from + 3;
+            if (imageUrls.size() >= to) {
+                request.getVariants().get(i).setImageUrls(imageUrls.subList(from, to));
+            }
+        }
+    }
+
+    return ResponseEntity.ok(productService.updateProduct(id, request, sellerId));
+}
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('SELLER')")

@@ -28,7 +28,7 @@
             <td>
               {{ p.name }}
               <div class="flex gap-2 mt-1" *ngIf="!p.variants?.length">
-                <img *ngFor="let img of p.imageUrls" [src]="img" alt="Product image" class="w-12 h-12 object-cover border rounded" />
+                <img *ngFor="let img of p.imageUrls" [src]="'http://localhost:8081' + img" alt="Product image" class="w-12 h-12 object-cover border rounded" />
               </div>
             </td>
             <td>{{ p.productStatus }}</td>
@@ -47,6 +47,12 @@
               <button *ngIf="p.productStatus === 'ACTIVE'" (click)="deactivateProduct(p.id!)">Kaldır</button>
               <button *ngIf="p.productStatus === 'INACTIVE' && p.stockQuantity > 0" (click)="activateProduct(p.id!)">Yayına Al</button>
             </td>
+            <td>
+              <button (click)="editProduct(p)">Düzenle</button>
+              <button *ngIf="p.productStatus === 'ACTIVE'" (click)="deactivateProduct(p.id!)">Kaldır</button>
+              <button *ngIf="p.productStatus === 'INACTIVE' && p.stockQuantity > 0" (click)="activateProduct(p.id!)">Yayına Al</button>
+            </td>
+
           </tr>
 
           <!-- Varyantlar -->

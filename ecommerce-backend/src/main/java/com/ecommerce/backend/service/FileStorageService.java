@@ -5,8 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.UUID;
-
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,4 +28,12 @@ public class FileStorageService {
             throw new RuntimeException("File storage failed", e);
         }
     }
+
+    public List<String> saveAll(MultipartFile[] files) {
+    List<String> paths = new ArrayList<>();
+    for (MultipartFile file : files) {
+        paths.add(saveFile(file)); // yukarıdaki metod zaten var
+    }
+    return paths;
+}
 }

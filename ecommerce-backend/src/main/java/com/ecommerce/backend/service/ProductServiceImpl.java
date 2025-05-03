@@ -89,29 +89,44 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse updateProduct(Long id, ProductRequest request, Long userId) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-
+    
         if (!product.getSeller().getId().equals(userId)) {
             throw new RuntimeException("Unauthorized");
         }
-
-        Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-
+    
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setStockQuantity(request.getStockQuantity());
+    
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not found"));
         product.setCategory(category);
-
-        // Stok artırımı varsa ve daha önce INACTIVE ise tekrar ACTIVE yapabilir
-        if (product.getProductStatus() == ProductStatus.INACTIVE &&
-                product.getStockQuantity() > 0) {
-            product.setProductStatus(ProductStatus.ACTIVE);
+    
+        // 🔁 Görselleri güncelle
+        if (request.getImageUrls() != null && !request.getImageUrls().isEmpty()) {
+            product.setImageUrls(request.getImageUrls());
         }
-
+    
+        // 🔁 Varyantları güncelle
+        if (request.getVariants() != null) {
+            List<ProductVariant> updatedVariants = new ArrayList<>();
+            for (ProductVariantRequest vr : request.getVariants()) {
+                ProductVariant variant = new ProductVariant();
+                variant.setColor(vr.getColor());
+                variant.setSize(vr.getSize());
+                variant.setStock(vr.getStock());
+                variant.setPrice(vr.getPrice());
+                variant.setImageUrls(vr.getImageUrls());
+                variant.setProduct(product);
+                updatedVariants.add(variant);
+            }
+            product.setVariants(updatedVariants);
+        }
+    
         return mapToResponse(productRepository.save(product));
     }
-
+    
     @Transactional
 public ProductResponse approveProduct(Long id) {
     Product product = productRepository.findById(id)

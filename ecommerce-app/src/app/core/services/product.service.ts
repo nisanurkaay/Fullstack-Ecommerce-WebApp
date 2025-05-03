@@ -25,9 +25,11 @@ export class ProductService {
   }
 
 
-  update(id: number, product: Product, userId: number): Observable<Product> {
-    return this.http.put<Product>(`${this.apiUrl}/${id}?userId=${userId}`, product);
+
+  updateRaw(id: number, formData: FormData, sellerId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/products/${id}?sellerId=${sellerId}`, formData);
   }
+
 
   activate(id: number, userId: number): Observable<Product> {
     return this.http.put<Product>(`${this.apiUrl}/${id}/activate?userId=${userId}`, {});
