@@ -1,25 +1,32 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-import { CartItem, CartService } from '@core/services/cart.service'; // CartItem'ı unutma!
+import { CartItem, CartService } from '@core/services/cart.service';
+import { Category } from '@core/models/category.model';
+import { CategoryService } from '@core/services/category.service';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-navbar',
-  standalone: false,
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
+  standalone:false
 })
 export class NavbarComponent implements OnInit {
   searchQuery = '';
-  filteredOptions: string[] = [];
   cartCount = 0;
   cartItems: CartItem[] = [];
   userName: string = '';
+  categories: Category[] = [];
+  expandedId: number | null = null;
+  showDropdown = false;
+  hoveredCategoryId: number | null = null;
 
   constructor(
     public auth: AuthService,
     private router: Router,
-    public cartService: CartService
+    public cartService: CartService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit(): void {
@@ -31,10 +38,31 @@ export class NavbarComponent implements OnInit {
     this.auth.currentUser$.subscribe(user => {
       this.userName = user?.name ?? '';
     });
+
+    this.loadCategories();
   }
 
+  loadCategories(): void {
+    this.categoryService.getAll().subscribe(data => {
+      this.categories = data;
+    });
+  }
 
-  // Diğer metotlar aynı kalır...
+  getMainCategories(): Category[] {
+    return this.categories.filter(cat => !cat.parentId);
+  }
+
+  getSubcategories(parentId: number): Category[] {
+    return this.categories.filter(cat => cat.parentId === parentId);
+  }
+
+  toggleExpand(id: number): void {
+    this.expandedId = this.expandedId === id ? null : id;
+  }
+
+  navigateToCategory(categoryId: number): void {
+    this.router.navigate(['/products'], { queryParams: { categoryId } });
+  }
 
   get isLoggedIn(): boolean {
     return this.auth.isLoggedIn();
@@ -61,4 +89,8 @@ export class NavbarComponent implements OnInit {
   removeFromCart(productId: number): void {
     this.cartService.removeItem(productId);
   }
+  toggleDropdown(): void {
+    this.showDropdown = !this.showDropdown;
+  }
+
 }

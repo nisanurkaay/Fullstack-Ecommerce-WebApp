@@ -4,37 +4,6 @@
   cursor: pointer;
 }
 
-.search-bar {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-}
-
-.search-input {
-  width: 350px;
-  max-width: 90vw;
-}
-
-.spacer {
-  flex: 1 1 auto;
-}
-
-@media (max-width: 768px) {
-  .search-bar {
-    width: 100%;
-    min-width: 0;
-  }
-  .search-input {
-    width: 100%;
-    min-width: 0;
-  }
-}
-.form button {
-  border: none;
-  background: none;
-  color: #8b8ba7;
-}
-/* styling of whole input container */
 .form {
   --timing: 0.3s;
   --width-of-input: 450px;
@@ -52,9 +21,9 @@
   padding-inline: 0.8em;
   border-radius: var(--border-radius);
   transition: border-radius 0.5s ease;
-  background: var(--input-bg,#fff);
+  background: var(--input-bg, #fff);
 }
-/* styling of Input */
+
 .input {
   font-size: 0.9rem;
   background-color: transparent;
@@ -64,7 +33,7 @@
   padding-block: 0.7em;
   border: none;
 }
-/* styling of animated border */
+
 .form:before {
   content: "";
   position: absolute;
@@ -78,43 +47,98 @@
   border-radius: 1px;
   transition: transform var(--timing) ease;
 }
-/* Hover on Input */
+
 .form:focus-within {
   border-radius: var(--after-border-radius);
 }
 
-input:focus {
-  outline: none;
-}
-.poppins-extrabold {
-  font-family: "Poppins", sans-serif;
-  font-weight: 800;
-  font-style: normal;
-}
-
-/* here is code of animated border */
 .form:focus-within:before {
   transform: scale(1);
 }
-/* styling of close button */
-/* == you can click the close button to remove text == */
-.reset {
+
+.form button {
   border: none;
   background: none;
-  opacity: 0;
-  visibility: hidden;
-}
-/* close button shown when typing */
-input:not(:placeholder-shown) ~ .reset {
-  opacity: 1;
-  visibility: visible;
-}
-/* sizing svg icons */
-.form svg {
-  width: 17px;
-  margin-top: 3px;
+  color: #8b8ba7;
 }
 
 span, mat-icon {
-  color:black;
+  color: black;
 }
+
+/* === Dropdown Style === */
+.category-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 1rem;
+  min-width: 220px;
+}
+
+.category-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.maincat-wrapper {
+  position: relative;
+}
+
+.maincat {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-align: left;
+  cursor: pointer;
+}
+
+.maincat:hover {
+  background-color: #f5f5f5;
+}
+
+/* Subcategories Flyout Right */
+.subcat-flyout {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  min-width: 180px;
+  border-radius: 6px;
+  z-index: 999;
+}
+
+.subcat-item {
+  padding: 8px 12px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+
+.subcat-item:hover {
+  background-color: #f3f4f6;
+  color: #0d6efd;
+}
+.category-wrapper.open::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+}
+

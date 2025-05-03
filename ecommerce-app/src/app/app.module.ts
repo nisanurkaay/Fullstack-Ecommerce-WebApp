@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { HomeModule } from './modules/home/home.module';
 @NgModule({
   declarations: [
     AppComponent
@@ -25,7 +26,8 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
     BrowserModule,
     AppRoutingModule,
     SharedModule,
-    HttpClientModule
+    HttpClientModule,
+    HomeModule
 
   ],
   providers: [
