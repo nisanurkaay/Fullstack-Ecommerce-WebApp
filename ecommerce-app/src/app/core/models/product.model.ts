@@ -1,4 +1,5 @@
 export type ProductStatus = 'PENDING' | 'ACTIVE' | 'INACTIVE' | 'BANNED';
+export type Color = 'RED' | 'BLUE' | 'GREEN' | 'BLACK' | 'WHITE' | 'YELLOW' | 'GRAY' | 'PINK' | 'PURPLE' | 'ORANGE';
 
 export interface Product {
   id?: number;
@@ -12,6 +13,7 @@ export interface Product {
   sellerName?: string;
   imageUrls?: string[];
   variants?: ProductVariant[];
+  color?: string;
 }
 
 export interface ProductVariant {
@@ -20,5 +22,6 @@ export interface ProductVariant {
   size: string;
   stock: number;
   price: number;
+
   imageUrls: string[]; // çoklu görsel URL'leri
 }

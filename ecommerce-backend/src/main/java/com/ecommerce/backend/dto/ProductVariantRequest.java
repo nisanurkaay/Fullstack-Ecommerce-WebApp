@@ -2,20 +2,22 @@ package com.ecommerce.backend.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ecommerce.backend.entity.ColorEnum;
+
 import java.lang.invoke.MutableCallSite;
 import java.util.List;
 public class ProductVariantRequest {
-    private String color;
+    private ColorEnum color;
     private String size;
     private Integer stock;
     private Double price;
     private List<String> imageUrls; // 👈 Çoklu görsel dosyaları
     
 
-    public String getColor() {
+    public ColorEnum getColor() {
         return color;
     }
-    public void setColor(String color) {
+    public void setColor(ColorEnum color) {
         this.color = color;
     }
     public List<String> getImageUrls() {

@@ -15,6 +15,13 @@
       <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
     </select>
   </div>
+  <div>
+    <label>Color</label>
+    <select formControlName="color" class="form-input">
+      <option value="">-- Choose Color --</option>
+      <option *ngFor="let c of colors" [value]="c">{{ c }}</option>
+    </select>
+  </div>
 
   <!-- Ana ürün görselleri -->
   <div *ngIf="!hasVariants">
@@ -31,7 +38,10 @@
     <div *ngFor="let variant of variants; let i = index">
       <hr />
       <label>Color</label>
-      <input [(ngModel)]="variant.color" name="color{{ i }}" class="form-input" />
+      <select [value]="variant.color" (change)="variant.color = $any($event.target).value" class="form-input">
+        <option value="">-- Select Color --</option>
+        <option *ngFor="let c of colors" [value]="c">{{ c }}</option>
+      </select>
 
       <label>Size</label>
       <input [(ngModel)]="variant.size" name="size{{ i }}" class="form-input" />

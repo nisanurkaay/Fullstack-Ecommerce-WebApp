@@ -27,7 +27,21 @@ private User seller;
     private String description;
     private Double price;
     private Integer stockQuantity;
+    
 
+    @Column(name="color")
+    private ColorEnum color;
+
+
+    public ColorEnum getColor() {
+        return color;
+    }
+ 
+
+  
+    public void setColor(ColorEnum  color) {
+        this.color = color;
+    }
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "image_url")

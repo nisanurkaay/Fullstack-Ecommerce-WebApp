@@ -9,7 +9,7 @@ public class ProductVariant {
     @Id @GeneratedValue
     private Long id;
 
-    private String color;
+    private ColorEnum color;
     private String size;
     private Integer stock;
     private Double price;
@@ -23,10 +23,10 @@ public class ProductVariant {
 @JsonIgnore // ✅ Bu olmazsa sonsuz döngüye girer
 private Product product;
 
-    public String getColor() {
+    public ColorEnum getColor() {
         return color;
     }
-    public void setColor(String color) {
+    public void setColor(ColorEnum color) {
         this.color = color;
     }
 
