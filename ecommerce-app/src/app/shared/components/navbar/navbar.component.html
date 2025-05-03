@@ -26,12 +26,10 @@
                 (mouseenter)="expandedId = cat.id!"
                 (mouseleave)="expandedId = null"
               >
-                <!-- Ana kategori -->
                 <button (click)="navigateToCategory(cat.id!)" class="maincat">
                   {{ cat.name }}
                 </button>
 
-                <!-- Alt kategoriler sağa açılır -->
                 <ul *ngIf="expandedId === cat.id" class="subcat-flyout">
                   <li
                     *ngFor="let sub of getSubcategories(cat.id!)"
@@ -111,7 +109,7 @@
     <ng-container *ngIf="cartItems.length; else emptyCart">
       <ng-container *ngFor="let item of cartItems">
         <button mat-menu-item class="flex items-center gap-3">
-          <img [src]="" alt="{{ item.product.name }}" class="w-10 h-10 object-cover rounded" />
+          <img [src]="item.product.imageUrls" alt="{{ item.product.name }}" class="w-10 h-10 object-cover rounded" />
           <div class="flex-1 text-left">
             <p class="font-medium">{{ item.product.name }}</p>
             <p class="text-sm text-gray-600">${{ item.product.price }} x {{ item.quantity }}</p>

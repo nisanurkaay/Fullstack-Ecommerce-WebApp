@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="product-form-custom">
   <div>
     <label>Product Name</label>
     <input formControlName="name" type="text" class="form-input" />
@@ -16,13 +16,11 @@
     </select>
   </div>
 
-  <!-- Varyant kontrolü -->
-  <label class="flex items-center space-x-2">
+  <label class="checkbox-container">
     <input type="checkbox" [checked]="hasVariants" (change)="toggleHasVariants($event)" />
-    <span>Has Variants?</span>
+    <span class="checkbox-label">Has Variants?</span>
   </label>
 
-  <!-- Varyantsız Ürün -->
   <div *ngIf="!hasVariants">
     <label>Color</label>
     <select formControlName="color" class="form-input">
@@ -35,15 +33,16 @@
     <input formControlName="stockQuantity" type="number" class="form-input" />
 
     <label>Upload Main Images (3 Required)</label>
-    <input type="file" multiple accept="image/*" (change)="onMainImagesSelected($event)" />
+    <div class="file-upload-wrapper">
+      <input type="file" multiple accept="image/*" (change)="onMainImagesSelected($event)" class="file-upload-btn" />
+    </div>
   </div>
 
-  <!-- Varyantlı Ürün -->
   <div *ngIf="hasVariants">
-    <div class="flex items-center space-x-2">
+    <label class="checkbox-container">
       <input type="checkbox" [checked]="sameForAll" (change)="toggleSameForAll($event)" />
-      <span>Use Same Price & Stock for All?</span>
-    </div>
+      <span class="checkbox-label">Use Same Price & Stock for All?</span>
+    </label>
 
     <div *ngIf="sameForAll">
       <label>Price</label>
@@ -53,8 +52,7 @@
       <input type="number" [value]="sharedStock" (input)="sharedStock = $any($event.target).value" class="form-input" />
     </div>
 
-    <div *ngFor="let variant of variants; let i = index">
-      <hr />
+    <div *ngFor="let variant of variants; let i = index" class="variant-block">
       <label>Color</label>
       <select formControlName="color" class="form-input">
         <option *ngFor="let c of colorOptions" [value]="c">{{ c }}</option>
@@ -72,10 +70,12 @@
       </div>
 
       <label>Upload Images for Variant {{ i + 1 }} (3 Required)</label>
-      <input type="file" multiple accept="image/*" (change)="onVariantImagesSelected($event, i)" />
+      <div class="file-upload-wrapper">
+        <input type="file" multiple accept="image/*" (change)="onVariantImagesSelected($event, i)" class="file-upload-btn" />
+      </div>
     </div>
 
-    <button type="button" (click)="addVariant()">+ Add Variant</button>
+    <button type="button" (click)="addVariant()" class="btn-add-variant">+ Add Variant</button>
   </div>
 
   <button type="submit" class="btn-submit">Submit</button>
