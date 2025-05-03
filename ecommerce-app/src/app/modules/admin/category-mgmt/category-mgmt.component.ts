@@ -7,13 +7,14 @@ import { CategoryService } from '../../../core/services/category.service';
   selector: 'app-category-mgmt',
   templateUrl: './category-mgmt.component.html',
   styleUrls: ['./category-mgmt.component.css'],
-  standalone:false
+  standalone: false
 })
 export class CategoryMgmtComponent implements OnInit {
   categories: Category[] = [];
   showForm = false;
-  form: FormGroup;
   expandedCategoryId: number | null = null;
+
+  form: FormGroup;
 
   constructor(
     private fb: FormBuilder,
@@ -23,7 +24,7 @@ export class CategoryMgmtComponent implements OnInit {
       isSubCategory: [false],
       parentCategoryId: [null],
       name: ['', Validators.required],
-      description: [''],
+      description: ['']
     });
   }
 
@@ -39,18 +40,16 @@ export class CategoryMgmtComponent implements OnInit {
 
   toggleForm(): void {
     this.showForm = !this.showForm;
-    this.form.reset({ isSubCategory: false });
+    if (!this.showForm) {
+      this.form.reset({ isSubCategory: false, parentCategoryId: null });
+    }
   }
 
-
-
   onSubmit(): void {
-    const newCategory: Category = {
+    const newCategory: any = {
       name: this.form.value.name,
       description: this.form.value.description,
-      parentId: this.form.value.isSubCategory
-        ? this.form.value.parentCategoryId
-        : undefined,
+      parentCategoryId: this.form.value.isSubCategory ? this.form.value.parentCategoryId : null
     };
 
     this.categoryService.create(newCategory).subscribe(() => {
@@ -58,16 +57,18 @@ export class CategoryMgmtComponent implements OnInit {
       this.toggleForm();
     });
   }
+
+
   toggleSubcategories(categoryId: number): void {
     this.expandedCategoryId = this.expandedCategoryId === categoryId ? null : categoryId;
   }
 
   getParentCategories(): Category[] {
-    return this.categories.filter(c => !c.parentId);
+    return this.categories.filter(c => !c.parentId); // Ana kategoriler
   }
 
   getSubcategories(parentId: number): Category[] {
-    return this.categories.filter(c => c.parentId === parentId);
+    return this.categories.filter(c => c.parentId === parentId); // Alt kategoriler
   }
 
 }

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface CategoryService {
     CategoryResponse createCategory(CategoryRequest request);
-    List<CategoryResponse> getAllCategories(); 
+    List<CategoryResponse> getAllCategories();
+    List<CategoryResponse> getSubcategories(Long parentId); // ✅ BURAYI EKLE
     List<ProductResponse> getProductsByCategory(Long categoryId);
 }
