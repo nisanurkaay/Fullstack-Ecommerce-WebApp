@@ -28,7 +28,7 @@
             <td>
               {{ p.name }}
               <div class="flex gap-2 mt-1" *ngIf="!p.variants?.length">
-                <img *ngFor="let img of p.imageUrls" [src]="'http://localhost:8081' + img" alt="Product image" class="w-12 h-12 object-cover border rounded" />
+                <img *ngFor="let img of p.imageUrls" [src]="'http://localhost:8080' + img" alt="Product image" class="w-12 h-12 object-cover border rounded" />
               </div>
             </td>
             <td>{{ p.productStatus }}</td>

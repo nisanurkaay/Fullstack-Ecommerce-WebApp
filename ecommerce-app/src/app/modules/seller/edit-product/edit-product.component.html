@@ -20,7 +20,7 @@
   <div *ngIf="!hasVariants">
     <label>Current Images</label>
     <div class="flex gap-2">
-      <img *ngFor="let img of existingMainImages" [src]="'http://localhost:8081' + img" class="w-16 h-16 object-cover border rounded" />
+      <img *ngFor="let img of existingMainImages" [src]="'http://localhost:8080' + img" class="w-16 h-16 object-cover border rounded" />
     </div>
     <label>Upload New Images (Optional - 3 required to replace)</label>
     <input type="file" multiple accept="image/*" (change)="onNewMainImagesSelected($event)" />

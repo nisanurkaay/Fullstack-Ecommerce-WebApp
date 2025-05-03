@@ -31,8 +31,11 @@
   height: 100%;
   padding-inline: 0.5em;
   padding-block: 0.7em;
-  border: none;
+  border: none;              /* Border tamamen kaldırılır */
+  outline: none;             /* Siyah kenarlık kaldırılır (focus'tayken gelen) */
+  box-shadow: none;          /* Tarayıcı varsayılan shadow'u da kaldırılır */
 }
+
 
 .form:before {
   content: "";
@@ -133,12 +136,3 @@ span, mat-icon {
   background-color: #f3f4f6;
   color: #0d6efd;
 }
-.category-wrapper.open::after {
-  content: '';
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 10;
-}
-
