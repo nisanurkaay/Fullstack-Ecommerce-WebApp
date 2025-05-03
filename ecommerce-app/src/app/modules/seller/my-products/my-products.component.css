@@ -1,8 +1,16 @@
+.my-products-container {
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  max-width: 100%;
+}
+
 /* === Başlık === */
 .form-title {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #162943;
+  color: #1b365b;
   margin-bottom: 1.5rem;
 }
 
@@ -18,79 +26,122 @@
   color: #374151;
   font-weight: 500;
   border: 1px solid #d1d5db;
-  border-radius: 12px;
+  border-radius: 10px;
   transition: all 0.2s ease;
 }
 .filter-buttons button:hover {
-  background-color: #c4d4f4;
+  background-color: #e0e7ff;
 }
-.filter-buttons .active-filter {
+.active-filter {
   background-color: #3b82f6;
   color: white;
   border-color: #3b82f6;
 }
 
-/* === Tablo Genel === */
+/* === Tablo === */
 .table-wrapper {
   overflow-x: auto;
 }
 .custom-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  border-radius: 8px;
-  overflow: hidden;
 }
 .custom-table thead {
   background-color: #3b82f6;
-  font-weight: 600;
-  color: #ffffff;
+  color: white;
 }
-.custom-table th,
-.custom-table td {
+.custom-table th, .custom-table td {
   text-align: left;
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid #d3d6de;
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
   font-size: 0.95rem;
 }
 .custom-table tr:hover {
-  background-color: #dff2ff;
+  background-color: #e5f0fd;
+}
+
+/* === Thumbnail Görseller === */
+.thumbnail {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
 /* === Butonlar === */
 .btn-danger {
-  background-color: #ef4444;
+  background-color: #ff2c2c;
   color: white;
-  padding: 0.4rem 0.9rem;
+  padding: 6px 12px;
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
   font-size: 0.85rem;
-  font-weight: 600;
-  transition: background 0.2s ease;
+  cursor: pointer;
 }
 .btn-danger:hover {
-  background-color: #dc2626;
+  background-color: #cd0b0b;
 }
 
 .btn-success {
-  background-color: #22c55e;
+  background-color: #33ca59;
   color: white;
-  padding: 0.4rem 0.9rem;
+  padding: 6px 12px;
   border: none;
-  border-radius: 12px;
+  border-radius: 8px;
   font-size: 0.85rem;
-  font-weight: 600;
-  transition: background 0.2s ease;
+  cursor: pointer;
 }
 .btn-success:hover {
-  background-color: #16a34a;
+  background-color: #059669;
 }
 
-/* === Uyarı Yazısı === */
+.btn-secondary {
+  background-color: #33ca59;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.btn-secondary:hover {
+  background-color: #298d33;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #3b82f6;
+  color: #3b82f6;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.btn-outline:hover {
+  background-color: #e0f2fe;
+}
+
+.price-alert {
+  color: #f97316;
+  font-weight: bold;
+}
+
+/* === Varyant Bilgileri === */
+.variant-row {
+  background-color: #f9fafb;
+}
+.variant-box {
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+}
+
+/* === Uyarı Mesajı === */
 .no-products {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
+  text-align: center;
   color: #6b7280;
-  font-size: 0.95rem;
   font-style: italic;
 }

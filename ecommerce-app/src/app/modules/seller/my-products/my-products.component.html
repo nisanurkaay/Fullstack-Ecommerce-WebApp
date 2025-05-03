@@ -1,6 +1,7 @@
 <div class="my-products-container">
   <h2 class="form-title">My Products</h2>
 
+  <!-- Filter Buttons -->
   <div class="filter-buttons">
     <button (click)="setFilter('ALL')" [class.active-filter]="filter === 'ALL'">All</button>
     <button (click)="setFilter('ACTIVE')" [class.active-filter]="filter === 'ACTIVE'">Active</button>
@@ -8,6 +9,7 @@
     <button (click)="setFilter('PENDING')" [class.active-filter]="filter === 'PENDING'">Pending</button>
   </div>
 
+  <!-- Product Table -->
   <div class="table-wrapper">
     <table class="custom-table">
       <thead>
@@ -18,17 +20,16 @@
           <th>Price</th>
           <th>Category</th>
           <th>Variants</th>
-          <th>Actions</th>
+          <th colspan="2">Actions</th>
         </tr>
       </thead>
       <tbody>
         <ng-container *ngFor="let p of filteredProducts">
-          <!-- Ana Ürün -->
           <tr>
             <td>
               {{ p.name }}
               <div class="flex gap-2 mt-1" *ngIf="!p.variants?.length">
-                <img *ngFor="let img of p.imageUrls" [src]="'http://localhost:8080' + img" alt="Product image" class="w-12 h-12 object-cover border rounded" />
+                <img *ngFor="let img of p.imageUrls" [src]="'http://localhost:8080' + img" alt="Product image" class="thumbnail" />
               </div>
             </td>
             <td>{{ p.productStatus }}</td>
@@ -36,40 +37,33 @@
             <td>{{ p.price | currency }}</td>
             <td>{{ p.categoryName }}</td>
             <td>
-              <span *ngIf="p.variants?.length" class="text-blue-600">
-                <button (click)="toggleVariants(p.id!)">
-                  {{ isExpanded(p.id!) ? 'Hide' : 'Show' }}
-                </button>
-                <span *ngIf="hasVaryingPrices(p)" class="ml-2 text-orange-500">💡 Changing</span>
-              </span>
+              <button *ngIf="p.variants?.length" (click)="toggleVariants(p.id!)" class="btn-outline">
+                {{ isExpanded(p.id!) ? 'Hide' : 'Show' }}
+              </button>
+              <span *ngIf="hasVaryingPrices(p)" class="price-alert">💡</span>
             </td>
             <td>
-              <button *ngIf="p.productStatus === 'ACTIVE'" (click)="deactivateProduct(p.id!)">Kaldır</button>
-              <button *ngIf="p.productStatus === 'INACTIVE' && p.stockQuantity > 0" (click)="activateProduct(p.id!)">Yayına Al</button>
+              <button *ngIf="p.productStatus === 'ACTIVE'" (click)="deactivateProduct(p.id!)" class="btn-danger">Kaldır</button>
+              <button *ngIf="p.productStatus === 'INACTIVE' && p.stockQuantity > 0" (click)="activateProduct(p.id!)" class="btn-success">Yayına Al</button>
             </td>
             <td>
-              <button (click)="editProduct(p)">Düzenle</button>
-              <button *ngIf="p.productStatus === 'ACTIVE'" (click)="deactivateProduct(p.id!)">Kaldır</button>
-              <button *ngIf="p.productStatus === 'INACTIVE' && p.stockQuantity > 0" (click)="activateProduct(p.id!)">Yayına Al</button>
+              <button (click)="editProduct(p)" class="btn-secondary">Düzenle</button>
+              <button (click)="confirmDeleteProduct(p.id!)" class="btn-danger">Sil</button>
             </td>
-            <td>
-            <button (click)="confirmDeleteProduct(p.id!)">Sil</button>
-          </td>
           </tr>
 
-          <!-- Varyantlar -->
+          <!-- Variant Details -->
           <ng-container *ngIf="isExpanded(p.id!) && p.variants?.length">
             <tr *ngFor="let v of p.variants">
-              <td colspan="7" class="pl-6 text-sm text-gray-700">
-                <strong>Varyant:</strong>
-                Renk: {{ v.color }}, Beden: {{ v.size }},
-                Fiyat: {{ v.price | currency }}, Stok: {{ v.stock }}
-                <div class="flex gap-2 mt-1">
-                  <img *ngFor="let img of v.imageUrls" [src]="img" alt="Variant image" class="w-12 h-12 object-cover border rounded" />
+              <td colspan="8" class="variant-row">
+                <div class="variant-box">
+                  <p><strong>Varyant:</strong> Renk: {{ v.color }}, Beden: {{ v.size }}, Fiyat: {{ v.price | currency }}, Stok: {{ v.stock }}</p>
+                  <div class="flex gap-2 mt-1">
+                    <img *ngFor="let img of v.imageUrls" [src]="img" alt="Variant image" class="thumbnail" />
+                  </div>
+                  <button (click)="confirmDeleteVariant(p.id!, v.id!)" class="btn-danger mt-2">Varyantı Sil</button>
                 </div>
               </td>
-              <button (click)="confirmDeleteVariant(p.id!, v.id!)">Varyantı Sil</button>
-
             </tr>
           </ng-container>
         </ng-container>

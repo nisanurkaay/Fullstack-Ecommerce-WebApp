@@ -1,4 +1,6 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data" class="product-form-custom">
+  <h2 class="form-title">Edit Product</h2>
+
   <div>
     <label>Product Name</label>
     <input formControlName="name" type="text" class="form-input" />
@@ -16,20 +18,22 @@
     </select>
   </div>
 
-  <!-- Ana ürün görselleri -->
+  <!-- Main Product Images -->
   <div *ngIf="!hasVariants">
     <label>Current Images</label>
-    <div class="flex gap-2">
-      <img *ngFor="let img of existingMainImages" [src]="'http://localhost:8080' + img" class="w-16 h-16 object-cover border rounded" />
+    <div class="image-preview-container">
+      <img *ngFor="let img of existingMainImages" [src]="'http://localhost:8080' + img" class="preview-img" />
     </div>
+
     <label>Upload New Images (Optional - 3 required to replace)</label>
     <input type="file" multiple accept="image/*" (change)="onNewMainImagesSelected($event)" />
   </div>
 
-  <!-- Varyantlar -->
+  <!-- Variant Section -->
   <div *ngIf="hasVariants">
-    <div *ngFor="let variant of variants; let i = index">
-      <hr />
+    <div *ngFor="let variant of variants; let i = index" class="variant-section">
+      <h3 class="variant-title">Variant {{ i + 1 }}</h3>
+
       <label>Color</label>
       <input [(ngModel)]="variant.color" name="color{{ i }}" class="form-input" />
 
@@ -43,8 +47,8 @@
       <input type="number" [(ngModel)]="variant.price" name="price{{ i }}" class="form-input" />
 
       <label>Current Images</label>
-      <div class="flex gap-2">
-        <img *ngFor="let img of variant.imageUrls" [src]="img" class="w-16 h-16 object-cover border rounded" />
+      <div class="image-preview-container">
+        <img *ngFor="let img of variant.imageUrls" [src]="img" class="preview-img" />
       </div>
 
       <label>Upload New Images (Optional - 3 required to replace)</label>
