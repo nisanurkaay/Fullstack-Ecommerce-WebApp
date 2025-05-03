@@ -104,13 +104,17 @@ public ResponseEntity<ProductResponse> updateProduct(
     return ResponseEntity.ok(productService.updateProduct(id, request, sellerId));
 }
 
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('SELLER')")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id,
-                                              @RequestParam Long userId) {
-        productService.deleteProduct(id, userId);
-        return ResponseEntity.noContent().build();
-    }
+@DeleteMapping("/products/{id}")
+public ResponseEntity<?> deleteProduct(@PathVariable Long id, @RequestParam Long sellerId) {
+    productService.hardDelete(id, sellerId);
+    return ResponseEntity.noContent().build();
+}
+@DeleteMapping("/products/{productId}/variants/{variantId}")
+public ResponseEntity<?> deleteVariant(@PathVariable Long productId, @PathVariable Long variantId) {
+    productService.deleteVariant(productId, variantId);
+    return ResponseEntity.noContent().build();
+}
+
 
     @PutMapping("/{id}/activate")
     @PreAuthorize("hasRole('SELLER')")

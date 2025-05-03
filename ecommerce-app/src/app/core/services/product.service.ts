@@ -23,7 +23,13 @@ export class ProductService {
   create(product: Product, sellerId: number): Observable<Product> {
     return this.http.post<Product>(`${this.apiUrl}?sellerId=${sellerId}`, product);
   }
+  deleteVariant(productId: number, variantId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/products/${productId}/variants/${variantId}`);
+  }
 
+  hardDelete(productId: number, sellerId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/products/${productId}?sellerId=${sellerId}`);
+  }
 
 
   updateRaw(id: number, formData: FormData, sellerId: number): Observable<any> {

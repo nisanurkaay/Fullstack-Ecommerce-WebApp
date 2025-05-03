@@ -40,7 +40,7 @@ private User seller;
     public void setImageUrls(List<String> imageUrls) {
         this.imageUrls = imageUrls;
     }
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> variants;
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;

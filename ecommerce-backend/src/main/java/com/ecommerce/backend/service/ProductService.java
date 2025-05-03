@@ -16,7 +16,8 @@ public interface ProductService {
     void deleteProduct(Long id, Long userId);
     List<ProductResponse> getProductsBySeller(Long sellerId) ;
 ProductResponse addVariantToProduct(Long productId, ProductVariantRequest variant);
-
+void hardDelete(Long id, Long userId);
+void deleteVariant(Long productId, Long variantId);
     void adminBanProduct(Long id);
     List<ProductResponse> getAllPendingProducts();
     ProductResponse getProductById(Long id);

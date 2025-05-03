@@ -52,7 +52,9 @@
               <button *ngIf="p.productStatus === 'ACTIVE'" (click)="deactivateProduct(p.id!)">Kaldır</button>
               <button *ngIf="p.productStatus === 'INACTIVE' && p.stockQuantity > 0" (click)="activateProduct(p.id!)">Yayına Al</button>
             </td>
-
+            <td>
+            <button (click)="confirmDeleteProduct(p.id!)">Sil</button>
+          </td>
           </tr>
 
           <!-- Varyantlar -->
@@ -66,6 +68,8 @@
                   <img *ngFor="let img of v.imageUrls" [src]="img" alt="Variant image" class="w-12 h-12 object-cover border rounded" />
                 </div>
               </td>
+              <button (click)="confirmDeleteVariant(p.id!, v.id!)">Varyantı Sil</button>
+
             </tr>
           </ng-container>
         </ng-container>

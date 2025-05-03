@@ -45,7 +45,25 @@ import { Router } from '@angular/router';
     const sellerId = Number(localStorage.getItem('userId'));
     this.productService.delete(id, sellerId).subscribe(() => this.loadMyProducts());
   }
+  confirmDeleteProduct(id: number) {
+    const confirmed = confirm('Are you sure you want to delete this product and all variants?');
+    if (!confirmed) return;
 
+    const sellerId = Number(localStorage.getItem('userId'));
+    this.productService.hardDelete(id, sellerId).subscribe({
+      next: () => this.loadMyProducts(),
+      error: (err) => console.error('Silme hatası:', err)
+    });
+  }
+  confirmDeleteVariant(productId: number, variantId: number) {
+    const confirmed = confirm('Are you sure you want to delete this variant?');
+    if (!confirmed) return;
+
+    this.productService.deleteVariant(productId, variantId).subscribe({
+      next: () => this.loadMyProducts(),
+      error: (err) => console.error('Varyant silme hatası:', err)
+    });
+  }
   activateProduct(id: number) {
     const sellerId = Number(localStorage.getItem('userId'));
 

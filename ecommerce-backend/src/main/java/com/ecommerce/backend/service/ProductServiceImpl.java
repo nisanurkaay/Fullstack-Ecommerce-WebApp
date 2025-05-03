@@ -126,7 +126,40 @@ public class ProductServiceImpl implements ProductService {
     
         return mapToResponse(productRepository.save(product));
     }
+    @Override
+    public void deleteVariant(Long productId, Long variantId) {
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new RuntimeException("Product not found"));
     
+        List<ProductVariant> variants = product.getVariants();
+    
+        // Hedef varyantı bul
+        ProductVariant variantToRemove = variants.stream()
+            .filter(v -> v.getId().equals(variantId))
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("Variant not found"));
+    
+        variants.remove(variantToRemove);
+    
+        // Eğer bu son varyantsa → ürünü sil
+        if (variants.size() == 0) {
+            productRepository.delete(product);
+        } else {
+            product.setVariants(variants);
+            productRepository.save(product);
+        }
+    }
+      @Override
+public void hardDelete(Long id, Long userId) {
+    Product product = productRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Product not found"));
+
+    if (!product.getSeller().getId().equals(userId)) {
+        throw new RuntimeException("Unauthorized");
+    }
+
+    productRepository.delete(product); // Cascade ile varyantlar da silinir
+}
     @Transactional
 public ProductResponse approveProduct(Long id) {
     Product product = productRepository.findById(id)
