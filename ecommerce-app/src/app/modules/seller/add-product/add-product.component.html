@@ -1,37 +1,76 @@
-<div class="product-form-custom">
-  <h2 class="form-title">Add New Product</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+  <div>
+    <label>Product Name</label>
+    <input formControlName="name" type="text" class="form-input" />
+  </div>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-5">
-    <div>
-      <label for="name">Product Name *</label>
-      <input type="text" id="name" formControlName="name" class="form-input" required />
+  <div>
+    <label>Description</label>
+    <textarea formControlName="description" class="form-input"></textarea>
+  </div>
+
+  <div>
+    <label>Category</label>
+    <select formControlName="categoryId" class="form-input">
+      <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+    </select>
+  </div>
+
+  <!-- Varyant kontrolü -->
+  <label class="flex items-center space-x-2">
+    <input type="checkbox" [checked]="hasVariants" (change)="toggleHasVariants($event)" />
+    <span>Has Variants?</span>
+  </label>
+
+  <!-- Varyantsız Ürün -->
+  <div *ngIf="!hasVariants">
+    <label>Price</label>
+    <input formControlName="price" type="number" class="form-input" />
+
+    <label>Stock</label>
+    <input formControlName="stockQuantity" type="number" class="form-input" />
+
+    <label>Upload Main Images (3 Required)</label>
+    <input type="file" multiple accept="image/*" (change)="onMainImagesSelected($event)" />
+  </div>
+
+  <!-- Varyantlı Ürün -->
+  <div *ngIf="hasVariants">
+    <div class="flex items-center space-x-2">
+      <input type="checkbox" [checked]="sameForAll" (change)="toggleSameForAll($event)" />
+      <span>Use Same Price & Stock for All?</span>
     </div>
 
-    <div>
-      <label for="description">Description</label>
-      <textarea id="description" formControlName="description" class="form-input"></textarea>
+    <div *ngIf="sameForAll">
+      <label>Price</label>
+      <input type="number" [value]="sharedPrice" (input)="sharedPrice = $any($event.target).value" class="form-input" />
+
+      <label>Stock</label>
+      <input type="number" [value]="sharedStock" (input)="sharedStock = $any($event.target).value" class="form-input" />
     </div>
 
-    <div>
-      <label for="price">Price *</label>
-      <input type="number" id="price" formControlName="price" class="form-input" required />
+    <div *ngFor="let variant of variants; let i = index">
+      <hr />
+      <label>Color</label>
+      <input [value]="variant.color" (input)="variant.color = $any($event.target).value" class="form-input" />
+
+      <label>Size</label>
+      <input [value]="variant.size" (input)="variant.size = $any($event.target).value" class="form-input" />
+
+      <div *ngIf="!sameForAll">
+        <label>Price</label>
+        <input type="number" [value]="variant.price" (input)="variant.price = $any($event.target).value" class="form-input" />
+
+        <label>Stock</label>
+        <input type="number" [value]="variant.stock" (input)="variant.stock = $any($event.target).value" class="form-input" />
+      </div>
+
+      <label>Upload Images for Variant {{ i + 1 }} (3 Required)</label>
+      <input type="file" multiple accept="image/*" (change)="onVariantImagesSelected($event, i)" />
     </div>
 
-    <div>
-      <label for="stockQuantity">Stock Quantity *</label>
-      <input type="number" id="stockQuantity" formControlName="stockQuantity" class="form-input" required />
-    </div>
+    <button type="button" (click)="addVariant()">+ Add Variant</button>
+  </div>
 
-    <div>
-      <label for="category">Category *</label>
-      <select id="category" formControlName="categoryId" class="form-input" required>
-        <option value="">Select a category</option>
-        <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
-      </select>
-    </div>
-
-    <button type="submit" [disabled]="form.invalid" class="btn-submit">
-      Submit Product for Approval
-    </button>
-  </form>
-</div>
+  <button type="submit" class="btn-submit">Submit</button>
+</form>

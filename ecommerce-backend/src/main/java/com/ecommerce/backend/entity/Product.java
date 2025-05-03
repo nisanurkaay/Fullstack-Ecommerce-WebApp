@@ -1,5 +1,9 @@
 package com.ecommerce.backend.entity;
 import jakarta.persistence.*;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.LocalDateTime;
 
@@ -11,10 +15,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "seller_id") // Seller ID
-    private User seller;
-
+ @ManyToOne
+@JoinColumn(name = "seller_id")
+@JsonIgnore // s// veya sadece "products"
+private User seller;
     @ManyToOne
     @JoinColumn(name = "category_id") // Category ID
     private Category category;
@@ -23,15 +27,21 @@ public class Product {
     private String description;
     private Double price;
     private Integer stockQuantity;
-    private String imageUrl;
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+    @ElementCollection
+    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrls;
 
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+    
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
+    }
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductVariant> variants;
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 
@@ -49,6 +59,12 @@ public class Product {
         this.updatedAt = LocalDateTime.now();
     }
 
+    public List<ProductVariant> getVariants() {
+        return variants;
+    }
+    public void setVariants(List<ProductVariant> variants) {
+        this.variants = variants;
+    }
     public Category getCategory() {
         return category;
     }

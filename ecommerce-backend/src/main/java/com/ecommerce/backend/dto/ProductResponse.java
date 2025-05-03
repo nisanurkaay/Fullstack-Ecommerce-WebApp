@@ -1,7 +1,8 @@
 package com.ecommerce.backend.dto;
 
 import com.ecommerce.backend.entity.ProductStatus;
-
+import com.ecommerce.backend.entity.ProductVariant;
+import java.util.List;
 public class ProductResponse {
     private Long id;
     private String name;
@@ -9,9 +10,22 @@ public class ProductResponse {
     private Double price;
     private Integer stockQuantity;
     private String categoryName;
+    private Long categoryId; 
     private String sellerName;
     private ProductStatus productStatus;
+    private List<String> imageUrls;
+    public List<String> getImageUrls() { return imageUrls; }
+    public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
+    
+private List<ProductVariant> variants;
 
+public List<ProductVariant> getVariants() {
+    return variants;
+}
+
+public void setVariants(List<ProductVariant> variants) {
+    this.variants = variants;
+}
     public Long getId() {
         return id;
     }
@@ -19,6 +33,13 @@ public class ProductResponse {
         this.id = id;
     }
 
+  
+public Long getCategoryId() {
+    return categoryId;
+}
+public void setCategoryId(Long categoryId) {
+    this.categoryId = categoryId;
+}
     public String getName() {
         return name;
     }

@@ -2,29 +2,72 @@ package com.ecommerce.backend.controller;
 
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.ProductResponse;
+import com.ecommerce.backend.dto.ProductVariantRequest;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+import com.ecommerce.backend.service.FileStorageService; // Import the FileStorageService class
 
 import java.util.List;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
+    private final FileStorageService fileStorageService; // Assuming you have a file storage service
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService,
+                             FileStorageService fileStorageService) {   
         this.productService = productService;
+        this.fileStorageService = fileStorageService; // Initialize your file storage service here
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('SELLER')")
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest request,
-                                                         @RequestParam Long sellerId) {
-        return ResponseEntity.ok(productService.createProduct(request, sellerId));
+    public ResponseEntity<ProductResponse> createProduct(
+
+        @RequestPart("product") String productJson,
+        @RequestPart("files") MultipartFile[] files,
+        @RequestParam Long sellerId
+    ) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            ProductRequest request = mapper.readValue(productJson, ProductRequest.class);
+    
+            List<String> urls = Arrays.stream(files)
+                                      .map(fileStorageService::saveFile)
+                                      .toList();
+    
+            if (request.getVariants() == null || request.getVariants().isEmpty()) {
+                // ✅ Ana ürüne 3 görsel ata
+                request.setImageUrls(urls); // urls zaten 3 adet olmalı
+            } else {
+                int perVariant = 3;
+                List<ProductVariantRequest> variants = request.getVariants();
+                for (int i = 0; i < variants.size(); i++) {
+                    int start = i * perVariant;
+                    int end = Math.min(start + perVariant, urls.size());
+                    List<String> variantUrls = urls.subList(start, end);
+                    variants.get(i).setImageUrls(variantUrls);
+                }
+            }
+    
+            return ResponseEntity.ok(productService.createProduct(request, sellerId));
+        } catch (Exception e) {
+
+
+            e.printStackTrace(); // log hatayı
+            return ResponseEntity.badRequest().build();
+        }
+
     }
     @PutMapping("/{id}/approve")
     @PreAuthorize("hasRole('ADMIN')")
@@ -87,4 +130,34 @@ public ResponseEntity<ProductResponse> denyProduct(@PathVariable Long id) {
     public ResponseEntity<List<ProductResponse>> getAllActiveProducts() {
         return ResponseEntity.ok(productService.getAllActiveProducts());
     }
+    @PutMapping(value = "/{id}/add-variant", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+@PreAuthorize("hasRole('SELLER')")
+public ResponseEntity<ProductResponse> addVariant(
+    @PathVariable Long id,
+    @RequestPart("variant") String variantJson,
+    @RequestPart("files") MultipartFile[] files
+) {
+    try {
+        ObjectMapper mapper = new ObjectMapper();
+        ProductVariantRequest variant = mapper.readValue(variantJson, ProductVariantRequest.class);
+
+        List<String> urls = Arrays.stream(files)
+                                  .map(fileStorageService::saveFile)
+                                  .toList();
+        variant.setImageUrls(urls);
+
+        return ResponseEntity.ok(productService.addVariantToProduct(id, variant));
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().build();
+    }
+}
+@PutMapping("/{id}/add-variant")
+@PreAuthorize("hasRole('SELLER')")
+public ResponseEntity<ProductResponse> addVariantToProduct(
+    @PathVariable Long id,
+    @RequestBody ProductVariantRequest variantRequest
+) {
+    return ResponseEntity.ok(productService.addVariantToProduct(id, variantRequest));
+}
+
 }

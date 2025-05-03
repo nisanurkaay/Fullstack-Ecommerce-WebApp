@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../../../core/models/product.model';
+import { Product,ProductVariant } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
 
 @Component({
@@ -7,10 +7,10 @@ import { ProductService } from '../../../core/services/product.service';
   templateUrl: './my-products.component.html',
   styleUrls: ['./my-products.component.css'],
   standalone:false
-})
-export class MyProductsComponent implements OnInit {
+})export class MyProductsComponent implements OnInit {
   products: Product[] = [];
   filter: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING' = 'ALL';
+  expandedProductIds: Set<number> = new Set();
 
   constructor(private productService: ProductService) {}
 
@@ -19,15 +19,20 @@ export class MyProductsComponent implements OnInit {
   }
 
   loadMyProducts(): void {
-    const seller = JSON.parse(localStorage.getItem('user')!);
-    const sellerId = seller?.id;
-
+    const sellerId = Number(localStorage.getItem('userId'));
     if (!sellerId) return;
 
     this.productService.getMyProducts(sellerId).subscribe({
-      next: (data) => this.products = data,
+      next: (data) => {
+        console.log("✔ Gelen ürünler:", data);
+        this.products = data;
+      },
       error: (err) => console.error('Error loading products:', err)
     });
+  }
+
+  setFilter(status: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING') {
+    this.filter = status;
   }
 
   get filteredProducts(): Product[] {
@@ -35,17 +40,53 @@ export class MyProductsComponent implements OnInit {
     return this.products.filter(p => p.productStatus === this.filter);
   }
 
-  setFilter(status: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING') {
-    this.filter = status;
-  }
-
   deactivateProduct(id: number) {
-    const seller = JSON.parse(localStorage.getItem('user')!);
-    this.productService.delete(id, seller.id).subscribe(() => this.loadMyProducts());
+    const sellerId = Number(localStorage.getItem('userId'));
+    this.productService.delete(id, sellerId).subscribe(() => this.loadMyProducts());
   }
 
   activateProduct(id: number) {
-    const seller = JSON.parse(localStorage.getItem('user')!);
-    this.productService.activate(id, seller.id).subscribe(() => this.loadMyProducts());
+    const sellerId = Number(localStorage.getItem('userId'));
+
+    this.productService.getById(id).subscribe({
+      next: (product) => {
+        const hasVariants = product.variants && product.variants.length > 0;
+
+        // Ana ürün görselleri
+        if (!hasVariants && (!product.imageUrls || product.imageUrls.length !== 3)) {
+          alert('Varyantsız ürünlerde tam 3 görsel yüklenmelidir.');
+          return;
+        }
+
+        // Varyant görsel kontrolü
+        if (hasVariants && product.variants?.some(v => !v.imageUrls || v.imageUrls.length !== 3)) {
+          alert('Her varyant için tam 3 görsel yüklenmelidir.');
+          return;
+        }
+
+        this.productService.activate(id, sellerId).subscribe(() => this.loadMyProducts());
+      },
+      error: (err) => {
+        console.error('Ürün detayları alınamadı:', err);
+      }
+    });
+  }
+
+  toggleVariants(productId: number): void {
+    if (this.expandedProductIds.has(productId)) {
+      this.expandedProductIds.delete(productId);
+    } else {
+      this.expandedProductIds.add(productId);
+    }
+  }
+
+  isExpanded(productId: number): boolean {
+    return this.expandedProductIds.has(productId);
+  }
+
+  hasVaryingPrices(p: Product): boolean {
+    if (!p.variants || p.variants.length < 2) return false;
+    const firstPrice = p.variants[0].price;
+    return p.variants.some(v => v.price !== firstPrice);
   }
 }
