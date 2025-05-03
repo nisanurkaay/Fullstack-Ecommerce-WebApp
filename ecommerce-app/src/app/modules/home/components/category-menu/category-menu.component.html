@@ -1,0 +1,18 @@
+<div class="category-dropdown" (mouseenter)="show = true" (mouseleave)="show = false">
+  <ul *ngIf="categories.length > 0" class="dropdown-list">
+    <li *ngFor="let cat of getMainCategories()">
+      <div (click)="toggleExpand(cat.id!)" class="main-cat">
+        {{ cat.name }}
+      </div>
+      <ul *ngIf="expandedId === cat.id" class="subcat-list">
+        <li
+          *ngFor="let sub of getSubcategories(cat.id!)"
+          (click)="navigateToCategory(sub.id!)"
+          class="subcat-item"
+        >
+          → {{ sub.name }}
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

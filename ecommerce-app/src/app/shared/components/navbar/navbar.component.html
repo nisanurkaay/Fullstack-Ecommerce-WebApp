@@ -6,34 +6,63 @@
     </span>
 
     <!-- Desktop: Categories + Search -->
-    <div class="hidden md:flex flex-1 justify-center items-center space-x-4">
-      <!-- Categories -->
-      <button mat-button routerLink="/categories" class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
-        <mat-icon>list</mat-icon>
-        <span class="text-sm">Categories</span>
-      </button>
+    <div class="hidden md:flex flex-1 justify-center items-center space-x-4 relative">
+      <!-- Categories Dropdown -->
+      <div class="relative category-wrapper" [class.open]="showDropdown">
+        <button
+          mat-button
+          (click)="toggleDropdown()"
+          class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+        >
+          <mat-icon>list</mat-icon>
+          <span class="text-sm">Categories</span>
+        </button>
 
-      <!-- Search Form -->
+        <div *ngIf="showDropdown" class="category-dropdown">
+          <ul>
+            <ng-container *ngFor="let cat of getMainCategories()">
+              <li
+                class="relative maincat-wrapper"
+                (mouseenter)="expandedId = cat.id!"
+                (mouseleave)="expandedId = null"
+              >
+                <!-- Ana kategori -->
+                <button (click)="navigateToCategory(cat.id!)" class="maincat">
+                  {{ cat.name }}
+                </button>
+
+                <!-- Alt kategoriler sağa açılır -->
+                <ul *ngIf="expandedId === cat.id" class="subcat-flyout">
+                  <li
+                    *ngFor="let sub of getSubcategories(cat.id!)"
+                    (click)="navigateToCategory(sub.id!)"
+                    class="subcat-item"
+                  >
+                    {{ sub.name }}
+                  </li>
+                </ul>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Search -->
       <form (submit)="onSearch()" class="form flex items-center gap-2">
         <input
-          class="input px-2 py-1 border rounded"
-          placeholder="Type your text"
+          class="input"
+          placeholder="Search for products"
           [(ngModel)]="searchQuery"
           name="search"
           type="text"
         />
-        <button type="submit" aria-label="Search">
-          <mat-icon>search</mat-icon>
-        </button>
-        <button type="reset" aria-label="Clear" (click)="onReset()">
-          <mat-icon>close</mat-icon>
-        </button>
+        <button type="submit" aria-label="Search"><mat-icon>search</mat-icon></button>
+        <button type="reset" aria-label="Clear" (click)="onReset()"><mat-icon>close</mat-icon></button>
       </form>
     </div>
 
-    <!-- Icons (Right) -->
+    <!-- Right Icons -->
     <div class="flex items-center space-x-4 ml-auto">
-      <!-- Profile -->
       <button mat-button [matMenuTriggerFor]="userMenu" class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
         <mat-icon>account_circle</mat-icon>
         <span class="hidden md:inline text-sm">
@@ -42,13 +71,11 @@
         </span>
       </button>
 
-      <!-- Wishlist -->
       <button mat-button routerLink="/wishlist" class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
         <mat-icon>favorite_border</mat-icon>
         <span class="hidden md:inline text-sm">Wishlist</span>
       </button>
 
-      <!-- Cart -->
       <button mat-button [matMenuTriggerFor]="cartMenu" [matBadge]="cartCount" matBadgeColor="warn"
               class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
         <mat-icon>shopping_cart</mat-icon>
@@ -59,43 +86,23 @@
 
   <!-- Mobile Search -->
   <div class="block md:hidden px-4 pb-2">
-    <form (submit)="onSearch()" class="form flex items-center gap-2">
-      <input
-        class="input w-full px-2 py-1 border rounded"
-        placeholder="Search"
-        [(ngModel)]="searchQuery"
-        name="searchMobile"
-        type="text"
-      />
-      <button type="submit" aria-label="Search">
-        <mat-icon>search</mat-icon>
-      </button>
-      <button type="reset" aria-label="Clear" (click)="onReset()">
-        <mat-icon>close</mat-icon>
-      </button>
+    <form (submit)="onSearch()" class="form">
+      <input class="input w-full" placeholder="Search" [(ngModel)]="searchQuery" name="searchMobile" type="text" />
+      <button type="submit" aria-label="Search"><mat-icon>search</mat-icon></button>
+      <button type="reset" aria-label="Clear" (click)="onReset()"><mat-icon>close</mat-icon></button>
     </form>
   </div>
 
   <!-- Profile Menu -->
   <mat-menu #userMenu="matMenu">
     <ng-container *ngIf="isLoggedIn; else guestLinks">
-      <button mat-menu-item routerLink="/profile">
-        <mat-icon>person</mat-icon> Profile
-      </button>
-      <button mat-menu-item routerLink="/orders">
-        <mat-icon>assignment</mat-icon> Orders
-      </button>
-      <button mat-menu-item (click)="logout()">
-        <mat-icon>logout</mat-icon> Logout
-      </button>
+      <button mat-menu-item routerLink="/profile"><mat-icon>person</mat-icon> Profile</button>
+      <button mat-menu-item routerLink="/orders"><mat-icon>assignment</mat-icon> Orders</button>
+      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Logout</button>
     </ng-container>
     <ng-template #guestLinks>
-      <button mat-menu-item routerLink="/auth/login">
-        <mat-icon>login</mat-icon> Login
-      </button>
-      <button mat-menu-item routerLink="/auth/register">
-        <mat-icon>person_add</mat-icon> Register
-      </button>
+      <button mat-menu-item routerLink="/auth/login"><mat-icon>login</mat-icon> Login</button>
+      <button mat-menu-item routerLink="/auth/register"><mat-icon>person_add</mat-icon> Register</button>
     </ng-template>
   </mat-menu>
 
@@ -109,9 +116,7 @@
             <p class="font-medium">{{ item.product.name }}</p>
             <p class="text-sm text-gray-600">${{ item.product.price }} x {{ item.quantity }}</p>
           </div>
-          <button mat-icon-button (click)="removeFromCart(item.product.id!)">
-            <mat-icon>delete</mat-icon>
-          </button>
+          <button mat-icon-button (click)="removeFromCart(item.product.id!)"><mat-icon>delete</mat-icon></button>
         </button>
       </ng-container>
       <mat-divider></mat-divider>

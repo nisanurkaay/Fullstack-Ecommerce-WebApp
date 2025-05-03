@@ -19,11 +19,13 @@ import { FooterComponent } from './components/footer/footer.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
 
+
 @NgModule({
   declarations: [
     NavbarComponent,
     FooterComponent,
-    ProductCardComponent
+    ProductCardComponent,
+
   ],
   imports: [
     CommonModule,
