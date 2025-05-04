@@ -49,10 +49,11 @@ public class SecurityConfig {
     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
     .requestMatchers("/api/auth/**").permitAll() // ✅ GİRİŞ ve KAYIT burada
     .requestMatchers("/uploads/**").permitAll()
+    .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+    .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll() 
     .requestMatchers("/api/products/colors").permitAll()
     .requestMatchers("/api/products/filter").permitAll()
-
-    // Korunan endpointler
+   // Korunan endpointler
     .requestMatchers("/api/products/pending").hasRole("ADMIN")
    
 
