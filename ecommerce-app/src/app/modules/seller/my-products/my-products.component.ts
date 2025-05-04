@@ -102,7 +102,10 @@ export class MyProductsComponent implements OnInit {
 
   deactivateProduct(id: number) {
     const sellerId = Number(localStorage.getItem('userId'));
-    this.productService.delete(id, sellerId).subscribe(() => this.loadMyProducts());
+    this.productService.deactivate(id, sellerId).subscribe({
+      next: () => this.loadMyProducts(),
+      error: (err) => console.error('Yayından kaldırma hatası:', err)
+    });
   }
   confirmDeleteProduct(id: number) {
     const confirmed = confirm('Are you sure you want to delete this product and all variants?');

@@ -293,7 +293,20 @@ public ProductResponse denyProduct(Long id) {
         product.setProductStatus(ProductStatus.ACTIVE);
         return mapToResponse(productRepository.save(product));
     }
-
+    @Override
+    @Transactional
+    public ProductResponse deactivateProduct(Long id, Long userId) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+    
+        if (!product.getSeller().getId().equals(userId)) {
+            throw new RuntimeException("Unauthorized");
+        }
+    
+        product.setProductStatus(ProductStatus.INACTIVE);
+        return mapToResponse(productRepository.save(product));
+    }
+    
     @Override
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long id) {

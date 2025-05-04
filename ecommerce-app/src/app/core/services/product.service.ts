@@ -41,7 +41,9 @@ export class ProductService {
   activate(id: number, userId: number): Observable<Product> {
     return this.http.put<Product>(`${this.apiUrl}/${id}/activate?userId=${userId}`, {});
   }
-
+  deactivate(id: number, userId: number): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/${id}/deactivate?userId=${userId}`, {});
+  }
   getPendingProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/pending`);
   }
