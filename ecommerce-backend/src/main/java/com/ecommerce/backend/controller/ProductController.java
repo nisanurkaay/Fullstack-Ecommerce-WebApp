@@ -31,7 +31,8 @@ public class ProductController {
         this.fileStorageService = fileStorageService; // Initialize your file storage service here
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+
     @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<ProductResponse> createProduct(
         @RequestPart("product") ProductRequest request,
@@ -73,8 +74,19 @@ public class ProductController {
         return ResponseEntity.ok(productService.approveProduct(id));
     }
     
-
-  @PutMapping("/products/{id}")
+    @GetMapping("/filter")
+    @PreAuthorize("hasAnyRole('ADMIN', 'SELLER', 'USER')")
+    public ResponseEntity<List<ProductResponse>> filterProducts(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) List<String> colors,
+            @RequestParam(required = false) List<String> sizes,
+            @RequestParam Long userId) {
+    
+        return ResponseEntity.ok(productService.filterProductsByRole(categoryId, colors, sizes, userId));
+    }
+    
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('SELLER')") 
 public ResponseEntity<ProductResponse> updateProduct(
     @PathVariable Long id,
     @RequestPart("product") ProductRequest request,

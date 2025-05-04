@@ -23,14 +23,13 @@ export class AuthInterceptor implements HttpInterceptor {
       authReq = this.addTokenHeader(req, token);
     }
 
-    // 👇 Sadece hata durumunda refresh deneyelim
     return next.handle(authReq).pipe(
       catchError(error => {
         if (
           error instanceof HttpErrorResponse &&
           error.status === 401 &&
-          !authReq.url.includes('/auth/login') &&
-          !authReq.url.includes('/auth/refresh-token')
+          !req.url.includes('/auth/login') &&
+          !req.url.includes('/auth/refresh-token')
         ) {
           return this.handle401Error(authReq, next);
         }
@@ -40,12 +39,15 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-
   private addTokenHeader(request: HttpRequest<any>, token: string): HttpRequest<any> {
     return request.clone({
-      headers: request.headers.set('Authorization', 'Bearer ' + token)
+      setHeaders: {
+        Authorization: 'Bearer ' + token
+      }
     });
   }
+
+
 
   private handle401Error(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!this.isRefreshing) {
@@ -54,12 +56,16 @@ export class AuthInterceptor implements HttpInterceptor {
 
       return this.authService.refreshToken().pipe(
         switchMap((res: any) => {
-          this.isRefreshing = false;
-          this.authService.setAccessToken(res.token); // BACKEND "token" dönüyor
-this.refreshTokenSubject.next(res.token);
-return next.handle(this.addTokenHeader(request, res.token));
+          console.log('✅ [REFRESH] Yeni token alındı:', res.token);
+          this.authService.setAccessToken(res.token);
+          this.refreshTokenSubject.next(res.token);
 
+          const updatedRequest = this.addTokenHeader(request, res.token);
+          console.log('✅ [REFRESH] Tekrar gönderilen istek:', updatedRequest);
+
+          return next.handle(updatedRequest);
         }),
+
         catchError(err => {
           this.isRefreshing = false;
           this.authService.logout();

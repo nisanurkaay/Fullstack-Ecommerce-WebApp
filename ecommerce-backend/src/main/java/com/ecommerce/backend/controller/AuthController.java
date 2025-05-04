@@ -69,20 +69,11 @@ public ResponseEntity<?> getCurrentUser(HttpServletRequest request) {
         .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Kullanıcı bulunamadı"));
 }
 
-
 @PostMapping("/refresh-token")
-public ResponseEntity<?> refreshToken(@RequestBody TokenRefreshRequest request) {
-    String requestRefreshToken = request.getRefreshToken();
-
-    return refreshTokenService.findByToken(requestRefreshToken)
-        .map(refreshTokenService::verifyExpiration)
-        .map(RefreshToken::getUser)
-        .map(user -> {
-            String accessToken = jwtUtils.generateJwtToken(user.getEmail(), user.getRole().name());
-            return ResponseEntity.ok(new TokenRefreshResponse(accessToken, requestRefreshToken));
-        })
-        .orElseThrow(() -> new TokenRefreshException(requestRefreshToken, "Refresh token is not in database!"));
+public ResponseEntity<TokenRefreshResponse> refreshAccessToken(@RequestBody TokenRefreshRequest request) {
+    return ResponseEntity.ok(authService.refreshAccessToken(request.getRefreshToken()));
 }
+
 
 
 }

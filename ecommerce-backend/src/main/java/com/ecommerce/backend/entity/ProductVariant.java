@@ -10,7 +10,9 @@ public class ProductVariant {
     private Long id;
 
     private ColorEnum color;
+    @Column(name = "size")
     private String size;
+    
     private Integer stock;
     private Double price;
 

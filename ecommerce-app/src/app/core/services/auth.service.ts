@@ -23,9 +23,7 @@ export class AuthService {
     }
 
   }
-  setRefreshToken(token: string): void {
-    localStorage.setItem('refresh_token', token);
-  }
+
 
   // 🔐 LOGIN
   login(credentials: { email: string; password: string }): Observable<any> {
@@ -100,22 +98,21 @@ export class AuthService {
   }
 
   getAccessToken(): string | null {
-    const token = localStorage.getItem('accessToken');
-    return token && token !== 'undefined' ? token : null;
+    return localStorage.getItem('accessToken');
+  }
+
+  setAccessToken(token: string): void {
+    console.log('✅ [AuthService] Setting new access token:', token);
+    localStorage.setItem('accessToken', token);
   }
 
   getRefreshToken(): string | null {
-    const token = localStorage.getItem('refreshToken');
-    return token && token !== 'undefined' ? token : null;
+    return localStorage.getItem('refreshToken');
   }
 
-
-  setAccessToken(token: string): void {
-    if (token && token !== 'undefined') {
-      localStorage.setItem('accessToken', token);
-    }
+  setRefreshToken(token: string): void {
+    localStorage.setItem('refreshToken', token);
   }
-
 
 
   // 👤 GET USER ROLE

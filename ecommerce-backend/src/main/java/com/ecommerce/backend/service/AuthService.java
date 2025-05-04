@@ -3,7 +3,9 @@ package com.ecommerce.backend.service;
 import com.ecommerce.backend.dto.AuthResponse;
 import com.ecommerce.backend.dto.LoginRequest;
 import com.ecommerce.backend.dto.RegisterRequest;
+import com.ecommerce.backend.dto.TokenRefreshResponse;
 import com.ecommerce.backend.entity.User;
+import com.ecommerce.backend.entity.RefreshToken;
 import com.ecommerce.backend.entity.Role;
 import com.ecommerce.backend.entity.UserStatus;
 import com.ecommerce.backend.repository.UserRepository;
@@ -61,7 +63,15 @@ public class AuthService {
     
         return new AuthResponse(accessToken, refreshToken,  user.getId(),   user.getName(), user.getRole().name());
     }
+    public TokenRefreshResponse refreshAccessToken(String refreshToken) {
+        RefreshToken token = refreshTokenService.validateRefreshToken(refreshToken);
+        User user = token.getUser();
+        String newAccessToken = jwtUtils.generateJwtToken(user.getEmail(), user.getRole().name());
     
+        return new TokenRefreshResponse(newAccessToken, refreshToken);
+    }
+    
+
     public void register(RegisterRequest request) {
         User user = new User();
         user.setName(request.getName());

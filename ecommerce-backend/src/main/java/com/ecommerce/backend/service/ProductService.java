@@ -19,6 +19,8 @@ ProductResponse addVariantToProduct(Long productId, ProductVariantRequest varian
 void hardDelete(Long id, Long userId);
 void deleteVariant(Long productId, Long variantId);
     void adminBanProduct(Long id);
+    List<ProductResponse> filterProductsByRole(Long categoryId, List<String> colors, List<String> sizes, Long userId);
+
     List<ProductResponse> getAllPendingProducts();
     ProductResponse getProductById(Long id);
      ProductResponse approveProduct(Long id);
@@ -26,4 +28,6 @@ void deleteVariant(Long productId, Long variantId);
     ProductResponse activateProduct(Long id, Long userId);
     ProductResponse denyProduct(Long id);
     List<ProductResponse> getProductsByStatus(ProductStatus status);
+    public List<ProductResponse> filterProducts(Long categoryId, List<String> colors, List<String> sizes);
+
 }

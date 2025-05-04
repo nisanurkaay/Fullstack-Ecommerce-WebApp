@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -14,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
@@ -50,13 +52,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             // 🔧 BURASI: Kullanıcıyı veritabanından çekiyoruz
             var userDetails = userDetailsService.loadUserByUsername(username);
             System.out.println("Granted Authorities: " + userDetails.getAuthorities());
-
+            String role = jwtUtils.getRoleFromJwtToken(token); 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             userDetails,
                             null,
+                         
+        List.of(new SimpleGrantedAuthority(role))
                             
-                            userDetails.getAuthorities() // 🔥 yetkileri buradan alıyoruz
+                           // 🔥 yetkileri buradan alıyoruz
                     );
 
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

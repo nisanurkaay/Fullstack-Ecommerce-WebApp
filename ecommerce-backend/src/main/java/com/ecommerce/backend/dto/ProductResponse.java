@@ -3,7 +3,12 @@ package com.ecommerce.backend.dto;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.entity.ProductVariant;
 import java.util.List;
+import java.util.stream.Collectors;
+
+
 import com.ecommerce.backend.entity.ColorEnum;
+import com.ecommerce.backend.entity.Product;
+
 public class ProductResponse {
     private Long id;
     private String name;
@@ -18,13 +23,13 @@ public class ProductResponse {
     public List<String> getImageUrls() { return imageUrls; }
     public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
     
-private List<ProductVariant> variants;
+    private List<ProductVariantResponse> variants;
 
-public List<ProductVariant> getVariants() {
+public List<ProductVariantResponse> getVariants() {
     return variants;
 }
 
-public void setVariants(List<ProductVariant> variants) {
+public void setVariants(List<ProductVariantResponse> variants) {
     this.variants = variants;
 }
     public Long getId() {
@@ -96,4 +101,27 @@ public ColorEnum getColor() {
 public void setColor(ColorEnum color) {
     this.color = color;
 }
+public static ProductResponse fromEntity(Product product) {
+    ProductResponse response = new ProductResponse();
+    response.setId(product.getId());
+    response.setName(product.getName());
+    response.setDescription(product.getDescription());
+    response.setCategoryId(product.getCategory().getId());
+    response.setImageUrls(product.getImageUrls());
+    response.setColor(product.getColor());
+    response.setPrice(product.getPrice());
+    response.setStockQuantity(product.getStockQuantity());
+    response.setProductStatus(product.getProductStatus());
+
+    if (product.getVariants() != null) {
+        response.setVariants(
+            product.getVariants().stream()
+                   .map(ProductVariantResponse::fromEntity) // varsa
+                   .collect(Collectors.toList())
+        );
+    }
+
+    return response;
+}
+
 }

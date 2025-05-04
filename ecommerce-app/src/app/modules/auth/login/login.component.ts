@@ -29,18 +29,32 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     this.auth.login(this.loginForm.value).subscribe({
       next: res => {
-        console.log('Login response:', res); // ✅
+        console.log('✅ Login response:', res);
+
+        const token = res.token ?? res.data?.token;
+        const refreshToken = res.refreshToken ?? res.data?.refreshToken;
+
+        if (!token) {
+          console.error('❌ Token alınamadı, giriş başarısız.');
+          return;
+        }
+
+        // 🔐 Token ve bilgiler localStorage'a yazılıyor
+        localStorage.setItem('accessToken', token);
+        localStorage.setItem('refreshToken', refreshToken ?? '');
         localStorage.setItem('userId', res.id.toString());
-        localStorage.setItem('accessToken', res.token); // ✅ Bu satır olmazsa interceptor çalışmaz!
+
         localStorage.setItem('user', JSON.stringify({
           id: res.id,
           name: res.name,
           role: res.role
         }));
 
-        this.auth.setRefreshToken(res.refreshToken); // varsa
-        const role = res.role;
+        this.auth.setAccessToken(token); // opsiyonel: service içinde tutmak için
+        this.auth.setRefreshToken(refreshToken ?? '');
 
+        // 🔀 Rol yönlendirme
+        const role = res.role;
         if (role === 'ROLE_SELLER') {
           this.router.navigate(['/seller/dashboard']);
         } else if (role === 'ROLE_ADMIN') {

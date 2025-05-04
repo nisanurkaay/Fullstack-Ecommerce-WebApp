@@ -103,6 +103,7 @@ export class AddProductComponent implements OnInit {
     formData.append('product', new Blob([JSON.stringify({
       ...product,
       categoryId: Number(product.categoryId),
+      color: this.hasVariants ? null : product.color, // ✅ Eklenen satır
       variants: this.hasVariants
         ? this.variants.map((v, i) => ({
             ...v,

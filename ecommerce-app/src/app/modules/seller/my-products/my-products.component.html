@@ -1,4 +1,28 @@
 <div class="my-products-container">
+
+
+  <div class="filter-form mb-4">
+    <select [(ngModel)]="selectedCategory">
+      <option [ngValue]="null">Tüm Kategoriler</option>
+      <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+    </select>
+
+    <div class="color-filters">
+      <label *ngFor="let color of availableColors">
+        <input type="checkbox" [value]="color" (change)="toggleColor(color)" [checked]="selectedColors.includes(color)" /> {{ color }}
+      </label>
+    </div>
+
+    <div class="size-filters">
+      <label *ngFor="let size of availableSizes">
+        <input type="checkbox" [value]="size" (change)="toggleSize(size)" [checked]="selectedSizes.includes(size)" /> {{ size }}
+      </label>
+    </div>
+
+    <button (click)="applyFilters()" class="btn-primary">Filtrele</button>
+  </div>
+
+
   <h2 class="form-title">My Products</h2>
 
   <!-- Filter Buttons -->
@@ -8,7 +32,11 @@
     <button (click)="setFilter('INACTIVE')" [class.active-filter]="filter === 'INACTIVE'">Inactive</button>
     <button (click)="setFilter('PENDING')" [class.active-filter]="filter === 'PENDING'">Pending</button>
   </div>
-
+  <div class="flex justify-end mb-2">
+    <button (click)="showVariantsAsProducts = !showVariantsAsProducts" class="btn-secondary">
+      {{ showVariantsAsProducts ? 'Varyantları Grupla' : 'Varyantları Ürün Gibi Göster' }}
+    </button>
+  </div>
   <!-- Product Table -->
   <div class="table-wrapper">
     <table class="custom-table">
@@ -29,7 +57,7 @@
             <td>
               {{ p.name }}
               <div class="flex gap-2 mt-1" *ngIf="!p.variants?.length">
-                <img *ngFor="let img of p.imageUrls" [src]="'http://localhost:8080' + img" alt="Product image" class="thumbnail" />
+                <img *ngFor="let img of p.imageUrls" [src]="'http://localhost:8081' + img" alt="Product image" class="thumbnail" />
               </div>
             </td>
             <td>{{ p.productStatus }}</td>

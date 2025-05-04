@@ -2,6 +2,11 @@ package com.ecommerce.backend.dto;
 import java.util.List;
 
 import com.ecommerce.backend.entity.ColorEnum;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductRequest {
     private String name;
     private String description;
@@ -54,6 +59,7 @@ public class ProductRequest {
     public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
 
 
+  
     private ColorEnum color;
 
 public ColorEnum getColor() {

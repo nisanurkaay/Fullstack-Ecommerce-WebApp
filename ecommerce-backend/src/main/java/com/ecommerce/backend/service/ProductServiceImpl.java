@@ -3,6 +3,7 @@ package com.ecommerce.backend.service;
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.ProductResponse;
 import com.ecommerce.backend.dto.ProductVariantRequest;
+import com.ecommerce.backend.dto.ProductVariantResponse;
 import com.ecommerce.backend.entity.*;
 import com.ecommerce.backend.repository.CategoryRepository;
 import com.ecommerce.backend.repository.ProductRepository;
@@ -48,7 +49,9 @@ public class ProductServiceImpl implements ProductService {
     
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
-    
+                if ((request.getVariants() == null || request.getVariants().isEmpty()) && request.getColor() == null) {
+                    throw new RuntimeException("Varyantsız ürünlerde color zorunludur.");
+                }
         Product product = new Product();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
@@ -84,7 +87,39 @@ public class ProductServiceImpl implements ProductService {
     
         return mapToResponse(product);
     }
-    
+    @Override
+public List<ProductResponse> filterProducts(Long categoryId, List<String> colors, List<String> sizes) {
+    List<Product> products = productRepository.findAllWithFilters(categoryId, colors, sizes);
+    return products.stream().map(ProductResponse::fromEntity).toList();
+}
+@Override
+public List<ProductResponse> filterProductsByRole(Long categoryId, List<String> colors, List<String> sizes, Long userId) {
+    User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    List<Product> products;
+
+    if (user.getRole() == Role.ROLE_ADMIN) {
+        // Admin: tüm ürünlerde filtre uygula
+        products = productRepository.findAllWithFilters(categoryId, colors, sizes);
+    } else if (user.getRole() == Role.ROLE_SELLER) {
+        // Seller: sadece kendi ürünlerinde filtre uygula
+        products = productRepository.findBySellerId(userId).stream()
+                .filter(p -> (categoryId == null || p.getCategory().getId().equals(categoryId)) &&
+                             (colors == null || colors.contains(p.getColor().name()) ||
+                              p.getVariants().stream().anyMatch(v -> colors.contains(v.getColor().name()))) &&
+                             (sizes == null || p.getVariants().stream().anyMatch(v -> sizes.contains(v.getSize()))))
+                .toList();
+    } else {
+        // User: sadece ACTIVE ürünlerde filtre uygula
+        products = productRepository.findAllWithFilters(categoryId, colors, sizes).stream()
+                .filter(p -> p.getProductStatus() == ProductStatus.ACTIVE)
+                .toList();
+    }
+
+    return products.stream().map(ProductResponse::fromEntity).toList();
+}
+
     @Override
     @Transactional
     public ProductResponse updateProduct(Long id, ProductRequest request, Long userId) {
@@ -270,7 +305,13 @@ public ProductResponse denyProduct(Long id) {
         res.setStockQuantity(product.getStockQuantity());
         res.setCategoryName(product.getCategory().getName());
         res.setCategoryId(product.getCategory().getId());
-        res.setVariants(product.getVariants());
+      res.setVariants(
+    product.getVariants()
+           .stream()
+           .map(ProductVariantResponse::fromEntity)
+           .toList()
+);
+
         res.setImageUrls(product.getImageUrls());
         res.setSellerName(product.getSeller().getName());
         res.setProductStatus(product.getProductStatus());

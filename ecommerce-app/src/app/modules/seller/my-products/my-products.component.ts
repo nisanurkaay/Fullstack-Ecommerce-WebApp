@@ -2,21 +2,36 @@ import { Component, OnInit } from '@angular/core';
 import { Product,ProductVariant } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
 import { Router } from '@angular/router';
+import { Category } from '../../../core/models/category.model';
+import { CategoryService } from '../../../core/services/category.service';
 
 @Component({
   selector: 'app-my-products',
   templateUrl: './my-products.component.html',
   styleUrls: ['./my-products.component.css'],
   standalone:false
-})export class MyProductsComponent implements OnInit {
+})
+export class MyProductsComponent implements OnInit {
   products: Product[] = [];
   filter: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING' = 'ALL';
   expandedProductIds: Set<number> = new Set();
+  categories: Category[] = [];
+  selectedCategory: number | null = null;
+  selectedColors: string[] = [];
+  selectedSizes: string[] = [];
+  showVariantsAsProducts = false;
+  availableColors = ['RED', 'BLUE', 'GREEN', 'BLACK', 'WHITE'];
+  availableSizes = ['S', 'M', 'L', 'XL'];
 
-  constructor(private productService: ProductService,  private router:Router) {}
+  constructor(
+    private productService: ProductService,
+    private categoryService: CategoryService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadMyProducts();
+    this.loadCategories();
   }
 
   loadMyProducts(): void {
@@ -32,13 +47,57 @@ import { Router } from '@angular/router';
     });
   }
 
+  loadCategories(): void {
+    this.categoryService.getAll().subscribe({
+      next: (data) => this.categories = data,
+      error: (err) => console.error('Kategori yüklenemedi:', err)
+    });
+  }
   setFilter(status: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING') {
     this.filter = status;
   }
 
+  applyFilters(): void {
+    const userId = Number(localStorage.getItem('userId'));
+    this.productService.filterMyProducts(
+      this.selectedCategory,
+      this.selectedColors,
+      this.selectedSizes,
+      userId
+    ).subscribe({
+      next: (data) => this.products = data,
+      error: (err) => console.error('Filtreleme hatası:', err)
+    });
+  }
+
   get filteredProducts(): Product[] {
-    if (this.filter === 'ALL') return this.products;
-    return this.products.filter(p => p.productStatus === this.filter);
+    const baseList = this.filter === 'ALL'
+      ? this.products
+      : this.products.filter(p => p.productStatus === this.filter);
+
+    // Varyantları ayrı ürün gibi göster
+    if (this.showVariantsAsProducts) {
+      const flat: Product[] = [];
+      baseList.forEach(p => {
+        if (p.variants && p.variants.length > 0) {
+          for (const v of p.variants) {
+            flat.push({
+              ...p,
+              price: v.price,
+              stockQuantity: v.stock,
+              imageUrls: v.imageUrls,
+              color: v.color,
+              variants: [], // varyantı varyantsız ürün gibi göster
+            });
+          }
+        } else {
+          flat.push(p); // varyantsız ürünü direkt ekle
+        }
+      });
+      return flat;
+    }
+
+    return baseList;
   }
 
   deactivateProduct(id: number) {
@@ -105,6 +164,25 @@ import { Router } from '@angular/router';
   isExpanded(productId: number): boolean {
     return this.expandedProductIds.has(productId);
   }
+
+  toggleColor(color: string): void {
+    const index = this.selectedColors.indexOf(color);
+    if (index > -1) {
+      this.selectedColors.splice(index, 1);
+    } else {
+      this.selectedColors.push(color);
+    }
+  }
+
+  toggleSize(size: string): void {
+    const index = this.selectedSizes.indexOf(size);
+    if (index > -1) {
+      this.selectedSizes.splice(index, 1);
+    } else {
+      this.selectedSizes.push(size);
+    }
+  }
+
 
   hasVaryingPrices(p: Product): boolean {
     if (!p.variants || p.variants.length < 2) return false;

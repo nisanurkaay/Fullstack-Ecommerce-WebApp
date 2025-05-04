@@ -34,6 +34,17 @@ public class RefreshTokenService {
         System.out.println("🔍 Looking up refresh token: " + token); // BU SATIRI EKLE
         return refreshTokenRepository.findByToken(token);
     }
+    public RefreshToken validateRefreshToken(String tokenStr) {
+        RefreshToken token = refreshTokenRepository.findByToken(tokenStr)
+            .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
+    
+        if (token.getExpiryDate().isBefore(Instant.now())) {
+            refreshTokenRepository.delete(token);
+            throw new RuntimeException("Refresh token expired");
+        }
+    
+        return token;
+    }
     
 
     public RefreshToken verifyExpiration(RefreshToken token) {

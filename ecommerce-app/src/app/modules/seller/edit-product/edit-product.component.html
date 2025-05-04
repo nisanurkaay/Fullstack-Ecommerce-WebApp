@@ -29,7 +29,7 @@
   <div *ngIf="!hasVariants">
     <label>Current Images</label>
     <div class="image-preview-container">
-      <img *ngFor="let img of existingMainImages" [src]="'http://localhost:8080' + img" class="preview-img" />
+      <img *ngFor="let img of existingMainImages" [src]="'http://localhost:8081' + img" class="preview-img" />
     </div>
 
     <label>Upload New Images (Optional - 3 required to replace)</label>

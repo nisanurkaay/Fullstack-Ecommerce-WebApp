@@ -8,7 +8,7 @@ import { Product,ProductVariant } from '../models/product.model';
   providedIn: 'root'
 })
 export class ProductService {
-  private apiUrl = 'http://localhost:8080/api/products';
+  private apiUrl = 'http://localhost:8081/api/products';
 
   constructor(private http: HttpClient) {}
 
@@ -32,10 +32,11 @@ export class ProductService {
   }
 
 
-  updateRaw(id: number, formData: FormData, sellerId: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/products/${id}?sellerId=${sellerId}`, formData);
-  }
 
+  updateRaw(productId: number, formData: FormData, sellerId: number): Observable<any> {
+    const url = `${this.apiUrl}/${productId}?sellerId=${sellerId}`;  // 👈 DOĞRU HALİ
+    return this.http.put(url, formData);
+  }
 
   activate(id: number, userId: number): Observable<Product> {
     return this.http.put<Product>(`${this.apiUrl}/${id}/activate?userId=${userId}`, {});
@@ -73,8 +74,18 @@ export class ProductService {
   createRaw(formData: FormData, sellerId: number): Observable<Product> {
     return this.http.post<Product>(`${this.apiUrl}?sellerId=${sellerId}`, formData);
   }
+
   addVariantToProduct(productId: number, variant: ProductVariant): Observable<Product> {
     return this.http.put<Product>(`${this.apiUrl}/${productId}/add-variant`, variant);
+  }
+  filterMyProducts(categoryId: number | null, colors: string[], sizes: string[], userId: number): Observable<Product[]> {
+    const params = new URLSearchParams();
+    if (categoryId) params.append('categoryId', categoryId.toString());
+    if (colors.length) params.append('colors', colors.join(','));
+    if (sizes.length) params.append('sizes', sizes.join(','));
+    params.append('userId', userId.toString());
+
+    return this.http.get<Product[]>(`${this.apiUrl}/filter?${params.toString()}`);
   }
 
 }
