@@ -10,32 +10,56 @@ import { ProductService } from '../../../core/services/product.service';
   standalone:false
 })
 export class ProductMgmtComponent implements OnInit {
-  pendingProducts: Product[] = [];
+  allProducts: Product[] = [];
+  displayedProducts: Product[] = [];
+  selectedStatus: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'BANNED' = 'ALL';
 
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
-    this.loadPendingProducts();
+    this.loadProductsByStatus('ALL');
   }
 
-  loadPendingProducts(): void {
-    this.productService.getPendingProducts().subscribe({
-      next: (res) => this.pendingProducts = res,
-      error: (err) => console.error('Error loading pending products', err)
+  loadProductsByStatus(status: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'BANNED'): void {
+    if (status === 'ALL') {
+      this.productService.getAllForAdmin().subscribe({
+        next: res => {
+          this.allProducts = res;
+          this.displayedProducts = res;
+        },
+        error: err => console.error('Failed to load all products', err)
+      });
+    } else {
+      this.productService.getProductsByStatus(status).subscribe({
+        next: res => this.displayedProducts = res,
+        error: err => console.error(`Failed to load ${status} products`, err)
+      });
+    }
+
+    this.selectedStatus = status;
+  }
+
+  toggleBan(product: Product): void {
+    const action = product.productStatus === 'BANNED'
+      ? this.productService.unbanProduct(product.id!)
+      : this.productService.banProduct(product.id!);
+
+    action.subscribe({
+      next: () => this.loadProductsByStatus(this.selectedStatus),
+      error: err => console.error('Ban/unban error:', err)
     });
   }
-
   approveProduct(id: number): void {
     this.productService.approveProduct(id).subscribe({
-      next: () => this.loadPendingProducts(),
-      error: (err) => console.error('Error approving product', err)
+      next: () => this.loadProductsByStatus(this.selectedStatus),
+      error: err => console.error('Error approving product', err)
     });
   }
 
   denyProduct(id: number): void {
     this.productService.denyProduct(id).subscribe({
-      next: () => this.loadPendingProducts(),
-      error: (err) => console.error('Error denying product', err)
+      next: () => this.loadProductsByStatus(this.selectedStatus),
+      error: err => console.error('Error denying product', err)
     });
   }
 }

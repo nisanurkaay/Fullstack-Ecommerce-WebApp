@@ -252,6 +252,7 @@ public ProductResponse denyProduct(Long id) {
     return mapToResponse(productRepository.save(product));
 }
 
+
     @Override
     @Transactional
     public void deleteProduct(Long id, Long userId) {
@@ -276,6 +277,22 @@ public ProductResponse denyProduct(Long id) {
         productRepository.save(product);
     }
 
+    @Override
+    @Transactional
+    public void unbanProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        product.setProductStatus(ProductStatus.INACTIVE);
+        productRepository.save(product);
+    }
+    public List<ProductResponse> getAllProductsForAdmin() {
+        return productRepository.findAll().stream()
+            .map(this::mapToResponse)
+            .toList();
+    }
+    
+    
     @Override
     @Transactional
     public ProductResponse activateProduct(Long id, Long userId) {
