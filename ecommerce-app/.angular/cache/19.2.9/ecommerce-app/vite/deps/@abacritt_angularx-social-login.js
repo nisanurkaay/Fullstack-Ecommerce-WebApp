@@ -1,7 +1,7 @@
 import {
   CommonModule
-} from "./chunk-VOSIYPZB.js";
-import "./chunk-NEGS3YYM.js";
+} from "./chunk-JINLRPIQ.js";
+import "./chunk-SWX5W6VE.js";
 import {
   Directive,
   ElementRef,
@@ -21,11 +21,11 @@ import {
   ɵɵdefineNgModule,
   ɵɵdirectiveInject,
   ɵɵinject
-} from "./chunk-Z67EBTI5.js";
-import "./chunk-6Q4RANH6.js";
+} from "./chunk-7W27O5A6.js";
 import {
   isObservable
-} from "./chunk-FFZIAYYX.js";
+} from "./chunk-2LVKW5TZ.js";
+import "./chunk-Q7YHLGLO.js";
 import {
   AsyncSubject,
   BehaviorSubject,
@@ -35,7 +35,7 @@ import {
   filter,
   skip,
   take
-} from "./chunk-CXCX2JKZ.js";
+} from "./chunk-4GNDKFTC.js";
 
 // node_modules/@abacritt/angularx-social-login/fesm2022/abacritt-angularx-social-login.mjs
 var BaseLoginProvider = class {

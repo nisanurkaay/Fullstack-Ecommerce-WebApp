@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Product } from '../../core/models/product.model'; // doğru yoldan importla
+import { Product } from '../../core/models/product.model';
 
 export interface CartItem {
   product: Product;
   quantity: number;
+  color: string;
+  size: string;
 }
 
 @Injectable({
@@ -15,45 +17,69 @@ export class CartService {
   private cartSubject = new BehaviorSubject<CartItem[]>([]);
   cart$ = this.cartSubject.asObservable();
 
-  addToCart(product: Product) {
-    const existingItem = this.cartItems.find(item => item.product.id === product.id);
+  // Ürünü sepete ekle
+  addToCart(product: Product, color: string = '', size: string = ''): void {
+    const existingItem = this.cartItems.find(item =>
+      item.product.id === product.id &&
+      item.color === color &&
+      item.size === size
+    );
+
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
-      this.cartItems.push({ product, quantity: 1 });
+      this.cartItems.push({ product, quantity: 1, color, size });
     }
+
     this.cartSubject.next(this.cartItems);
   }
 
-  incrementQuantity(productId: number) {
-    const item = this.cartItems.find(i => i.product.id === productId);
+  // Miktar artır
+  incrementQuantity(productId: number, color?: string, size?: string): void {
+    const item = this.cartItems.find(i =>
+      i.product.id === productId &&
+      i.color === color &&
+      i.size === size
+    );
     if (item) {
       item.quantity++;
       this.cartSubject.next(this.cartItems);
     }
   }
 
-  decrementQuantity(productId: number) {
-    const item = this.cartItems.find(i => i.product.id === productId);
+  // Miktar azalt
+  decrementQuantity(productId: number, color?: string, size?: string): void {
+    const item = this.cartItems.find(i =>
+      i.product.id === productId &&
+      i.color === color &&
+      i.size === size
+    );
+
     if (item && item.quantity > 1) {
       item.quantity--;
       this.cartSubject.next(this.cartItems);
     } else if (item) {
-      this.removeItem(productId);
+      this.removeItem(productId, color, size);
     }
   }
 
-  removeItem(productId: number) {
-    this.cartItems = this.cartItems.filter(i => i.product.id !== productId);
+  // Sepetten sil
+  removeItem(productId: number, color?: string, size?: string): void {
+    this.cartItems = this.cartItems.filter(i =>
+      !(i.product.id === productId && i.color === color && i.size === size)
+    );
     this.cartSubject.next(this.cartItems);
   }
 
-  clearCart() {
+  // Sepeti temizle
+  clearCart(): void {
     this.cartItems = [];
     this.cartSubject.next(this.cartItems);
   }
 
+  // Toplam fiyat
   getTotalPrice(): number {
-    return this.cartItems.reduce((total, item) => total + item.product.price * item.quantity, 0);
+    return this.cartItems.reduce((total, item) =>
+      total + item.product.price * item.quantity, 0);
   }
 }

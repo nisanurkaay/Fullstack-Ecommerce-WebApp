@@ -28,7 +28,8 @@ public class ProductController {
     public ProductController(ProductService productService,
                              FileStorageService fileStorageService) {   
         this.productService = productService;
-        this.fileStorageService = fileStorageService; // Initialize your file storage service here
+        this.fileStorageService = fileStorageService; 
+        
     }
 
     @PostMapping(path = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

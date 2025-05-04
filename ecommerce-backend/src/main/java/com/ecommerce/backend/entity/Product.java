@@ -1,5 +1,7 @@
 package com.ecommerce.backend.entity;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -56,7 +58,7 @@ private User seller;
         this.imageUrls = imageUrls;
     }
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProductVariant> variants;
+    private List<ProductVariant> variants = new ArrayList<>();
     @Enumerated(EnumType.STRING)
     private ProductStatus productStatus;
 

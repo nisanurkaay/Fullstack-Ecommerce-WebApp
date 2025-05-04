@@ -2,6 +2,8 @@ package com.ecommerce.backend.dto;
 
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.entity.ProductVariant;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +25,8 @@ public class ProductResponse {
     public List<String> getImageUrls() { return imageUrls; }
     public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
     
-    private List<ProductVariantResponse> variants;
+    private List<ProductVariantResponse> variants = new ArrayList<>();
+
 
 public List<ProductVariantResponse> getVariants() {
     return variants;

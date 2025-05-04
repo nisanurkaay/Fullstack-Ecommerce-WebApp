@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CartService, CartItem } from '../../../core/services/cart.service'; // kendi proje yapına göre yolu düzelt
+import { CartService, CartItem } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-cart',
-  standalone:false,
+  standalone: false,
   templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.css'] // Eğer style kullanıyorsan
+  styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
   cartItems: CartItem[] = [];
@@ -18,16 +18,16 @@ export class CartComponent implements OnInit {
     });
   }
 
-  incrementQuantity(productId: number): void {
-    this.cartService.incrementQuantity(productId);
+  incrementQuantity(productId: number, color: string, size: string): void {
+    this.cartService.incrementQuantity(productId, color, size);
   }
 
-  decrementQuantity(productId: number): void {
-    this.cartService.decrementQuantity(productId);
+  decrementQuantity(productId: number, color: string, size: string): void {
+    this.cartService.decrementQuantity(productId, color, size);
   }
 
-  removeItem(productId: number): void {
-    this.cartService.removeItem(productId);
+  removeItem(productId: number, color: string, size: string): void {
+    this.cartService.removeItem(productId, color, size);
   }
 
   clearAll(): void {

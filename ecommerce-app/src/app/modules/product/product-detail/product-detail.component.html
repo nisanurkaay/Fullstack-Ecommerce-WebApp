@@ -3,22 +3,22 @@
     <!-- Görsel Galerisi -->
     <div>
       <!-- Ana Görsel -->
-<img
-[src]="'http://localhost:8080' + selectedImage"
-[alt]="product.name"
-class="main-image mb-4"
-/>
+      <img
+        [src]="'http://localhost:8081' + selectedImage"
+        [alt]="product.name"
+        class="main-image mb-4 w-full h-auto object-contain"
+      />
 
-<!-- Küçük Görseller: yatay scroll alanı -->
-<div class="thumbnail-strip">
-<img
-  *ngFor="let img of product.imageUrls"
-  [src]="'http://localhost:8080' + img"
-  (click)="selectImage(img)"
-  [class.selected]="selectedImage === img"
-/>
-</div>
-
+      <!-- Küçük Görseller: yatay scroll alanı -->
+      <div class="thumbnail-strip flex overflow-x-auto space-x-2 mt-2">
+        <img
+          *ngFor="let img of product.imageUrls"
+          [src]="'http://localhost:8081' + img"
+          (click)="selectImage(img)"
+          [class.border-black]="selectedImage === img"
+          class="w-16 h-16 object-cover cursor-pointer border-2 border-transparent hover:border-gray-400 rounded"
+        />
+      </div>
     </div>
 
     <!-- Ürün Bilgileri -->
@@ -31,29 +31,44 @@ class="main-image mb-4"
       </div>
 
       <!-- Renk Seçimi -->
-      <div class="mt-4">
-        <label class="font-semibold">Color:</label>
-        <div class="flex space-x-2 mt-1">
+      <div class="mt-4" *ngIf="colors.length > 0">
+        <label class="font-semibold block mb-1">Color:</label>
+        <div class="flex space-x-2">
           <div
             *ngFor="let color of colors"
-            class="w-6 h-6 rounded-full border"
-            [ngClass]="color"
-          ></div>
+            (click)="selectColor(color)"
+            [ngStyle]="{
+              'background-color': color.toLowerCase(),
+              'border': selectedColor === color ? '3px solid black' : '1px solid #ccc'
+            }"
+            class="w-6 h-6 rounded-full cursor-pointer"
+            [title]="color">
+          </div>
         </div>
+        <p *ngIf="selectedColor" class="text-sm mt-1">Selected: {{ selectedColor }}</p>
       </div>
 
       <!-- Beden Seçimi -->
-      <div class="mt-4">
-        <label class="font-semibold">Size:</label>
-        <div class="flex space-x-2 mt-1">
-          <button *ngFor="let size of sizes" class="border px-3 py-1 rounded">
+      <div class="mt-4" *ngIf="sizes.length > 0">
+        <label class="font-semibold block mb-1">Size:</label>
+        <div class="flex space-x-2">
+          <button
+            *ngFor="let size of sizes"
+            (click)="selectSize(size)"
+            [ngClass]="{
+              'bg-black text-white': selectedSize === size,
+              'bg-white text-black border': selectedSize !== size
+            }"
+            class="px-3 py-1 border rounded transition">
             {{ size }}
           </button>
         </div>
+        <p *ngIf="selectedSize" class="text-sm mt-1">Selected: {{ selectedSize }}</p>
       </div>
 
+      <!-- Sepete Ekle Butonu -->
       <button
-        (click)="addToCart(product)"
+        (click)="addToCart()"
         class="mt-6 bg-black text-white py-2 px-6 rounded hover:bg-gray-700"
       >
         Add to Cart
