@@ -1,11 +1,10 @@
-// src/app/modules/product-detail/product-detail.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Product } from '../../../core/models/product.model';
 import { Review } from '../../../core/models/review.model';
-import { CartService } from '../../../core/services/cart.service';
 import { ProductService } from '../../../core/services/product.service';
 import { ReviewService } from '../../../core/services/review.service';
+import { CartService } from '../../../core/services/cart.service';
 
 @Component({
   selector: 'app-product-detail',
@@ -19,6 +18,8 @@ export class ProductDetailComponent implements OnInit {
   productReviews: Review[] = [];
   sizes: string[] = ['S', 'M', 'L', 'XL'];
   colors: string[] = ['black', 'green', 'blue'];
+  currentSlide = 0;
+  selectedImage: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -30,7 +31,10 @@ export class ProductDetailComponent implements OnInit {
   ngOnInit(): void {
     this.productId = Number(this.route.snapshot.paramMap.get('id'));
     this.productService.getById(this.productId).subscribe({
-      next: (prod: Product) => this.product = prod,
+      next: (prod: Product) => {
+        this.product = prod;
+        this.selectedImage = prod.imageUrls?.[0] ?? ''; // İlk resmi ayarla
+      },
       error: (e: any) => console.error(e)
     });
 
@@ -40,7 +44,28 @@ export class ProductDetailComponent implements OnInit {
     });
   }
 
+  nextSlide(): void {
+    if (this.product?.imageUrls?.length) {
+      this.currentSlide = (this.currentSlide + 1) % this.product.imageUrls.length;
+    }
+  }
+
+  prevSlide(): void {
+    if (this.product?.imageUrls?.length) {
+      this.currentSlide = (this.currentSlide - 1 + this.product.imageUrls.length) % this.product.imageUrls.length;
+    }
+  }
+
+
+
+  goToSlide(index: number): void {
+    this.currentSlide = index;
+  }
+
   addToCart(product: Product): void {
-    this.cartService.addToCart(this.product);
+    this.cartService.addToCart(product);
+  }
+  selectImage(img: string): void {
+    this.selectedImage = img;
   }
 }

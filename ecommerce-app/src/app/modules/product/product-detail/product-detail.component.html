@@ -1,9 +1,27 @@
 <div *ngIf="product">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Görsel Galerisi -->
     <div>
-      <img [src]="" alt="{{ product.name }}" class="rounded-lg">
+      <!-- Ana Görsel -->
+<img
+[src]="'http://localhost:8080' + selectedImage"
+[alt]="product.name"
+class="main-image mb-4"
+/>
+
+<!-- Küçük Görseller: yatay scroll alanı -->
+<div class="thumbnail-strip">
+<img
+  *ngFor="let img of product.imageUrls"
+  [src]="'http://localhost:8080' + img"
+  (click)="selectImage(img)"
+  [class.selected]="selectedImage === img"
+/>
+</div>
+
     </div>
 
+    <!-- Ürün Bilgileri -->
     <div>
       <h1 class="text-3xl font-bold">{{ product.name }}</h1>
       <p class="text-lg text-gray-600 mt-2">{{ product.description }}</p>
@@ -12,15 +30,19 @@
         <span class="text-2xl font-bold">${{ product.price }}</span>
       </div>
 
-      <!-- Static Color Selection -->
+      <!-- Renk Seçimi -->
       <div class="mt-4">
         <label class="font-semibold">Color:</label>
         <div class="flex space-x-2 mt-1">
-          <div *ngFor="let color of colors" class="w-6 h-6 rounded-full" [ngClass]="color"></div>
+          <div
+            *ngFor="let color of colors"
+            class="w-6 h-6 rounded-full border"
+            [ngClass]="color"
+          ></div>
         </div>
       </div>
 
-      <!-- Static Size Selection -->
+      <!-- Beden Seçimi -->
       <div class="mt-4">
         <label class="font-semibold">Size:</label>
         <div class="flex space-x-2 mt-1">
@@ -30,22 +52,23 @@
         </div>
       </div>
 
-      <button (click)="addToCart(product)" class="mt-6 bg-black text-white py-2 px-6 rounded hover:bg-gray-700">
+      <button
+        (click)="addToCart(product)"
+        class="mt-6 bg-black text-white py-2 px-6 rounded hover:bg-gray-700"
+      >
         Add to Cart
       </button>
     </div>
   </div>
 
-  <!-- Tabs Section -->
+  <!-- Tab Menüsü -->
   <mat-tab-group class="mt-10">
     <mat-tab label="Product Details">
       <p class="mt-4 text-gray-600">{{ product.description }}</p>
     </mat-tab>
-
     <mat-tab label="Ratings & Reviews">
       <app-review-list [reviews]="productReviews"></app-review-list>
     </mat-tab>
-
     <mat-tab label="FAQs">
       <p class="mt-4 text-gray-600">Frequently Asked Questions will go here.</p>
     </mat-tab>
