@@ -87,5 +87,7 @@ export class ProductService {
 
     return this.http.get<Product[]>(`${this.apiUrl}/filter?${params.toString()}`);
   }
-
+  getColors(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/colors`); // ✅ Template literal düzeltildi
+  }
 }

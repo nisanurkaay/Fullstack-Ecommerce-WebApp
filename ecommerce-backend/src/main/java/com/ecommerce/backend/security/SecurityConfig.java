@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/products/filter").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/api/products/colors").permitAll()
 
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // 💥 Preflight izin
                         .anyRequest().authenticated()

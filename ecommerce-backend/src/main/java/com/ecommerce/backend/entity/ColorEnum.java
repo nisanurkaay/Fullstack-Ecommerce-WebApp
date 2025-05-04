@@ -20,4 +20,4 @@ public enum ColorEnum {
     public String toValue() {
         return this.name();
     }
-}
+}  

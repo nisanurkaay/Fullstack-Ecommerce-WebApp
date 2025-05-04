@@ -30,6 +30,7 @@ private User seller;
     
 
     @Column(name="color")
+    @Enumerated(EnumType.STRING)
     private ColorEnum color;
 
 

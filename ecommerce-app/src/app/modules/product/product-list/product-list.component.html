@@ -1,18 +1,40 @@
-<!-- Loading and Error Messages -->
-<div *ngIf="isLoading" class="text-center py-8 text-lg font-medium text-gray-700">
-  Yükleniyor...
-</div>
+<div class="flex">
+  <!-- SOL: Filtreler -->
+  <div *ngIf="showFilters" class="w-64 p-4 border-r space-y-4 bg-gray-50">
+    <h2 class="text-lg font-semibold">Filtrele</h2>
 
-<div *ngIf="error" class="text-center py-4 text-red-600 font-medium">
-  {{ error }}
-</div>
+    <!-- Kategori -->
+    <div>
+      <p class="font-medium mb-1">Kategori</p>
+      <div *ngFor="let cat of categories">
+        <label class="flex items-center gap-2">
+          <input type="checkbox" [value]="cat.id" (change)="toggleCategory(cat.id!)" />
+          {{ cat.name }}
+        </label>
+      </div>
+    </div>
 
-<!-- No Results Message -->
-<div *ngIf="!isLoading && filteredProducts.length === 0 && !error" class="text-center py-8 text-gray-500">
-  No products found.
-</div>
+    <!-- Renk -->
+    <div>
+      <p class="font-medium mb-1 mt-4">Renk</p>
+      <div *ngFor="let color of colors">
+        <label class="flex items-center gap-2">
+          <input type="checkbox" [value]="color" (change)="toggleColor(color)" />
+          {{ color }}
+        </label>
+      </div>
+    </div>
+  </div>
 
-<!-- src/app/modules/product/components/product-list/product-list.component.html -->
-<div *ngIf="!isLoading && filteredProducts.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-  <app-product-card *ngFor="let p of filteredProducts" [product]="p"></app-product-card>  <!-- ProductCardComponent'i burada kullanıyoruz -->
+  <!-- SAĞ: Ürünler -->
+  <div class="flex-1 p-4">
+    <div *ngIf="isLoading" class="text-center">Yükleniyor...</div>
+    <div *ngIf="error" class="text-red-600 text-center">{{ error }}</div>
+    <div *ngIf="!isLoading && filteredProducts.length === 0" class="text-center text-gray-500">Ürün bulunamadı.</div>
+
+    <div *ngIf="filteredProducts.length > 0"
+         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <app-product-card *ngFor="let p of filteredProducts" [product]="p"></app-product-card>
+    </div>
+  </div>
 </div>

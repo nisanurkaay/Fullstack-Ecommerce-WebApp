@@ -1,60 +1,107 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Product } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
+import { CategoryService } from '../../../core/services/category.service';
+import { Product } from '../../../core/models/product.model';
+import { Category } from '../../../core/models/category.model';
 
 @Component({
   selector: 'app-product-list',
-  standalone: false,
   templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  styleUrls: ['./product-list.component.css'],
+  standalone: false
 })
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   filteredProducts: Product[] = [];
+  categories: Category[] = [];
+  colors: string[] = [];
+  selectedCategories: number[] = [];
+  selectedColors: string[] = [];
+  selectedSizes: string[] = [];
   isLoading = true;
   error: string | null = null;
+  showFilters = true;
 
   constructor(
     private productService: ProductService,
+    private categoryService: CategoryService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this.route.queryParamMap.subscribe(params => {
-      const query = params.get('q')?.toLowerCase() || '';
-      const categoryId = params.get('category');
-if (categoryId) {
-  const catId = Number(categoryId);
-  this.filteredProducts = this.filteredProducts.filter(p => p.categoryId === catId);
-}
+    this.loadData();
+  }
 
-      this.isLoading = true;
-      this.productService.getAll().subscribe({
-        next: (data: Product[]) => {
-          this.products = data;
-          this.filteredProducts = data;
+  loadData() {
+    this.isLoading = true;
 
-          if (query) {
-            this.filteredProducts = this.filteredProducts.filter(p =>
-              p.name.toLowerCase().includes(query)
-            );
-          }
+    // Fetch the colors available for filtering
+    this.productService.getColors().subscribe({
+      next: (data) => this.colors = data,
+      error: () => this.colors = [] // If there's an error, leave the color array empty
+    });
 
-          if (categoryId) {
-            const catId = Number(categoryId);
-            this.filteredProducts = this.filteredProducts.filter(p =>
-              p.categoryId === catId
-            );
-          }
+    // Fetch all categories
+    this.categoryService.getAll().subscribe(cats => {
+      this.categories = cats;
+    });
 
-          this.isLoading = false;
-        },
-        error: (err: any) => {
-          this.error = 'Hata oluştu';
-          this.isLoading = false;
-        }
-      });
+    // Fetch all products
+    this.productService.getAll().subscribe({
+      next: (data) => {
+        this.products = data;
+        this.filteredProducts = data;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.error = 'Hata oluştu';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  // Toggle category filter
+  toggleCategory(catId: number) {
+    this.selectedCategories.includes(catId)
+      ? this.selectedCategories = this.selectedCategories.filter(id => id !== catId)
+      : this.selectedCategories.push(catId);
+    this.applyFilters();
+  }
+
+  // Toggle color filter
+  toggleColor(color: string) {
+    this.selectedColors.includes(color)
+      ? this.selectedColors = this.selectedColors.filter(c => c !== color)
+      : this.selectedColors.push(color);
+    this.applyFilters();
+  }
+
+  // Toggle size filter
+  toggleSize(size: string) {
+    this.selectedSizes.includes(size)
+      ? this.selectedSizes = this.selectedSizes.filter(s => s !== size)
+      : this.selectedSizes.push(size);
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    this.filteredProducts = this.products.filter(product => {
+      // Check if product matches the selected categories
+      const matchesCategory = this.selectedCategories.length === 0 || this.selectedCategories.includes(product.categoryId);
+
+      // Check if product matches the selected colors (including variants)
+      const matchesColor = this.selectedColors.length === 0 ||
+        // Check if the product color itself matches the selected color
+        this.selectedColors.includes(product.color!) ||
+        // Check if any of the variants' color matches the selected colors
+        product.variants?.some(variant => this.selectedColors.includes(variant.color));
+
+      // Check if product matches the selected sizes (including variants)
+      const matchesSize = this.selectedSizes.length === 0 ||
+        product.variants?.some(variant => this.selectedSizes.includes(variant.size));
+
+      return matchesCategory && matchesColor && matchesSize;
     });
   }
 

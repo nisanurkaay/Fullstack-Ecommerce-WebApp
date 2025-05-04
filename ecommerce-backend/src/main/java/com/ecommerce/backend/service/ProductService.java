@@ -20,7 +20,7 @@ void hardDelete(Long id, Long userId);
 void deleteVariant(Long productId, Long variantId);
     void adminBanProduct(Long id);
     List<ProductResponse> filterProductsByRole(Long categoryId, List<String> colors, List<String> sizes, Long userId);
-
+    List<String> getUsedColors();
     List<ProductResponse> getAllPendingProducts();
     ProductResponse getProductById(Long id);
      ProductResponse approveProduct(Long id);

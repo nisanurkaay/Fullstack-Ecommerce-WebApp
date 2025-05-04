@@ -68,4 +68,4 @@ public ColorEnum getColor() {
 public void setColor(ColorEnum color) {
     this.color = color;
 }
-}
+} 

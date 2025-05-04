@@ -66,6 +66,10 @@ public class ProductController {
     
         return ResponseEntity.ok(productService.createProduct(request, sellerId));
     }
+    @GetMapping("/colors")
+    public ResponseEntity<List<String>> getAllColorsUsedInProducts() {
+        return ResponseEntity.ok(productService.getUsedColors());
+    }
     
 
     @PutMapping("/{id}/approve")

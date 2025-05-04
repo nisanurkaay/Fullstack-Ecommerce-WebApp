@@ -12,7 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.modelmapper.ModelMapper; 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Stream;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -87,6 +91,29 @@ public class ProductServiceImpl implements ProductService {
     
         return mapToResponse(product);
     }
+
+@Override
+public List<String> getUsedColors() {
+    Set<String> colorSet = new HashSet<>();
+
+    // Ana ürün renkleri (eğer varyant yoksa)
+    productRepository.findAll().stream()
+        .map(Product::getColor)
+        .filter(Objects::nonNull)
+        .map(Enum::name)
+        .forEach(colorSet::add);
+
+    // Varyant renkleri
+    productRepository.findAll().stream()
+        .flatMap(p -> p.getVariants() != null ? p.getVariants().stream() : Stream.empty())
+        .map(ProductVariant::getColor)
+        .filter(Objects::nonNull)
+        .map(Enum::name)
+        .forEach(colorSet::add);
+
+    return new ArrayList<>(colorSet);
+}
+
     @Override
 public List<ProductResponse> filterProducts(Long categoryId, List<String> colors, List<String> sizes) {
     List<Product> products = productRepository.findAllWithFilters(categoryId, colors, sizes);
