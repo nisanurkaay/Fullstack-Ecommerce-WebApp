@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { User, Role } from '../models/user.model';
+import { jwtDecode  } from 'jwt-decode';
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private currentUser$$ = new BehaviorSubject<User | null>(null);
@@ -34,7 +36,7 @@ export class AuthService {
         // ✅ ACCESS ve REFRESH token'ı düzgün kaydet
         localStorage.setItem('accessToken', res.token);
         localStorage.setItem('refreshToken', res.refreshToken);
-
+        localStorage.setItem('email', res.email);
         // ✅ user bilgilerini de kaydet
         localStorage.setItem('user', JSON.stringify({
           id: res.id,
@@ -114,7 +116,18 @@ export class AuthService {
     localStorage.setItem('refreshToken', token);
   }
 
+  getCurrentUserEmail(): string | null {
+    const token = this.getAccessToken();
+    if (!token) return null;
 
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded?.sub || decoded?.email || null; // email genelde 'sub' veya 'email' alanında olur
+    } catch (error) {
+      console.error('Token decode error:', error);
+      return null;
+    }
+  }
   // 👤 GET USER ROLE
   getUserRole(): Role {
     const user = localStorage.getItem('user');
