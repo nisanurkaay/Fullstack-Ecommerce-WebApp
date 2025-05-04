@@ -54,7 +54,7 @@ public class SecurityConfig {
 
     // Korunan endpointler
     .requestMatchers("/api/products/pending").hasRole("ADMIN")
-    .requestMatchers("/api/products/**").hasRole("SELLER")
+   
 
     .anyRequest().authenticated()
 )
