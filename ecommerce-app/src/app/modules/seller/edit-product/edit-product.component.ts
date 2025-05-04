@@ -18,6 +18,7 @@ export class EditProductComponent implements OnInit {
   productId!: number;
   hasVariants = false;
   sameForAll = false;
+  colors: string[] = ['RED', 'BLUE', 'GREEN', 'BLACK', 'WHITE', 'YELLOW', 'GRAY', 'PINK', 'PURPLE', 'ORANGE'];
 
   variants: ProductVariant[] = [];
   existingMainImages: string[] = [];
@@ -37,7 +38,8 @@ export class EditProductComponent implements OnInit {
       description: [''],
       categoryId: [null, Validators.required],
       price: [0],
-      stockQuantity: [0]
+      stockQuantity: [0],
+      color: ['']
     });
   }
 
@@ -50,7 +52,8 @@ export class EditProductComponent implements OnInit {
         description: product.description,
         categoryId: product.categoryId,
         price: product.price,
-        stockQuantity: product.stockQuantity
+        stockQuantity: product.stockQuantity,
+        color : product.color
       });
 
       this.hasVariants = !!(product.variants && product.variants.length > 0);
@@ -75,6 +78,7 @@ export class EditProductComponent implements OnInit {
     const updatedProduct = {
       ...this.form.value,
       categoryId: Number(this.form.value.categoryId),
+      color: this.form.value.color,
       variants: this.variants
     };
 

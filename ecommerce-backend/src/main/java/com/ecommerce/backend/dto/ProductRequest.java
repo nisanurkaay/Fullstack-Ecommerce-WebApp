@@ -1,5 +1,7 @@
 package com.ecommerce.backend.dto;
 import java.util.List;
+
+import com.ecommerce.backend.entity.ColorEnum;
 public class ProductRequest {
     private String name;
     private String description;
@@ -50,4 +52,14 @@ public class ProductRequest {
     private List<String> imageUrls;
     public List<String> getImageUrls() { return imageUrls; }
     public void setImageUrls(List<String> imageUrls) { this.imageUrls = imageUrls; }
+
+
+    private ColorEnum color;
+
+public ColorEnum getColor() {
+    return color;
+}
+public void setColor(ColorEnum color) {
+    this.color = color;
+}
 }

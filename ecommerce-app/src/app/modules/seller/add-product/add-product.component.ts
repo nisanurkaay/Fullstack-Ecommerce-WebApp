@@ -5,6 +5,7 @@ import { Category } from '../../../core/models/category.model';
 import { ProductService } from '../../../core/services/product.service';
 import { Product, ProductVariant } from '../../../core/models/product.model';
 import { Router } from '@angular/router';
+import { Color } from '../../../core/models/product.model';
 @Component({
   selector: 'app-addproduct',
   templateUrl: './add-product.component.html',
@@ -19,7 +20,7 @@ export class AddProductComponent implements OnInit {
   sameForAll = false;
   sharedPrice = 0;
   sharedStock = 0;
-
+  colorOptions: Color[] = ['RED', 'BLUE', 'GREEN', 'BLACK', 'WHITE', 'YELLOW', 'GRAY', 'PINK', 'PURPLE', 'ORANGE'];
   variants: ProductVariant[] = [];
   variantImages: File[][] = [];
   mainImages: File[] = [];
@@ -35,7 +36,8 @@ export class AddProductComponent implements OnInit {
       description: [''],
       categoryId: [null, Validators.required],
       price: [0],
-      stockQuantity: [0]
+      stockQuantity: [0],
+      color: ['']
     });
   }
 

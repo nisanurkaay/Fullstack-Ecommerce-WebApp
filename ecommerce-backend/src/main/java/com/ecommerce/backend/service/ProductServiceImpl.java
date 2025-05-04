@@ -56,6 +56,7 @@ public class ProductServiceImpl implements ProductService {
         product.setStockQuantity(request.getStockQuantity());
         product.setCategory(category);
         product.setSeller(seller);
+        product.setColor(request.getColor());
         product.setProductStatus(ProductStatus.PENDING);
         
         if (request.getImageUrls() != null && !request.getImageUrls().isEmpty()) {
@@ -273,6 +274,8 @@ public ProductResponse denyProduct(Long id) {
         res.setImageUrls(product.getImageUrls());
         res.setSellerName(product.getSeller().getName());
         res.setProductStatus(product.getProductStatus());
+        res.setColor(product.getColor());
+
         return res;
     }
     

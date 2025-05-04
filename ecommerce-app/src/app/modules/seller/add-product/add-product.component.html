@@ -22,6 +22,10 @@
   </label>
 
   <div *ngIf="!hasVariants">
+    <label>Color</label>
+    <select formControlName="color" class="form-input">
+      <option *ngFor="let c of colorOptions" [value]="c">{{ c }}</option>
+    </select>
     <label>Price</label>
     <input formControlName="price" type="number" class="form-input" />
 
@@ -50,7 +54,9 @@
 
     <div *ngFor="let variant of variants; let i = index" class="variant-block">
       <label>Color</label>
-      <input [value]="variant.color" (input)="variant.color = $any($event.target).value" class="form-input" />
+      <select formControlName="color" class="form-input">
+        <option *ngFor="let c of colorOptions" [value]="c">{{ c }}</option>
+      </select>
 
       <label>Size</label>
       <input [value]="variant.size" (input)="variant.size = $any($event.target).value" class="form-input" />

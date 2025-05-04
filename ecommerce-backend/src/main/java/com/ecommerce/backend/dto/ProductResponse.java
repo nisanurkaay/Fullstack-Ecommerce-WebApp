@@ -3,6 +3,7 @@ package com.ecommerce.backend.dto;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.entity.ProductVariant;
 import java.util.List;
+import com.ecommerce.backend.entity.ColorEnum;
 public class ProductResponse {
     private Long id;
     private String name;
@@ -86,4 +87,13 @@ public void setCategoryId(Long categoryId) {
     public void setProductStatus(ProductStatus productStatus) {
         this.productStatus = productStatus;
     }
+
+    private ColorEnum color;
+
+public ColorEnum getColor() {
+    return color;
+}
+public void setColor(ColorEnum color) {
+    this.color = color;
+}
 }
