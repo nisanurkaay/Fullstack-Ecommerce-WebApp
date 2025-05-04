@@ -3,23 +3,22 @@
     <!-- Görsel Galerisi -->
     <div>
       <!-- Ana Görsel -->
-      <img
-        [src]="'http://localhost:8080' + selectedImage"
-        [alt]="product.name"
-        class="w-full h-[400px] object-contain border rounded mb-4"
-      />
+<img
+[src]="'http://localhost:8080' + selectedImage"
+[alt]="product.name"
+class="main-image mb-4"
+/>
 
-      <!-- Küçük Görseller: yatay scroll alanı -->
-      <div class="flex gap-2 overflow-x-auto pb-2">
-        <img
-          *ngFor="let img of product.imageUrls"
-          [src]="'http://localhost:8080' + img"
-          (click)="selectImage(img)"
-          class="w-24 h-24 object-cover border rounded cursor-pointer hover:scale-105 transition-transform shrink-0"
-          [class.ring-2]="selectedImage === img"
-          [class.ring-orange-500]="selectedImage === img"
-        />
-      </div>
+<!-- Küçük Görseller: yatay scroll alanı -->
+<div class="thumbnail-strip">
+<img
+  *ngFor="let img of product.imageUrls"
+  [src]="'http://localhost:8080' + img"
+  (click)="selectImage(img)"
+  [class.selected]="selectedImage === img"
+/>
+</div>
+
     </div>
 
     <!-- Ürün Bilgileri -->

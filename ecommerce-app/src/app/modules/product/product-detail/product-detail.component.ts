@@ -56,6 +56,8 @@ export class ProductDetailComponent implements OnInit {
     }
   }
 
+
+
   goToSlide(index: number): void {
     this.currentSlide = index;
   }
