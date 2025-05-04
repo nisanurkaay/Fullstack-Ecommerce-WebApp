@@ -3,6 +3,7 @@ package com.ecommerce.backend.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -44,16 +45,19 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 💡 CORS aktif
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/products/filter").permitAll()
-                        .requestMatchers("/api/products/**").hasRole("SELLER")
-                        .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/api/products/colors").permitAll()
+               .authorizeHttpRequests(auth -> auth
+    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+    .requestMatchers("/api/auth/**").permitAll() // ✅ GİRİŞ ve KAYIT burada
+    .requestMatchers("/uploads/**").permitAll()
+    .requestMatchers("/api/products/colors").permitAll()
+    .requestMatchers("/api/products/filter").permitAll()
 
-                        .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll() // 💥 Preflight izin
-                        .anyRequest().authenticated()
-                )
+    // Korunan endpointler
+    .requestMatchers("/api/products/pending").hasRole("ADMIN")
+    .requestMatchers("/api/products/**").hasRole("SELLER")
+
+    .anyRequest().authenticated()
+)
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAuthorizationFilter(jwtUtils, userDetailsService),
