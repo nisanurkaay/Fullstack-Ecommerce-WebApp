@@ -151,11 +151,27 @@ public ResponseEntity<?> deleteVariant(@PathVariable Long productId, @PathVariab
         productService.adminBanProduct(id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/admin-unban/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> adminUnbanProduct(@PathVariable Long id) {
+        productService.unbanProduct(id);
+        return ResponseEntity.noContent().build();
+    }
     @GetMapping("/pending")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ProductResponse>> getAllPendingProducts() {
         return ResponseEntity.ok(productService.getAllPendingProducts());
     }
+    @GetMapping("/status/{status}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ProductResponse>> getProductsByStatus(@PathVariable ProductStatus status) {
+        return ResponseEntity.ok(productService.getProductsByStatus(status));
+    }
+    @GetMapping("/all")
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<List<ProductResponse>> getAllProductsForAdmin() {
+    return ResponseEntity.ok(productService.getAllProductsForAdmin());
+}
 
     
     @GetMapping("/my")

@@ -1,31 +1,48 @@
-<div class="pending-products-container">
-  <h2 class="form-title">Pending Products</h2>
-
-  <div class="table-wrapper">
-    <table class="custom-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Seller</th>
-          <th>Category</th>
-          <th>Stock</th>
-          <th>Price</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let product of pendingProducts">
-          <td>{{ product.name }}</td>
-          <td>{{ product.sellerName }}</td>
-          <td>{{ product.categoryName }}</td>
-          <td>{{ product.stockQuantity }}</td>
-          <td>${{ product.price }}</td>
-          <td class="action-buttons">
-            <button class="btn-approve" (click)="approveProduct(product.id!)">Approve</button>
-            <button class="btn-deny" (click)="denyProduct(product.id!)">Deny</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+<div class="flex gap-4 mb-4">
+  <button (click)="loadProductsByStatus('ALL')">All</button>
+  <button (click)="loadProductsByStatus('PENDING')">Pending</button>
+  <button (click)="loadProductsByStatus('ACTIVE')">Active</button>
+  <button (click)="loadProductsByStatus('INACTIVE')">Inactive</button>
+  <button (click)="loadProductsByStatus('BANNED')">Banned</button>
 </div>
+
+<table class="custom-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Seller</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Price</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of displayedProducts">
+      <td>{{ product.name }}</td>
+      <td>{{ product.sellerName }}</td>
+      <td>{{ product.categoryName }}</td>
+      <td>{{ product.stockQuantity }}</td>
+      <td>${{ product.price }}</td>
+      <td>{{ product.productStatus }}</td>
+      <td>
+        <button *ngIf="product.productStatus === 'PENDING'" (click)="approveProduct(product.id!)">Approve</button>
+        <button *ngIf="product.productStatus === 'PENDING'" (click)="denyProduct(product.id!)">Deny</button>
+
+
+        <button
+        *ngIf="product.productStatus !== 'PENDING'"
+        (click)="toggleBan(product)"
+        [ngClass]="{
+          'bg-red-500 text-white': product.productStatus !== 'BANNED',
+          'bg-green-500 text-white': product.productStatus === 'BANNED'
+        }"
+        class="px-3 py-1 rounded text-xs font-medium"
+      >
+        {{ product.productStatus === 'BANNED' ? 'Unban' : 'Ban' }}
+      </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

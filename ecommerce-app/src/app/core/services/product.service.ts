@@ -31,6 +31,9 @@ export class ProductService {
     return this.http.delete<void>(`${this.apiUrl}/products/${productId}?sellerId=${sellerId}`);
   }
 
+  getProductsByStatus(status: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'BANNED'): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/status/${status}`);
+  }
 
 
   updateRaw(productId: number, formData: FormData, sellerId: number): Observable<any> {
@@ -55,6 +58,18 @@ export class ProductService {
   denyProduct(productId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/admin-ban/${productId}`);
   }
+
+  banProduct(productId: number):Observable<any> {
+    return this.http.delete(`${this.apiUrl}/admin-ban/${productId}`);
+  }
+
+  unbanProduct(productId: number): Observable<any> {
+    return this.http.get<Product>(`${this.apiUrl}/admin-unban/${productId}`);
+  }
+  getAllForAdmin(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/all`);
+  }
+
   delete(id: number, userId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}?userId=${userId}`);
   }
