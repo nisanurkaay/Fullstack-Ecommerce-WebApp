@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Product,ProductVariant } from '../../../core/models/product.model';
 import { ProductService } from '../../../core/services/product.service';
 import { Router } from '@angular/router';
 import { Category } from '../../../core/models/category.model';
 import { CategoryService } from '../../../core/services/category.service';
+import { Product } from '../../../core/models/product.model';
 
 @Component({
   selector: 'app-my-products',
   templateUrl: './my-products.component.html',
   styleUrls: ['./my-products.component.css'],
-  standalone:false
+  standalone: false
 })
 export class MyProductsComponent implements OnInit {
   products: Product[] = [];
@@ -20,7 +20,7 @@ export class MyProductsComponent implements OnInit {
   selectedColors: string[] = [];
   selectedSizes: string[] = [];
   showVariantsAsProducts = false;
-  availableColors = ['RED', 'BLUE', 'GREEN', 'BLACK', 'WHITE'];
+  availableColors: string[] = [];  // Will store available colors fetched from backend
   availableSizes = ['S', 'M', 'L', 'XL'];
 
   constructor(
@@ -32,6 +32,7 @@ export class MyProductsComponent implements OnInit {
   ngOnInit(): void {
     this.loadMyProducts();
     this.loadCategories();
+    this.loadAvailableColors();  // Call the method to load colors
   }
 
   loadMyProducts(): void {
@@ -40,8 +41,8 @@ export class MyProductsComponent implements OnInit {
 
     this.productService.getMyProducts(sellerId).subscribe({
       next: (data) => {
-        console.log("✔ Gelen ürünler:", data);
         this.products = data;
+        this.applyFilters();  // Apply filters immediately after products are loaded
       },
       error: (err) => console.error('Error loading products:', err)
     });
@@ -53,21 +54,50 @@ export class MyProductsComponent implements OnInit {
       error: (err) => console.error('Kategori yüklenemedi:', err)
     });
   }
-  setFilter(status: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING') {
-    this.filter = status;
+
+  loadAvailableColors(): void {
+    this.productService.getColors().subscribe({
+      next: (data) => this.availableColors = data,
+      error: (err) => console.error('Error loading colors:', err)
+    });
   }
 
+  setFilter(status: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING') {
+    this.filter = status;
+    this.applyFilters();  // Apply filters immediately after status change
+  }
+
+  // Apply filters dynamically based on selected options
   applyFilters(): void {
-    const userId = Number(localStorage.getItem('userId'));
-    this.productService.filterMyProducts(
-      this.selectedCategory,
-      this.selectedColors,
-      this.selectedSizes,
-      userId
-    ).subscribe({
-      next: (data) => this.products = data,
-      error: (err) => console.error('Filtreleme hatası:', err)
-    });
+    let filteredProducts = this.products;
+
+    // Category filter
+    if (this.selectedCategory) {
+      filteredProducts = filteredProducts.filter(p => p.categoryId === this.selectedCategory);
+    }
+
+    // Color filter
+    if (this.selectedColors.length > 0) {
+      filteredProducts = filteredProducts.filter(p =>
+        p.color && this.selectedColors.includes(p.color) ||
+        p.variants?.some(v => this.selectedColors.includes(v.color))
+      );
+    }
+
+    // Size filter
+    if (this.selectedSizes.length > 0) {
+      filteredProducts = filteredProducts.filter(p =>
+        p.variants?.some(v => this.selectedSizes.includes(v.size))
+      );
+    }
+
+    // Filter by status (ALL, ACTIVE, INACTIVE, PENDING)
+    if (this.filter !== 'ALL') {
+      filteredProducts = filteredProducts.filter(p => p.productStatus === this.filter);
+    }
+
+    // Update the product list after applying all filters
+    this.products = filteredProducts;
   }
 
   get filteredProducts(): Product[] {
@@ -100,6 +130,29 @@ export class MyProductsComponent implements OnInit {
     return baseList;
   }
 
+  // Toggle color filter
+  toggleColor(color: string): void {
+    if (this.selectedColors.includes(color)) {
+      this.selectedColors = this.selectedColors.filter(c => c !== color);
+      this.applyFilters();
+    } else {
+      this.selectedColors.push(color);
+    }
+    this.applyFilters();  // Apply filter immediately after toggle
+  }
+
+  // Toggle size filter
+  toggleSize(size: string): void {
+    if (this.selectedSizes.includes(size)) {
+      this.selectedSizes = this.selectedSizes.filter(s => s !== size);
+      this.applyFilters();
+    } else {
+      this.selectedSizes.push(size);
+    }
+    this.applyFilters();  // Apply filter immediately after toggle
+  }
+
+  // Deactivate product
   deactivateProduct(id: number) {
     const sellerId = Number(localStorage.getItem('userId'));
     this.productService.deactivate(id, sellerId).subscribe({
@@ -107,6 +160,8 @@ export class MyProductsComponent implements OnInit {
       error: (err) => console.error('Yayından kaldırma hatası:', err)
     });
   }
+
+  // Confirm product deletion
   confirmDeleteProduct(id: number) {
     const confirmed = confirm('Are you sure you want to delete this product and all variants?');
     if (!confirmed) return;
@@ -117,6 +172,8 @@ export class MyProductsComponent implements OnInit {
       error: (err) => console.error('Silme hatası:', err)
     });
   }
+
+  // Confirm variant deletion
   confirmDeleteVariant(productId: number, variantId: number) {
     const confirmed = confirm('Are you sure you want to delete this variant?');
     if (!confirmed) return;
@@ -126,6 +183,8 @@ export class MyProductsComponent implements OnInit {
       error: (err) => console.error('Varyant silme hatası:', err)
     });
   }
+
+  // Activate product
   activateProduct(id: number) {
     const sellerId = Number(localStorage.getItem('userId'));
 
@@ -133,13 +192,12 @@ export class MyProductsComponent implements OnInit {
       next: (product) => {
         const hasVariants = product.variants && product.variants.length > 0;
 
-        // Ana ürün görselleri
+        // Check for 3 images in product or variants
         if (!hasVariants && (!product.imageUrls || product.imageUrls.length !== 3)) {
           alert('Varyantsız ürünlerde tam 3 görsel yüklenmelidir.');
           return;
         }
 
-        // Varyant görsel kontrolü
         if (hasVariants && product.variants?.some(v => !v.imageUrls || v.imageUrls.length !== 3)) {
           alert('Her varyant için tam 3 görsel yüklenmelidir.');
           return;
@@ -152,10 +210,13 @@ export class MyProductsComponent implements OnInit {
       }
     });
   }
+
+  // Edit product
   editProduct(product: Product) {
     this.router.navigate(['/seller/edit-product', product.id]);
   }
 
+  // Toggle variants visibility
   toggleVariants(productId: number): void {
     if (this.expandedProductIds.has(productId)) {
       this.expandedProductIds.delete(productId);
@@ -167,25 +228,6 @@ export class MyProductsComponent implements OnInit {
   isExpanded(productId: number): boolean {
     return this.expandedProductIds.has(productId);
   }
-
-  toggleColor(color: string): void {
-    const index = this.selectedColors.indexOf(color);
-    if (index > -1) {
-      this.selectedColors.splice(index, 1);
-    } else {
-      this.selectedColors.push(color);
-    }
-  }
-
-  toggleSize(size: string): void {
-    const index = this.selectedSizes.indexOf(size);
-    if (index > -1) {
-      this.selectedSizes.splice(index, 1);
-    } else {
-      this.selectedSizes.push(size);
-    }
-  }
-
 
   hasVaryingPrices(p: Product): boolean {
     if (!p.variants || p.variants.length < 2) return false;

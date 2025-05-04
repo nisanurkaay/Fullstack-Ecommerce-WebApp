@@ -1,27 +1,30 @@
 <div class="my-products-container">
 
-
+  <!-- Filter Form -->
   <div class="filter-form mb-4">
+    <!-- Category Filter -->
     <select [(ngModel)]="selectedCategory">
       <option [ngValue]="null">Tüm Kategoriler</option>
       <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
     </select>
 
+    <!-- Color Filters -->
     <div class="color-filters">
       <label *ngFor="let color of availableColors">
         <input type="checkbox" [value]="color" (change)="toggleColor(color)" [checked]="selectedColors.includes(color)" /> {{ color }}
       </label>
     </div>
 
+    <!-- Size Filters -->
     <div class="size-filters">
       <label *ngFor="let size of availableSizes">
         <input type="checkbox" [value]="size" (change)="toggleSize(size)" [checked]="selectedSizes.includes(size)" /> {{ size }}
       </label>
     </div>
 
+    <!-- Filter Button -->
     <button (click)="applyFilters()" class="btn-primary">Filtrele</button>
   </div>
-
 
   <h2 class="form-title">My Products</h2>
 
@@ -32,11 +35,14 @@
     <button (click)="setFilter('INACTIVE')" [class.active-filter]="filter === 'INACTIVE'">Inactive</button>
     <button (click)="setFilter('PENDING')" [class.active-filter]="filter === 'PENDING'">Pending</button>
   </div>
+
+  <!-- Button to Toggle Variant Display -->
   <div class="flex justify-end mb-2">
     <button (click)="showVariantsAsProducts = !showVariantsAsProducts" class="btn-secondary">
       {{ showVariantsAsProducts ? 'Varyantları Grupla' : 'Varyantları Ürün Gibi Göster' }}
     </button>
   </div>
+
   <!-- Product Table -->
   <div class="table-wrapper">
     <table class="custom-table">
@@ -52,11 +58,13 @@
         </tr>
       </thead>
       <tbody>
+        <!-- Loop through filtered products -->
         <ng-container *ngFor="let p of filteredProducts">
           <tr>
             <td>
               {{ p.name }}
               <div class="flex gap-2 mt-1" *ngIf="!p.variants?.length">
+                <!-- Display product images if no variants -->
                 <img *ngFor="let img of p.imageUrls" [src]="'http://localhost:8081' + img" alt="Product image" class="thumbnail" />
               </div>
             </td>
@@ -99,5 +107,6 @@
     </table>
   </div>
 
+  <!-- No Products Found -->
   <p *ngIf="filteredProducts.length === 0" class="no-products">No products found for this filter.</p>
 </div>
