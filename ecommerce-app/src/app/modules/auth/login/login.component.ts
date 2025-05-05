@@ -7,7 +7,7 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  standalone:false
+  standalone: false
 })
 export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
@@ -27,6 +27,8 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.loginForm.invalid) return;
+
     this.auth.login(this.loginForm.value).subscribe({
       next: res => {
         console.log('✅ Login response:', res);
@@ -39,21 +41,23 @@ export class LoginComponent implements OnInit {
           return;
         }
 
-        // 🔐 Token ve bilgiler localStorage'a yazılıyor
+        // 🔐 Token ve kullanıcı bilgileri localStorage'a kaydedilir
         localStorage.setItem('accessToken', token);
         localStorage.setItem('refreshToken', refreshToken ?? '');
         localStorage.setItem('userId', res.id.toString());
 
-        localStorage.setItem('user', JSON.stringify({
+        const userData = {
           id: res.id,
           name: res.name,
           role: res.role
-        }));
+        };
+        localStorage.setItem('user', JSON.stringify(userData));
 
-        this.auth.setAccessToken(token); // opsiyonel: service içinde tutmak için
+        // 👉 Token'ları serviste sakla (opsiyonel)
+        this.auth.setAccessToken(token);
         this.auth.setRefreshToken(refreshToken ?? '');
 
-        // 🔀 Rol yönlendirme
+        // 🚀 ROL bazlı yönlendirme
         const role = res.role;
         if (role === 'ROLE_SELLER') {
           this.router.navigate(['/seller/dashboard']);
@@ -62,6 +66,7 @@ export class LoginComponent implements OnInit {
         } else {
           this.router.navigate(['/']);
         }
+        this.router.navigate(['/']);
       },
       error: err => {
         this.error = err.status === 401
@@ -70,5 +75,4 @@ export class LoginComponent implements OnInit {
       }
     });
   }
-
 }

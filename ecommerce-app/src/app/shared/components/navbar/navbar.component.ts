@@ -93,4 +93,29 @@ export class NavbarComponent implements OnInit {
     this.showDropdown = !this.showDropdown;
   }
 
+
+  onLogoClick(): void {
+    const user = localStorage.getItem('user');
+    const role = user ? JSON.parse(user).role : null;
+    const currentUrl = this.router.url;
+
+    const isInDashboard =
+      currentUrl.includes('/seller/dashboard') || currentUrl.includes('/admin/dashboard');
+
+    if ((role === 'ROLE_SELLER' || role === 'ROLE_ADMIN') && isInDashboard) {
+      // Eğer zaten dashboard sayfasındaysa → anasayfaya gönder
+      this.router.navigate(['/']);
+    } else if (role === 'ROLE_SELLER') {
+      this.router.navigate(['/seller/dashboard']);
+    } else if (role === 'ROLE_ADMIN') {
+      this.router.navigate(['/admin/dashboard']);
+    } else {
+      this.router.navigate(['/']);
+    }
+  }
+
+
+
+
+
 }

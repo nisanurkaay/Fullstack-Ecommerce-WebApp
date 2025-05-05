@@ -4,7 +4,8 @@ import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { User, Role } from '../models/user.model';
-import { jwtDecode  } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
+
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -129,8 +130,8 @@ export class AuthService {
     }
   }
   // 👤 GET USER ROLE
-  getUserRole(): Role {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user).role : 'ROLE_USER';
+  getUserRole(): string {
+    const userJson = localStorage.getItem('user');
+    return userJson ? JSON.parse(userJson).role : '';
   }
 }
