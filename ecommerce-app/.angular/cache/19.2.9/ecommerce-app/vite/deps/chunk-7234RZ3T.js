@@ -2,45 +2,45 @@ import {
   DomPortalOutlet,
   PortalModule,
   TemplatePortal
-} from "./chunk-IYFC5GTT.js";
+} from "./chunk-OOV2TDNZ.js";
+import {
+  _isTestEnvironment
+} from "./chunk-OHWI2S6G.js";
+import {
+  coerceCssPixelValue
+} from "./chunk-SVVIGFXE.js";
 import {
   ScrollDispatcher,
   ScrollingModule,
   ViewportRuler
-} from "./chunk-A7V2DH4B.js";
+} from "./chunk-MJMRYFF5.js";
 import {
-  _isTestEnvironment
-} from "./chunk-6JSTKULT.js";
-import {
-  coerceCssPixelValue
-} from "./chunk-SVVIGFXE.js";
+  supportsScrollBehavior
+} from "./chunk-CQF2LB5Q.js";
 import {
   ESCAPE,
   _IdGenerator,
   _getEventTarget,
   coerceArray,
   hasModifierKey
-} from "./chunk-GCA3NZJ5.js";
+} from "./chunk-BDUHCGZ3.js";
 import {
   _CdkPrivateStyleLoader,
   _bindEventWithOptions
-} from "./chunk-E3YEYTGH.js";
-import {
-  supportsScrollBehavior
-} from "./chunk-IJ3KGSPX.js";
+} from "./chunk-KVKAZYEP.js";
 import {
   BidiModule,
   Directionality
-} from "./chunk-Q5GE6IRN.js";
+} from "./chunk-IJ7SZWRZ.js";
 import {
   Platform
-} from "./chunk-RYZWFTBI.js";
+} from "./chunk-TQ5OV6KP.js";
 import {
   Location
-} from "./chunk-OFWNEWDS.js";
+} from "./chunk-AZ3RN2ZO.js";
 import {
   DOCUMENT
-} from "./chunk-7MFUTISS.js";
+} from "./chunk-LI7YMH5D.js";
 import {
   ANIMATION_MODULE_TYPE,
   ApplicationRef,
@@ -74,17 +74,17 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵgetInheritedFactory
-} from "./chunk-JSWM5O77.js";
+} from "./chunk-WZFYOW4A.js";
 import {
   merge
-} from "./chunk-WPM5VTLQ.js";
+} from "./chunk-BEKK4LPA.js";
 import {
   Subject,
   Subscription,
   filter,
   takeUntil,
   takeWhile
-} from "./chunk-4S3KYZTJ.js";
+} from "./chunk-NUMT5ELH.js";
 import {
   __spreadProps,
   __spreadValues
@@ -2889,9 +2889,11 @@ var FullscreenOverlayContainer = class _FullscreenOverlayContainer extends Overl
 
 export {
   OverlayConfig,
+  OverlayContainer,
+  OverlayRef,
   Overlay,
   CdkOverlayOrigin,
   CdkConnectedOverlay,
   OverlayModule
 };
-//# sourceMappingURL=chunk-ZN34SOAS.js.map
+//# sourceMappingURL=chunk-7234RZ3T.js.map

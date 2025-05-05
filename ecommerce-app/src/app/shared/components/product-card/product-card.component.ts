@@ -22,9 +22,14 @@ export class ProductCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Wishlist'te olup olmadığını kontrol et
     this.isInWishlist = this.wishlistService.isInWishlist(this.product);
+
+    if (this.product.variants && this.product.variants.length > 0) {
+      const prices = this.product.variants.map(v => v.price);
+      this.product.price = Math.min(...prices);  // 💡 En düşük varyant fiyatını ata
+    }
   }
+
 
   toggleWishlist(): void {
     if (this.isInWishlist) {

@@ -1,6 +1,10 @@
 import {
   DOCUMENT
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-IYFC5GTT.js
 } from "./chunk-7MFUTISS.js";
+=======
+} from "./chunk-LI7YMH5D.js";
+>>>>>>> 344f59c4a7c6e04db0e20678e6d54d670419e3a1:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-OOV2TDNZ.js
 import {
   Directive,
   ElementRef,
@@ -22,7 +26,11 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵgetInheritedFactory
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-IYFC5GTT.js
 } from "./chunk-JSWM5O77.js";
+=======
+} from "./chunk-WZFYOW4A.js";
+>>>>>>> 344f59c4a7c6e04db0e20678e6d54d670419e3a1:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-OOV2TDNZ.js
 
 // node_modules/@angular/cdk/fesm2022/portal-directives-CtfZjx5e.mjs
 function throwNullPortalError() {
@@ -596,4 +604,8 @@ export {
   CdkPortalOutlet,
   PortalModule
 };
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-IYFC5GTT.js
 //# sourceMappingURL=chunk-IYFC5GTT.js.map
+=======
+//# sourceMappingURL=chunk-OOV2TDNZ.js.map
+>>>>>>> 344f59c4a7c6e04db0e20678e6d54d670419e3a1:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-OOV2TDNZ.js

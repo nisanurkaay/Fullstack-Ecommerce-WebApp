@@ -8,7 +8,11 @@ import {
   inject,
   setClassMetadata,
   ɵɵdefineInjectable
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-E3YEYTGH.js
 } from "./chunk-JSWM5O77.js";
+=======
+} from "./chunk-WZFYOW4A.js";
+>>>>>>> 344f59c4a7c6e04db0e20678e6d54d670419e3a1:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-KVKAZYEP.js
 
 // node_modules/@angular/cdk/fesm2022/style-loader-WcmCyO2o.mjs
 var appsWithLoaders = /* @__PURE__ */ new WeakMap();
@@ -76,4 +80,8 @@ export {
   _CdkPrivateStyleLoader,
   _bindEventWithOptions
 };
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-E3YEYTGH.js
 //# sourceMappingURL=chunk-E3YEYTGH.js.map
+=======
+//# sourceMappingURL=chunk-KVKAZYEP.js.map
+>>>>>>> 344f59c4a7c6e04db0e20678e6d54d670419e3a1:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-KVKAZYEP.js

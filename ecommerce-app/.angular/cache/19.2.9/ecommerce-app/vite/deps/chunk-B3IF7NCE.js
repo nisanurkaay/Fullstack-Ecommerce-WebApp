@@ -8,7 +8,11 @@ import {
   ɵɵdefineComponent,
   ɵɵprojection,
   ɵɵprojectionDef
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-B3IF7NCE.js
 } from "./chunk-JSWM5O77.js";
+=======
+} from "./chunk-WZFYOW4A.js";
+>>>>>>> 344f59c4a7c6e04db0e20678e6d54d670419e3a1:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-7BDVRKFR.js
 
 // node_modules/@angular/material/fesm2022/internal-form-field-C8swiHbL.mjs
 var _c0 = ["mat-internal-form-field", ""];
@@ -74,4 +78,8 @@ var _MatInternalFormField = class __MatInternalFormField {
 export {
   _MatInternalFormField
 };
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-B3IF7NCE.js
 //# sourceMappingURL=chunk-B3IF7NCE.js.map
+=======
+//# sourceMappingURL=chunk-7BDVRKFR.js.map
+>>>>>>> 344f59c4a7c6e04db0e20678e6d54d670419e3a1:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-7BDVRKFR.js

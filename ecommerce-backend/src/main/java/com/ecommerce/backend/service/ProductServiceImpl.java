@@ -16,6 +16,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+
+
+
+// import com.ecommerce.backend.util.EnumUtils; // Removed as the class is not found
+
 import java.util.stream.Stream;
 
 @Service
@@ -77,6 +83,10 @@ public class ProductServiceImpl implements ProductService {
             for (ProductVariantRequest variantReq : request.getVariants()) {
                 ProductVariant variant = new ProductVariant();
                 variant.setColor(variantReq.getColor());
+
+
+
+
                 variant.setSize(variantReq.getSize());
                 variant.setStock(variantReq.getStock());
                 variant.setPrice(variantReq.getPrice());
@@ -178,6 +188,8 @@ public List<ProductResponse> filterProductsByRole(Long categoryId, List<String> 
             for (ProductVariantRequest vr : request.getVariants()) {
                 ProductVariant variant = new ProductVariant();
                 variant.setColor(vr.getColor());
+
+
                 variant.setSize(vr.getSize());
                 variant.setStock(vr.getStock());
                 variant.setPrice(vr.getPrice());
@@ -413,20 +425,29 @@ public ProductResponse activateProductWithVariants(Long productId, Long sellerId
         res.setStockQuantity(product.getStockQuantity());
         res.setCategoryName(product.getCategory().getName());
         res.setCategoryId(product.getCategory().getId());
-      res.setVariants(
-    product.getVariants()
-           .stream()
-           .map(ProductVariantResponse::fromEntity)
-           .toList()
-);
-
-        res.setImageUrls(product.getImageUrls());
         res.setSellerName(product.getSeller().getName());
         res.setProductStatus(product.getProductStatus());
         res.setColor(product.getColor());
-
+    
+        // ✅ Varyantları DTO'ya çevir
+        List<ProductVariantResponse> variantResponses = product.getVariants()
+            .stream()
+            .map(ProductVariantResponse::fromEntity)
+            .toList();
+        res.setVariants(variantResponses);
+    
+        // ✅ Görsel belirleme
+        if (product.getImageUrls() != null && !product.getImageUrls().isEmpty()) {
+            res.setImageUrls(product.getImageUrls());
+        } else if (!variantResponses.isEmpty() && variantResponses.get(0).getImageUrls() != null) {
+            res.setImageUrls(variantResponses.get(0).getImageUrls()); // 🔥 Varyanttan ilk görsel set edilir
+        } else {
+            res.setImageUrls(new ArrayList<>()); // tamamen boşsa
+        }
+    
         return res;
     }
+    
     
     @Override
 public ProductResponse addVariantToProduct(Long productId, ProductVariantRequest variantRequest) {
@@ -435,6 +456,7 @@ public ProductResponse addVariantToProduct(Long productId, ProductVariantRequest
 
     ProductVariant variant = new ProductVariant();
     variant.setColor(variantRequest.getColor());
+
     variant.setSize(variantRequest.getSize());
     variant.setPrice(variantRequest.getPrice());
     variant.setStock(variantRequest.getStock());

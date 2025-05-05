@@ -88,9 +88,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/products'], { queryParams: {} });
   }
 
-  removeFromCart(productId: number): void {
-    this.cartService.removeItem(productId);
+  removeFromCart(productId: number, color: string, size: string): void {
+    this.cartService.removeItem(productId, color, size);
   }
+
   toggleDropdown(): void {
     this.showDropdown = !this.showDropdown;
   }
