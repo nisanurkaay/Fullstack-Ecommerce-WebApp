@@ -1,8 +1,12 @@
-// src/app/modules/cart/checkout/checkout.component.ts
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { CartService } from '../../../core/services/cart.service';
+import { CartItem } from '../../../core/models/cart-item.model';
 import { OrderService } from '../../../core/services/order.service';
+import { StripeService } from '../../../core/services/stripe.service';
+import { Router } from '@angular/router';
+
+import { loadStripe, Stripe, StripeCardElement, StripeElements } from '@stripe/stripe-js';
+import { environment } from 'environments/environment';
 
 @Component({
   selector: 'app-checkout',
@@ -10,44 +14,80 @@ import { OrderService } from '../../../core/services/order.service';
   styleUrls: ['./checkout.component.css'],
   standalone: false
 })
-export class CheckoutComponent implements OnInit {
-  checkoutForm!: FormGroup;
+export class CheckoutComponent implements OnInit, AfterViewInit {
+  cartItems: CartItem[] = [];
+  totalAmount: number = 0;
+
+  private stripe: Stripe | null = null;
+  private elements!: StripeElements;
+  private card!: StripeCardElement;
 
   constructor(
-    private fb: FormBuilder,
+    private cartService: CartService,
     private orderService: OrderService,
+    private stripeService: StripeService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.checkoutForm = this.fb.group({
-      fullName:    ['', Validators.required],
-      address:     ['', Validators.required],
-      city:        ['', Validators.required],
-      zip:         ['', [Validators.required, Validators.pattern(/^[0-9]{5,}$/)]],
-      cardNumber:  ['', [Validators.required, Validators.minLength(16)]],
-      expiryMonth: ['', [Validators.required, Validators.min(1), Validators.max(12)]],
-      expiryYear:  ['', [Validators.required, Validators.min(new Date().getFullYear())]],
-      cvv:         ['', [Validators.required, Validators.minLength(3), Validators.maxLength(4)]],
+    this.cartService.cart$.subscribe(items => {
+      this.cartItems = items;
+      this.totalAmount = this.calculateTotal();
     });
   }
 
-  onSubmit(): void {
-    if (this.checkoutForm.invalid) {
-      this.checkoutForm.markAllAsTouched();
-      return;
-    }
+  async ngAfterViewInit() {
+    this.stripe = await loadStripe(environment.stripePublicKey);
 
-    this.orderService.createOrder(this.checkoutForm.value).subscribe({
+    if (!this.stripe) throw new Error('Stripe yüklenemedi');
+
+    this.elements = this.stripe.elements();
+    this.card = this.elements.create('card');
+    this.card.mount('#card-element');
+  }
+
+  calculateTotal(): number {
+    return this.cartItems.reduce((sum, item) => {
+      const price = item.variantId
+        ? item.product.variants?.find(v => v.id === item.variantId)?.price
+        : item.product.price;
+      return sum + (price ?? 0) * item.quantity;
+    }, 0);
+  }
+
+  async payWithStripe() {
+    try {
+      const amountInCents = Math.round(this.totalAmount * 100);
+      const intentId = await this.stripeService.createPaymentIntent(amountInCents);
+
+      const result = await this.stripe!.confirmCardPayment(intentId, {
+        payment_method: {
+          card: this.card,
+          billing_details: { name: 'Ad Soyad' }
+        }
+      });
+
+      if (result.error) {
+        alert('💳 Ödeme başarısız: ' + result.error.message);
+      } else if (result.paymentIntent?.status === 'succeeded') {
+        this.createOrder(intentId);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('⚠️ Ödeme işlemi sırasında hata oluştu.');
+    }
+  }
+
+  createOrder(paymentIntentId: string): void {
+    this.orderService.createOrderFromCart(this.cartItems, paymentIntentId).subscribe({
       next: () => {
-        // Ödeme onayı bildirimi
-        window.alert('🎉 Ödemeniz onaylandı!');
-        //  → Burayı /orders sayfasına yönlendirecek şekilde değiştirdik:
+        alert('🎉 Siparişiniz başarıyla oluşturuldu!');
+        this.cartService.clearCart();
         this.router.navigate(['/orders']);
       },
       error: err => {
         console.error(err);
-        window.alert('⚠️ Bir hata oluştu, lütfen tekrar deneyin.');
+        alert('⚠️ Sipariş oluşturulamadı.');
       }
     });
   }

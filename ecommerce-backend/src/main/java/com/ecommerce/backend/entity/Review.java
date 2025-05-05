@@ -14,9 +14,11 @@ public class Review {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
     private Product product;
 
     @ManyToOne
+    @JsonIgnore
     private User user;
 
     private int rating; // 1–5 yıldız

@@ -1,5 +1,7 @@
 package com.ecommerce.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 
@@ -17,7 +19,10 @@ public class OrderItem {
     private int quantity;
 
     @ManyToOne
+    @JoinColumn(name = "order_id")
+    @JsonIgnore // Bunu eklemen çok önemli!
     private Order order;
+    
 
     public Long getId() {
         return id;

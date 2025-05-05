@@ -1,1 +1,19 @@
-<p>order-mgmt works!</p>
+<h2 class="text-xl font-bold mb-4">Tüm Siparişler</h2>
+
+<select [(ngModel)]="selectedStatus" (change)="filterByStatus()" class="mb-4 p-2 border rounded">
+  <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+</select>
+
+<div *ngFor="let order of filteredOrders" class="border p-4 mb-2 rounded shadow">
+  <p><strong>Sipariş ID:</strong> {{ order.id }}</p>
+  <p><strong>Kullanıcı:</strong> {{ order.user.name }}</p>
+  <p><strong>Durum:</strong> {{ order.status }}</p>
+  <p><strong>Tutar:</strong> {{ order.totalAmount | currency:'TRY' }}</p>
+  <p><strong>Tarih:</strong> {{ order.createdAt | date:'medium' }}</p>
+
+  <ul>
+    <li *ngFor="let item of order.items">
+      {{ item.product.name }} ({{ item.quantity }} adet)
+    </li>
+  </ul>
+</div>

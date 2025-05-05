@@ -6,5 +6,5 @@ export interface CartItem {
   quantity: number;
   color: string;
   size: string;
-
+  variantId?: number;
 }

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-import { CartItem, CartService } from '@core/services/cart.service';
+import { CartItem } from '@core/models/cart-item.model';
+import { CartService } from '@core/services/cart.service';
+
 import { Category } from '@core/models/category.model';
 import { CategoryService } from '@core/services/category.service';
 import { HostListener } from '@angular/core';

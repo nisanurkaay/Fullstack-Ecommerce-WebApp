@@ -1,124 +1,27 @@
-<!-- src/app/modules/cart/checkout/checkout.component.html -->
-<!-- Sepete Geri Dön butonu -->
-<div class="back-to-cart">
-  <button type="button" class="btn-back" routerLink="/cart">
-    ← Sepete Geri Dön
-  </button>
-</div>
+<div class="checkout-container">
+  <h2>Ödeme Sayfası</h2>
 
-
-<section class="checkout">
-  <div class="checkout-card">
-    <h2 class="card-title">Ödeme Bilgilerinizi Girin</h2>
-
-    <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()" novalidate>
-      <!-- Adres -->
-      <div class="form-group">
-        <label for="fullName">Ad Soyad</label>
-        <input
-          id="fullName"
-          type="text"
-          formControlName="fullName"
-          class="form-input"
-          placeholder="Ad Soyad"
-        />
-        <div class="error" *ngIf="checkoutForm.get('fullName')?.touched && checkoutForm.get('fullName')?.invalid">
-          Zorunlu alan.
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="address">Adres</label>
-        <textarea
-          id="address"
-          formControlName="address"
-          class="form-input"
-          rows="2"
-          placeholder="Adres"
-        ></textarea>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group half">
-          <label for="city">Şehir</label>
-          <input
-            id="city"
-            type="text"
-            formControlName="city"
-            class="form-input"
-            placeholder="Şehir"
-          />
-        </div>
-        <div class="form-group half">
-          <label for="zip">Posta Kodu</label>
-          <input
-            id="zip"
-            type="text"
-            formControlName="zip"
-            class="form-input"
-            placeholder="Posta Kodu"
-          />
-          <div class="error" *ngIf="checkoutForm.get('zip')?.touched && checkoutForm.get('zip')?.invalid">
-            Geçersiz posta kodu.
-          </div>
-        </div>
-      </div>
-
-      <!-- Kart -->
-      <div class="form-group">
-        <label for="cardNumber">Kart Numarası</label>
-        <input
-          id="cardNumber"
-          type="text"
-          formControlName="cardNumber"
-          class="form-input"
-          placeholder="XXXX XXXX XXXX XXXX"
-          maxlength="16"
-        />
-      </div>
-
-      <div class="form-row">
-        <div class="form-group third">
-          <label for="expiryMonth">Ay</label>
-          <input
-            id="expiryMonth"
-            type="number"
-            formControlName="expiryMonth"
-            class="form-input"
-            placeholder="MM"
-          />
-        </div>
-        <div class="form-group third">
-          <label for="expiryYear">Yıl</label>
-          <input
-            id="expiryYear"
-            type="number"
-            formControlName="expiryYear"
-            class="form-input"
-            placeholder="YYYY"
-          />
-        </div>
-        <div class="form-group third">
-          <label for="cvv">CVV</label>
-          <input
-            id="cvv"
-            type="password"
-            formControlName="cvv"
-            class="form-input"
-            placeholder="CVV"
-            maxlength="4"
-          />
-        </div>
-      </div>
-
-      <!-- Buton -->
-      <button
-        type="submit"
-        class="btn-submit"
-        [disabled]="checkoutForm.invalid"
-      >
-        Ödemeyi Tamamla
-      </button>
-    </form>
+  <div *ngIf="cartItems.length === 0" class="empty-cart">
+    <p>Sepetiniz boş.</p>
+    <a routerLink="/cart">Sepete Git</a>
   </div>
-</section>
+
+  <div *ngIf="cartItems.length > 0" class="payment-box">
+    <ul class="cart-list">
+      <li *ngFor="let item of cartItems">
+        {{ item.product.name }} - {{ item.quantity }} adet
+      </li>
+    </ul>
+
+    <p class="total-amount">
+      Toplam Tutar: <strong>{{ totalAmount | currency:'TRY' }}</strong>
+    </p>
+
+    <!-- Stripe Kart Alanı -->
+    <div id="card-element" class="card-element"></div>
+
+    <button class="pay-button" (click)="payWithStripe()">
+      💳 Stripe ile Öde
+    </button>
+  </div>
+</div>

@@ -101,7 +101,8 @@ public class OrderService {
     
         order.setItems(items);
         order.setTotalAmount(totalAmount);
-    
+        order.setPaymentIntentId(request.getPaymentIntentId()); // ✅ Burası eksik olan!
+
         return orderRepository.save(order);
     }
     

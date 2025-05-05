@@ -15,6 +15,7 @@ import { CategoryMgmtComponent } from './category-mgmt/category-mgmt.component';
 import { OrderMgmtComponent } from './order-mgmt/order-mgmt.component';
 import { ProductMgmtComponent } from './product-mgmt/product-mgmt.component';
 import { UserMgmtComponent } from './user-mgmt/user-mgmt.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ ReactiveFormsModule,
     MatInputModule,
     MatSelectModule,
     MatSlideToggleModule,
-    MatIconModule
+    MatIconModule,
+    FormsModule
   ]
 })
 export class AdminModule {}
