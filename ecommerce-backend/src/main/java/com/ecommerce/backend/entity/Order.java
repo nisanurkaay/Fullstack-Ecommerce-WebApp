@@ -2,7 +2,7 @@ package com.ecommerce.backend.entity;
 
 import jakarta.persistence.*;
 
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -17,6 +17,22 @@ public class Order {
     @ManyToOne
     private User user;
 
+    
+    private LocalDateTime createdAt;
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
+
+    @OneToMany(mappedBy = "order")
+    private List<Review> reviews;
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
     private double totalAmount;
 
     @Enumerated(EnumType.STRING)
@@ -66,4 +82,23 @@ public class Order {
     public void setItems(List<OrderItem> items) {
         this.items = items;
     }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @Column(name = "payment_intent_id")
+private String paymentIntentId;
+
+public String getPaymentIntentId() {
+    return paymentIntentId;
+}
+
+public void setPaymentIntentId(String paymentIntentId) {
+    this.paymentIntentId = paymentIntentId;
+}
+
 }

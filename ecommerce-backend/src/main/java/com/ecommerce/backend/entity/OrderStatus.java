@@ -1,7 +1,5 @@
 package com.ecommerce.backend.entity;
 
 public enum OrderStatus {
-    PENDING,
-    PAID,
-    SHIPPED
+    PLACED, SHIPPED, DELIVERED, CANCELLED, RETURNED, REFUNDED, PENDING, FAILED, PROCESSING
 }
