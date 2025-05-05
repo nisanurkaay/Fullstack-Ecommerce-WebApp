@@ -58,9 +58,9 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   async payWithStripe() {
     try {
       const amountInCents = Math.round(this.totalAmount * 100);
-      const { id, clientSecret } = await this.stripeService.createPaymentIntent(amountInCents);
+      const intentId = await this.stripeService.createPaymentIntent(amountInCents);
 
-      const result = await this.stripe!.confirmCardPayment(clientSecret, {
+      const result = await this.stripe!.confirmCardPayment(intentId, {
         payment_method: {
           card: this.card,
           billing_details: { name: 'Ad Soyad' }
@@ -70,7 +70,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
       if (result.error) {
         alert('💳 Ödeme başarısız: ' + result.error.message);
       } else if (result.paymentIntent?.status === 'succeeded') {
-        this.createOrder(id); // ⬅️ Önemli: `id`'yi gönderiyorsun artık
+        this.createOrder(intentId);
       }
     } catch (err) {
       console.error(err);

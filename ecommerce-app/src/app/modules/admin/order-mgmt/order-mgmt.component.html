@@ -4,31 +4,16 @@
   <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
 </select>
 
-<div *ngFor="let order of filteredOrders" class="border p-4 mb-4 rounded shadow">
+<div *ngFor="let order of filteredOrders" class="border p-4 mb-2 rounded shadow">
   <p><strong>Sipariş ID:</strong> {{ order.id }}</p>
-  <p><strong>Kullanıcı:</strong> {{ order.userName }}</p>
+  <p><strong>Kullanıcı:</strong> {{ order.user.name }}</p>
   <p><strong>Durum:</strong> {{ order.status }}</p>
   <p><strong>Tutar:</strong> {{ order.totalAmount | currency:'TRY' }}</p>
   <p><strong>Tarih:</strong> {{ order.createdAt | date:'medium' }}</p>
 
-  <div class="mt-2 space-y-3">
-    <div *ngFor="let item of order.items" class="flex gap-4 items-start border p-2 rounded">
-      <img *ngIf="item.productImage"
-           [src]="item.productImage.startsWith('http') ? item.productImage : 'http://localhost:8081' + item.productImage"
-           class="w-16 h-16 object-cover rounded border" />
-
-      <div>
-        <p class="font-semibold">{{ item.productName }}</p>
-        <p *ngIf="item.isVariant">
-          <span>Varyant:</span>
-          <span *ngIf="item.color">Renk: {{ item.color }}</span>
-          <span *ngIf="item.size"> - Beden: {{ item.size }}</span>
-        </p>
-        <p *ngIf="!item.isVariant && item.color">
-          <span>Renk: {{ item.color }}</span>
-        </p>
-        <p>{{ item.quantity }} adet × {{ item.price | currency:'TRY' }}</p>
-      </div>
-    </div>
-  </div>
+  <ul>
+    <li *ngFor="let item of order.items">
+      {{ item.product.name }} ({{ item.quantity }} adet)
+    </li>
+  </ul>
 </div>

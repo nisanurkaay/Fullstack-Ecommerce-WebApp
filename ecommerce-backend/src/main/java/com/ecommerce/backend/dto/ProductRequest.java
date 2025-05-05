@@ -14,7 +14,7 @@ public class ProductRequest {
     private Integer stockQuantity;
     private Long categoryId;
     private List<ProductVariantRequest> variants;
- 
+
     public String getName() {
         return name;
     }

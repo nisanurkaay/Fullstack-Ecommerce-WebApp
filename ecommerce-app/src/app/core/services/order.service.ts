@@ -44,6 +44,7 @@ export class OrderService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-
-
+  cancelOrderBySeller(orderId: number): Observable<string> {
+    return this.http.put<string>(`${this.apiUrl}/${orderId}/cancel-by-seller`, {});
+  }
 }
