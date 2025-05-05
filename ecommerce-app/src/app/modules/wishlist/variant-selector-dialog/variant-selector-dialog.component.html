@@ -1,0 +1,45 @@
+<div class="dialog-container">
+  <h2 class="dialog-title">Choose Your Variant</h2>
+
+  <div class="form-section">
+    <label>Color:</label>
+    <div class="color-swatch">
+      <div
+        *ngFor="let color of availableColors"
+        class="color-circle"
+        [ngStyle]="{ 'background-color': color.toLowerCase() }"
+        [class.selected]="selectedColor === color"
+        (click)="selectColor(color)"
+      ></div>
+    </div>
+  </div>
+
+  <div class="form-section">
+    <label>Size:</label>
+    <div class="size-buttons">
+      <button
+        *ngFor="let size of allSizes"
+        class="size-button"
+        [class.selected]="selectedSize === size"
+        [class.unavailable]="!isSizeAvailable(size)"
+        [disabled]="!isSizeAvailable(size)"
+        (click)="isSizeAvailable(size) && selectSize(size)"
+      >
+        {{ size }}
+        <span *ngIf="!isSizeAvailable(size)" class="x-mark">×</span>
+      </button>
+    </div>
+  </div>
+
+
+  <div *ngIf="matchedVariant" class="preview-gallery">
+    <img *ngFor="let img of matchedVariant.imageUrls"
+         [src]="img.startsWith('http') ? img : 'http://localhost:8081' + img"
+         alt="Variant image" />
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-stroked-button (click)="cancel()">Cancel</button>
+    <button mat-flat-button color="primary" [disabled]="!matchedVariant" (click)="confirm()">Add to Cart</button>
+  </div>
+</div>

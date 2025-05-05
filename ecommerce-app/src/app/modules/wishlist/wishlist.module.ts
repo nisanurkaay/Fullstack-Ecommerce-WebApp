@@ -7,12 +7,19 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module'; // Navbar, ProductCard, MatButton vs.
 import { WishlistRoutingModule } from './wishlist-routing.module';
 import { WishlistComponent } from './wishlist/wishlist.component';
+import { VariantSelectorDialogComponent } from './variant-selector-dialog/variant-selector-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+
+
 @NgModule({
-  declarations: [WishlistComponent],
+  declarations: [WishlistComponent, VariantSelectorDialogComponent],
   imports: [
     CommonModule,
     WishlistRoutingModule,
-    SharedModule,
+    MatDialogModule,
+    FormsModule,
+
     MatButtonModule,
     MatSnackBarModule,
     RouterModule

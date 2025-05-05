@@ -105,13 +105,15 @@ export class AddProductComponent implements OnInit {
       categoryId: Number(product.categoryId),
       color: this.hasVariants ? null : product.color, // ✅ Eklenen satır
       variants: this.hasVariants
-        ? this.variants.map((v, i) => ({
-            ...v,
-            price: this.sameForAll ? this.sharedPrice : v.price,
-            stock: this.sameForAll ? this.sharedStock : v.stock,
-            imageUrls: [] // server ekleyecek
-          }))
-        : []
+  ? this.variants.map((v, i) => ({
+      color: v.color, // ✅ burada ENUM olarak göndermek şart
+      size: v.size,
+      price: this.sameForAll ? this.sharedPrice : v.price,
+      stock: this.sameForAll ? this.sharedStock : v.stock,
+      imageUrls: [] // server ekleyecek
+    }))
+  : []
+
     })], { type: 'application/json' }));
 
     const allImages = this.hasVariants ? this.variantImages.flat() : this.mainImages;
