@@ -53,14 +53,17 @@
     </div>
 
     <div *ngFor="let variant of variants; let i = index" class="variant-block">
+      <!-- ✅ COLOR -->
       <label>Color</label>
-      <select formControlName="color" class="form-input">
+      <select class="form-input" [value]="variant.color" (change)="variant.color = $any($event.target).value">
         <option *ngFor="let c of colorOptions" [value]="c">{{ c }}</option>
       </select>
 
+      <!-- ✅ SIZE -->
       <label>Size</label>
       <input [value]="variant.size" (input)="variant.size = $any($event.target).value" class="form-input" />
 
+      <!-- ✅ PRICE & STOCK (eğer sameForAll seçili değilse) -->
       <div *ngIf="!sameForAll">
         <label>Price</label>
         <input type="number" [value]="variant.price" (input)="variant.price = $any($event.target).value" class="form-input" />
@@ -69,11 +72,13 @@
         <input type="number" [value]="variant.stock" (input)="variant.stock = $any($event.target).value" class="form-input" />
       </div>
 
+      <!-- ✅ IMAGE UPLOAD -->
       <label>Upload Images for Variant {{ i + 1 }} (3 Required)</label>
       <div class="file-upload-wrapper">
         <input type="file" multiple accept="image/*" (change)="onVariantImagesSelected($event, i)" class="file-upload-btn" />
       </div>
     </div>
+
 
     <button type="button" (click)="addVariant()" class="btn-add-variant">+ Add Variant</button>
   </div>
