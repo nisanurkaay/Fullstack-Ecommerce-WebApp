@@ -64,10 +64,14 @@ export class ProductService {
   }
 
   unbanProduct(productId: number): Observable<any> {
-    return this.http.get<Product>(`${this.apiUrl}/admin-unban/${productId}`);
+    return this.http.put(`${this.apiUrl}/admin-unban/${productId}`, {}); // ✅ PUT olmalı
   }
+
   getAllForAdmin(): Observable<Product[]> {
     return this.http.get<Product[]>(`${this.apiUrl}/all`);
+  }
+  activateWithVariants(id: number, userId: number): Observable<Product> {
+    return this.http.put<Product>(`${this.apiUrl}/${id}/activate-with-variants?userId=${userId}`, {});
   }
 
   delete(id: number, userId: number): Observable<void> {
@@ -107,4 +111,21 @@ export class ProductService {
   getColors(): Observable<string[]> {
     return this.http.get<string[]>(`${this.apiUrl}/colors`); // ✅ Template literal düzeltildi
   }
+    // ✅ Yeni eklenecek varyant düzeyinde kontrol
+    activateVariant(variantId: number): Observable<void> {
+      return this.http.put<void>(`${this.apiUrl}/variants/${variantId}/activate`, {});
+    }
+
+    deactivateVariant(variantId: number): Observable<void> {
+      return this.http.put<void>(`${this.apiUrl}/variants/${variantId}/deactivate`, {});
+    }
+
+    approveVariant(variantId: number): Observable<void> {
+      return this.http.put<void>(`${this.apiUrl}/variants/${variantId}/approve-variant`, {});
+    }
+
+    denyVariant(variantId: number): Observable<void> {
+      return this.http.put<void>(`${this.apiUrl}/variants/${variantId}/deny-variant`, {});
+    }
+
 }

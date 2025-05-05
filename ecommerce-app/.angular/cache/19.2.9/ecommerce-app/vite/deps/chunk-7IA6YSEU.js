@@ -5,17 +5,29 @@ import {
   MatLabel,
   MatPrefix,
   MatSuffix
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-7IA6YSEU.js
 } from "./chunk-6WJNM5GK.js";
 import {
   MatCommonModule,
   ObserversModule
 } from "./chunk-37IVR6H6.js";
+=======
+} from "./chunk-JIQUMTHD.js";
+import {
+  MatCommonModule,
+  ObserversModule
+} from "./chunk-DOR2O6BL.js";
+>>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-B7UIVCGW.js
 import {
   NgModule,
   setClassMetadata,
   ɵɵdefineInjector,
   ɵɵdefineNgModule
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-7IA6YSEU.js
 } from "./chunk-WZFYOW4A.js";
+=======
+} from "./chunk-JSWM5O77.js";
+>>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-B7UIVCGW.js
 
 // node_modules/@angular/material/fesm2022/module-BOQEdUAz.mjs
 var MatFormFieldModule = class _MatFormFieldModule {
@@ -44,4 +56,8 @@ var MatFormFieldModule = class _MatFormFieldModule {
 export {
   MatFormFieldModule
 };
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-7IA6YSEU.js
 //# sourceMappingURL=chunk-7IA6YSEU.js.map
+=======
+//# sourceMappingURL=chunk-B7UIVCGW.js.map
+>>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-B7UIVCGW.js

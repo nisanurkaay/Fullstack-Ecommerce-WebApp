@@ -14,6 +14,7 @@ export interface Product {
   imageUrls?: string[];
   variants?: ProductVariant[];
   color?: string;
+  parentId?: number;
 }
 
 export interface ProductVariant {
@@ -22,6 +23,7 @@ export interface ProductVariant {
   size: string;
   stock: number;
   price: number;
+  status?: ProductStatus;
 
   imageUrls: string[]; // çoklu görsel URL'leri
 }

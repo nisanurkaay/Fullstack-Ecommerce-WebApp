@@ -139,6 +139,13 @@ public ResponseEntity<?> deleteVariant(@PathVariable Long productId, @PathVariab
                                                            @RequestParam Long userId) {
         return ResponseEntity.ok(productService.activateProduct(id, userId));
     }
+
+    @PutMapping("/{id}/activate-with-variants")
+public ResponseEntity<ProductResponse> activateWithVariants(@PathVariable Long id,
+                                                             @RequestParam Long userId) {
+    return ResponseEntity.ok(productService.activateProductWithVariants(id, userId));
+}
+
     @PutMapping("/{id}/deactivate")
     @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<ProductResponse> deactivateProduct(@PathVariable Long id, @RequestParam Long userId) {

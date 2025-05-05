@@ -1,48 +1,105 @@
 <div class="flex gap-4 mb-4">
-  <button (click)="loadProductsByStatus('ALL')">All</button>
-  <button (click)="loadProductsByStatus('PENDING')">Pending</button>
-  <button (click)="loadProductsByStatus('ACTIVE')">Active</button>
-  <button (click)="loadProductsByStatus('INACTIVE')">Inactive</button>
-  <button (click)="loadProductsByStatus('BANNED')">Banned</button>
+  <button (click)="loadProductsByStatus('ALL')" [class.active]="selectedStatus === 'ALL'">All</button>
+  <button (click)="loadProductsByStatus('PENDING')" [class.active]="selectedStatus === 'PENDING'">Pending</button>
+  <button (click)="loadProductsByStatus('ACTIVE')" [class.active]="selectedStatus === 'ACTIVE'">Active</button>
+  <button (click)="loadProductsByStatus('INACTIVE')" [class.active]="selectedStatus === 'INACTIVE'">Inactive</button>
+  <button (click)="loadProductsByStatus('BANNED')" [class.active]="selectedStatus === 'BANNED'">Banned</button>
 </div>
 
-<table class="custom-table">
-  <thead>
+<table class="custom-table w-full border border-gray-300">
+  <thead class="bg-blue-600 text-white">
     <tr>
-      <th>Name</th>
-      <th>Seller</th>
-      <th>Category</th>
-      <th>Stock</th>
-      <th>Price</th>
-      <th>Status</th>
-      <th>Actions</th>
+      <th class="py-2 px-4 text-left">Name</th>
+      <th class="py-2 px-4 text-left">Seller</th>
+      <th class="py-2 px-4 text-left">Category</th>
+      <th class="py-2 px-4 text-left">Stock</th>
+      <th class="py-2 px-4 text-left">Price</th>
+      <th class="py-2 px-4 text-left">Status</th>
+      <th class="py-2 px-4 text-left">Actions</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let product of displayedProducts">
-      <td>{{ product.name }}</td>
-      <td>{{ product.sellerName }}</td>
-      <td>{{ product.categoryName }}</td>
-      <td>{{ product.stockQuantity }}</td>
-      <td>${{ product.price }}</td>
-      <td>{{ product.productStatus }}</td>
-      <td>
-        <button *ngIf="product.productStatus === 'PENDING'" (click)="approveProduct(product.id!)">Approve</button>
-        <button *ngIf="product.productStatus === 'PENDING'" (click)="denyProduct(product.id!)">Deny</button>
+    <ng-container *ngFor="let product of displayedProducts">
+      <!-- Ana ürün satırı -->
+      <tr class="border-b hover:bg-gray-50">
+        <td class="py-2 px-4">{{ product.name }}</td>
+        <td class="py-2 px-4">{{ product.sellerName }}</td>
+        <td class="py-2 px-4">{{ product.categoryName }}</td>
+        <td class="py-2 px-4">{{ product.stockQuantity }}</td>
+        <td class="py-2 px-4">${{ product.price }}</td>
+        <td class="py-2 px-4">
+          <span [ngClass]="{
+            'bg-yellow-300 text-black': product.productStatus === 'PENDING',
+            'bg-green-500 text-white': product.productStatus === 'ACTIVE',
+            'bg-gray-400 text-white': product.productStatus === 'INACTIVE',
+            'bg-red-600 text-white': product.productStatus === 'BANNED'
+          }"
+          class="px-2 py-1 rounded text-xs font-semibold uppercase">
+            {{ product.productStatus }}
+          </span>
+        </td>
+        <td class="py-2 px-4 space-y-1">
+          <div *ngIf="product.productStatus === 'PENDING'">
+            <button (click)="approveProduct(product.id!)" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs">Approve</button>
+            <button (click)="denyProduct(product.id!)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs">Deny</button>
+          </div>
+          <div *ngIf="product.productStatus !== 'PENDING'">
+            <button
+              (click)="toggleBan(product)"
+              [ngClass]="{
+                'bg-red-500 hover:bg-red-600': product.productStatus !== 'BANNED',
+                'bg-green-500 hover:bg-green-600': product.productStatus === 'BANNED'
+              }"
+              class="text-white px-2 py-1 rounded text-xs"
+            >
+              {{ product.productStatus === 'BANNED' ? 'Unban' : 'Ban' }}
+            </button>
+          </div>
+          <div *ngIf="product.variants?.length">
+            <button
+              (click)="toggleVariants(product.id!)"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs">
+              {{ isExpanded(product.id!) ? 'Hide Variants' : 'Show Variants' }}
+            </button>
+          </div>
+        </td>
+      </tr>
+
+      <!-- VARYANTLAR -->
+      <tr *ngIf="isExpanded(product.id!) && product.variants?.length">
+        <td colspan="7" class="bg-gray-50 p-3">
+          <div *ngFor="let v of product.variants" class="mb-4 p-2 border rounded">
+            <p class="mb-1">
+              <strong>Varyant:</strong>
+              Renk: {{ v.color || '—' }},
+              Beden: {{ v.size || '—' }},
+              Fiyat: {{ v.price | currency }},
+              Stok: {{ v.stock }},
+              Durum: <span class="font-semibold">{{ v.status }}</span>
+            </p>
+            <div class="flex gap-2 mb-2">
+              <img *ngFor="let img of v.imageUrls"
+                   [src]="img.startsWith('http') ? img : 'http://localhost:8081' + img"
+                   class="w-12 h-12 border object-cover" />
+            </div>
+            <div class="flex gap-2">
+              <!-- Yalnızca PENDING varyantlara Yayına Al & Reddet -->
 
 
-        <button
-        *ngIf="product.productStatus !== 'PENDING'"
-        (click)="toggleBan(product)"
-        [ngClass]="{
-          'bg-red-500 text-white': product.productStatus !== 'BANNED',
-          'bg-green-500 text-white': product.productStatus === 'BANNED'
-        }"
-        class="px-3 py-1 rounded text-xs font-medium"
-      >
-        {{ product.productStatus === 'BANNED' ? 'Unban' : 'Ban' }}
-      </button>
-      </td>
-    </tr>
+              <!-- Sil her zaman görünür -->
+              <button (click)="confirmDeleteVariant(product.id!, v.id!)"
+                      class="bg-gray-500 hover:bg-gray-600 text-white px-2 py-1 rounded text-xs">
+                Sil
+              </button>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
   </tbody>
 </table>
+
+<p *ngIf="displayedProducts.length === 0" class="text-center text-gray-500 mt-4">No products found for this status.</p>
+
+
+<p *ngIf="displayedProducts.length === 0" class="text-center text-gray-500 mt-4">No products found for this status.</p>

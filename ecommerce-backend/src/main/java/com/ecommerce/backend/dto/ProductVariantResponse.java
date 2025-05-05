@@ -25,9 +25,24 @@ public class ProductVariantResponse {
         variant.setStock(variantEntity.getStock());
         variant.setPrice(variantEntity.getPrice());
         variant.setImageUrls(variantEntity.getImageUrls());
+        if (variantEntity.getProductStatus() != null) {
+            variant.setStatus(variantEntity.getProductStatus().name());
+        } else {
+            variant.setStatus("UNKNOWN");
+        }
+        
+
         return variant;
     }
-    
+    private String status;
+
+public String getStatus() {
+    return status;
+}
+public void setStatus(String status) {
+    this.status = status;
+}
+
 
     public String getColor() {
         return color;

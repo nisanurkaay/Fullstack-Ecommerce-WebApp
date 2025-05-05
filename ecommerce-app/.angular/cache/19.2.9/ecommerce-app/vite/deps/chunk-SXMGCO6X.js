@@ -1,6 +1,10 @@
 import {
   getDOM
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-SXMGCO6X.js
 } from "./chunk-AZ3RN2ZO.js";
+=======
+} from "./chunk-OFWNEWDS.js";
+>>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HDHCX5MQ.js
 import {
   ChangeDetectorRef,
   Directive,
@@ -41,15 +45,26 @@ import {
   ɵɵdirectiveInject,
   ɵɵgetInheritedFactory,
   ɵɵlistener
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-SXMGCO6X.js
 } from "./chunk-WZFYOW4A.js";
 import {
   forkJoin
 } from "./chunk-BEKK4LPA.js";
+=======
+} from "./chunk-JSWM5O77.js";
+import {
+  forkJoin
+} from "./chunk-WPM5VTLQ.js";
+>>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HDHCX5MQ.js
 import {
   Subject,
   from,
   map
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-SXMGCO6X.js
 } from "./chunk-NUMT5ELH.js";
+=======
+} from "./chunk-4S3KYZTJ.js";
+>>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HDHCX5MQ.js
 import {
   __spreadProps,
   __spreadValues
@@ -6865,4 +6880,8 @@ export {
    * License: MIT
    *)
 */
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-SXMGCO6X.js
 //# sourceMappingURL=chunk-SXMGCO6X.js.map
+=======
+//# sourceMappingURL=chunk-HDHCX5MQ.js.map
+>>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HDHCX5MQ.js

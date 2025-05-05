@@ -1,6 +1,10 @@
 import {
   isPlatformBrowser
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-D7URE75M.js
 } from "./chunk-LI7YMH5D.js";
+=======
+} from "./chunk-7MFUTISS.js";
+>>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-KLGHZHJC.js
 import {
   ElementRef,
   Injectable,
@@ -8,7 +12,11 @@ import {
   inject,
   setClassMetadata,
   ɵɵdefineInjectable
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-D7URE75M.js
 } from "./chunk-WZFYOW4A.js";
+=======
+} from "./chunk-JSWM5O77.js";
+>>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-KLGHZHJC.js
 
 // node_modules/@angular/cdk/fesm2022/element-CpqV8p-X.mjs
 function coerceNumberProperty(value, fallbackValue = 0) {
@@ -91,4 +99,8 @@ export {
   coerceElement,
   Platform
 };
+<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-D7URE75M.js
 //# sourceMappingURL=chunk-D7URE75M.js.map
+=======
+//# sourceMappingURL=chunk-KLGHZHJC.js.map
+>>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-KLGHZHJC.js
