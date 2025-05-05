@@ -24,6 +24,7 @@ import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.UserRepository;
 import com.ecommerce.backend.service.OrderService;
 import com.ecommerce.backend.dto.OrderRequest;
+import com.ecommerce.backend.dto.OrderResponse;
 import com.ecommerce.backend.entity.Order;
 import org.springframework.http.HttpStatus;
 
@@ -39,16 +40,19 @@ public class OrderController {
     @Autowired private OrderService orderService;
     @Autowired private UserRepository userRepository;
 
-    @PostMapping
-    public ResponseEntity<?> createOrder(@RequestBody OrderRequest request,
-                                         @AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+ @PostMapping
+public ResponseEntity<?> createOrder(@RequestBody OrderRequest request,
+                                     @AuthenticationPrincipal UserDetails userDetails) {
+    User user = userRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Order order = orderService.placeOrder(user, request);
-        return ResponseEntity.ok(order);
-    }
+    Order order = orderService.placeOrder(user, request);
 
+    // DTO'ya dönüştür (servise eklediğin method)
+    OrderResponse response = orderService.mapToResponse(order);
+
+    return ResponseEntity.ok(response);
+}
     @GetMapping
     @PreAuthorize("hasRole('USER') or hasRole('SELLER') or hasRole('ADMIN')")
     public ResponseEntity<List<Order>> getOrders(@AuthenticationPrincipal UserDetails userDetails) {

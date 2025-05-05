@@ -1,12 +1,13 @@
 package com.ecommerce.backend.service;
 import com.ecommerce.backend.dto.OrderItemRequest;
+import com.ecommerce.backend.dto.OrderItemResponse;
 import com.ecommerce.backend.dto.OrderRequest;
-
+import com.ecommerce.backend.dto.OrderResponse;
 import com.ecommerce.backend.entity.Order;
 import com.ecommerce.backend.entity.OrderItem;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductVariant;
-
+import com.ecommerce.backend.dto.OrderResponse;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.entity.UserStatus;
 import com.ecommerce.backend.entity.OrderStatus;
@@ -149,6 +150,30 @@ public void cancelOrderBySeller(Long orderId) {
 
         orderRepository.save(order);
     }
+}
+public OrderResponse mapToResponse(Order order) {
+    OrderResponse response = new OrderResponse();
+    response.setId(order.getId());
+    response.setTotalAmount(order.getTotalAmount());
+    response.setStatus(order.getStatus().toString());
+    response.setCreatedAt(order.getCreatedAt());
+
+    List<OrderItemResponse> itemResponses = order.getItems().stream().map(item -> {
+        OrderItemResponse itemRes = new OrderItemResponse();
+        itemRes.setProductId(item.getProduct().getId());
+        itemRes.setProductName(item.getProduct().getName());
+        itemRes.setProductImage(
+            item.getProduct().getImageUrls() != null && !item.getProduct().getImageUrls().isEmpty()
+                ? item.getProduct().getImageUrls().get(0)
+                : null
+        );
+        itemRes.setPrice(item.getProduct().getPrice());
+        itemRes.setQuantity(item.getQuantity());
+        return itemRes;
+    }).toList();
+
+    response.setItems(itemResponses);
+    return response;
 }
 
 }
