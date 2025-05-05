@@ -5,7 +5,7 @@ import {
 } from "./chunk-OOV2TDNZ.js";
 import {
   _isTestEnvironment
-} from "./chunk-2N55NYQO.js";
+} from "./chunk-OHWI2S6G.js";
 import {
   coerceCssPixelValue
 } from "./chunk-SVVIGFXE.js";
@@ -23,7 +23,7 @@ import {
   _getEventTarget,
   coerceArray,
   hasModifierKey
-} from "./chunk-PLNC2Q3H.js";
+} from "./chunk-BDUHCGZ3.js";
 import {
   _CdkPrivateStyleLoader,
   _bindEventWithOptions
@@ -2889,9 +2889,11 @@ var FullscreenOverlayContainer = class _FullscreenOverlayContainer extends Overl
 
 export {
   OverlayConfig,
+  OverlayContainer,
+  OverlayRef,
   Overlay,
   CdkOverlayOrigin,
   CdkConnectedOverlay,
   OverlayModule
 };
-//# sourceMappingURL=chunk-BY5JEBL6.js.map
+//# sourceMappingURL=chunk-7234RZ3T.js.map

@@ -2,9 +2,9 @@
 <div *ngIf="wishlist.length > 0; else emptyTpl" class="p-6 space-y-6">
   <div *ngFor="let p of wishlist" class="flex flex-col md:flex-row border rounded-lg overflow-hidden">
     <img
-      [src]=""
-      [alt]="p.name"
-      class="w-full md:w-48 h-48 object-contain bg-gray-50"
+    [src]="'http://localhost:8081' + p.imageUrls![0]"
+    [alt]="p.name"
+    class="w-full md:w-48 h-48 object-contain bg-gray-50"
     />
     <div class="flex-1 p-4 flex flex-col justify-between">
       <div>

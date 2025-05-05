@@ -3157,6 +3157,7 @@ export {
   CdkObserveContent,
   ObserversModule,
   InteractivityChecker,
+  FocusTrapFactory,
   LiveAnnouncer,
   A11yModule,
   _IdGenerator,
@@ -3168,4 +3169,4 @@ export {
   AriaDescriber,
   MatCommonModule
 };
-//# sourceMappingURL=chunk-PLNC2Q3H.js.map
+//# sourceMappingURL=chunk-BDUHCGZ3.js.map

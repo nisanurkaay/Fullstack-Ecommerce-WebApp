@@ -6,7 +6,7 @@
   </div>
 
   <div *ngFor="let item of cartItems" class="flex items-center border rounded p-4">
-    <img [src]="item.product.imageUrls?.[0] ? 'http://localhost:8081' + item.product.imageUrls![0] : ''"
+    <img [src]="item.product.imageUrls!?.[0] ? 'http://localhost:8081' + item.product.imageUrls![0] : ''"
          [alt]="item.product.name"
          class="w-20 h-20 object-contain mr-4" />
 
