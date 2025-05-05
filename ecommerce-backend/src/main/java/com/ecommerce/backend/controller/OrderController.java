@@ -53,26 +53,31 @@ public ResponseEntity<?> createOrder(@RequestBody OrderRequest request,
 
     return ResponseEntity.ok(response);
 }
-    @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('SELLER') or hasRole('ADMIN')")
-    public ResponseEntity<List<Order>> getOrders(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
+@GetMapping
+@PreAuthorize("hasRole('USER') or hasRole('SELLER') or hasRole('ADMIN')")
+public ResponseEntity<List<OrderResponse>> getOrders(@AuthenticationPrincipal UserDetails userDetails) {
+    User user = userRepository.findByEmail(userDetails.getUsername())
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    
-        if (user.getRole().name().equals("ROLE_ADMIN")) {
-            return ResponseEntity.ok(orderService.getAllOrders());
-        } else if (user.getRole().name().equals("ROLE_SELLER")) {
-            return ResponseEntity.ok(orderService.getOrdersForSeller(user));
-        } else {
-            return ResponseEntity.ok(orderService.getOrdersByUser(user));
-        }
+
+    List<Order> orders;
+
+    if (user.getRole().name().equals("ROLE_ADMIN")) {
+        orders = orderService.getAllOrders();
+    } else if (user.getRole().name().equals("ROLE_SELLER")) {
+        orders = orderService.getOrdersForSeller(user);
+    } else {
+        orders = orderService.getOrdersByUser(user);
     }
 
-    @PutMapping("/{orderId}/cancel-by-seller")
-    @PreAuthorize("hasRole('SELLER')")
-    public ResponseEntity<String> cancelOrderBySeller(@PathVariable Long orderId) {
-        orderService.cancelOrderBySeller(orderId);
-        return ResponseEntity.ok("Order has been cancelled and refunded (if paid).");
-    }
+    // 🟢 Ortak dönüş formatı: OrderResponse
+    List<OrderResponse> response = orders.stream()
+            .map(orderService::mapToResponse)
+            .toList();
+
+    return ResponseEntity.ok(response);
+}
+
+
+   
     
 }

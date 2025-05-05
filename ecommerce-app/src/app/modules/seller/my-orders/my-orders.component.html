@@ -1,1 +1,48 @@
-<p>my-orders works!</p>
+<h2 class="text-xl font-bold mb-4">Siparişlerim (Seller)</h2>
+
+<!-- 🔽 Filtre -->
+<select [(ngModel)]="selectedStatus" (change)="filterByStatus()" class="mb-4 p-2 border rounded">
+  <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+</select>
+
+<!-- 🔁 Sipariş Kartları -->
+<div *ngFor="let order of filteredOrders" class="border p-4 mb-4 rounded-lg shadow-md bg-white">
+  <div class="mb-2">
+    <p><strong>Sipariş ID:</strong> {{ order.id }}</p>
+    <p><strong>Kullanıcı:</strong> {{ order.userName }}</p>
+    <p><strong>Tarih:</strong> {{ order.createdAt | date:'medium' }}</p>
+  </div>
+
+  <!-- 📦 Ürünler -->
+  <ul class="mt-2 space-y-2">
+    <li *ngFor="let item of order.items">
+      <ng-container *ngIf="item.product.sellerId === currentSellerId">
+      <!-- Görsel -->
+      <img *ngIf="item.productImage"
+           [src]="item.productImage.startsWith('http') ? item.productImage : 'http://localhost:8081' + item.productImage"
+           class="w-16 h-16 object-cover rounded border" />
+
+      <!-- Detay -->
+      <div>
+        <p class="font-bold text-sm">{{ item.productName }}</p>
+        <p class="text-sm">{{ item.quantity }} × {{ item.price | currency:'TRY' }}</p>
+        <p class="text-sm" *ngIf="item.color">Renk: {{ item.color }}</p>
+        <p class="text-sm" *ngIf="item.size">Beden: {{ item.size }}</p>
+
+        <!-- Durum -->
+        <p class="text-sm mt-1">
+          <strong>Durum:</strong>
+          <span [ngClass]="{
+            'text-green-600': item.itemStatus === 'ACTIVE',
+            'text-red-600': item.itemStatus === 'CANCELLED'
+          }">
+            {{ item.itemStatus }}
+          </span>
+        </p>
+
+
+      </div>
+    </ng-container>
+    </li>
+  </ul>
+</div>

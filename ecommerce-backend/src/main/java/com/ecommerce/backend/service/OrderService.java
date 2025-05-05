@@ -5,6 +5,7 @@ import com.ecommerce.backend.dto.OrderRequest;
 import com.ecommerce.backend.dto.OrderResponse;
 import com.ecommerce.backend.entity.Order;
 import com.ecommerce.backend.entity.OrderItem;
+import com.ecommerce.backend.entity.OrderItemStatus;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductVariant;
 import com.ecommerce.backend.dto.OrderResponse;
@@ -119,58 +120,75 @@ public class OrderService {
         List<Order> filtered = new ArrayList<>();
     
         for (Order order : allOrders) {
-            boolean hasSellerProduct = order.getItems().stream()
-                .anyMatch(item -> item.getProduct().getSeller().getId().equals(seller.getId()));
+            List<OrderItem> sellerItems = order.getItems().stream()
+                .filter(item -> item.getProduct().getSeller().getId().equals(seller.getId()))
+                .toList();
     
-            if (hasSellerProduct) {
-                filtered.add(order);
+            if (!sellerItems.isEmpty()) {
+                // Sadece seller'ın ürünlerini içeren yeni bir Order nesnesi oluştur
+                Order filteredOrder = new Order();
+                filteredOrder.setId(order.getId());
+                filteredOrder.setUser(order.getUser());
+                filteredOrder.setCreatedAt(order.getCreatedAt());
+                filteredOrder.setStatus(order.getStatus());
+                filteredOrder.setItems(sellerItems);
+                filteredOrder.setTotalAmount(
+                    sellerItems.stream()
+                        .mapToDouble(item -> {
+                            double price = item.getVariant() != null ? item.getVariant().getPrice() : item.getProduct().getPrice();
+                            return price * item.getQuantity();
+                        })
+                        .sum()
+                );
+    
+                filtered.add(filteredOrder);
             }
         }
     
         return filtered;
     }
+    
 
-public void cancelOrderBySeller(Long orderId) {
-    Order order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new RuntimeException("Order not found"));
 
-    // Order statüsü iptal değilse devam et
-    if (order.getStatus() != OrderStatus.CANCELLED) {
-        order.setStatus(OrderStatus.CANCELLED);
-
-        // Stoğu geri ekle
-        for (OrderItem item : order.getItems()) {
-            Product product = item.getProduct();
-            product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-            productRepository.save(product);
-        }
-
-        // Refund işlemi
-        stripePaymentService.refundPayment(order.getPaymentIntentId()); // Ödeme ID'si burada tutulmalı
-
-        orderRepository.save(order);
-    }
-}
 public OrderResponse mapToResponse(Order order) {
     OrderResponse response = new OrderResponse();
     response.setId(order.getId());
     response.setTotalAmount(order.getTotalAmount());
     response.setStatus(order.getStatus().toString());
     response.setCreatedAt(order.getCreatedAt());
+    response.setUserName(order.getUser().getName());
 
     List<OrderItemResponse> itemResponses = order.getItems().stream().map(item -> {
         OrderItemResponse itemRes = new OrderItemResponse();
-        itemRes.setProductId(item.getProduct().getId());
-        itemRes.setProductName(item.getProduct().getName());
+        Product product = item.getProduct();
+    
+        itemRes.setProductId(product.getId());
+        itemRes.setProductName(product.getName());
         itemRes.setProductImage(
-            item.getProduct().getImageUrls() != null && !item.getProduct().getImageUrls().isEmpty()
-                ? item.getProduct().getImageUrls().get(0)
+            product.getImageUrls() != null && !product.getImageUrls().isEmpty()
+                ? product.getImageUrls().get(0)
                 : null
         );
-        itemRes.setPrice(item.getProduct().getPrice());
         itemRes.setQuantity(item.getQuantity());
+        itemRes.setPrice(product.getPrice());
+        
+        // Varyant varsa set et
+        if (item.getVariant() != null) {
+            ProductVariant v = item.getVariant();
+            itemRes.setVariant(true);
+            itemRes.setColor(v.getColor() != null ? v.getColor().name() : null);
+            itemRes.setSize(v.getSize());
+            itemRes.setPrice(v.getPrice());
+            itemRes.setProductImage(v.getImageUrls() != null && !v.getImageUrls().isEmpty()
+                ? v.getImageUrls().get(0) : itemRes.getProductImage());
+        } else {
+            itemRes.setVariant(false);
+            itemRes.setColor(product.getColor() != null ? product.getColor().name() : null);
+        }
+    
         return itemRes;
     }).toList();
+    
 
     response.setItems(itemResponses);
     return response;

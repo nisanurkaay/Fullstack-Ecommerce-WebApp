@@ -422,6 +422,7 @@ public ProductResponse activateProductWithVariants(Long productId, Long sellerId
         res.setName(product.getName());
         res.setDescription(product.getDescription());
         res.setPrice(product.getPrice());
+        
         res.setStockQuantity(product.getStockQuantity());
         res.setCategoryName(product.getCategory().getName());
         res.setCategoryId(product.getCategory().getId());

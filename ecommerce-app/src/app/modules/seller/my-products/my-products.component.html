@@ -104,9 +104,7 @@
                          class="w-12 h-12 border object-cover" />
                   </div>
                   <div class="mt-2 flex gap-2">
-                    <button *ngIf="v.status === 'INACTIVE'" (click)="activateVariant(v.id!)" class="btn-success">Yayına Al</button>
-                    <button *ngIf="v.status === 'ACTIVE'" (click)="deactivateVariant(v.id!)" class="btn-danger">Kaldır</button>
-                    <button (click)="confirmDeleteVariant(p.id!, v.id!)" class="btn-danger">Sil</button>
+                   <button (click)="confirmDeleteVariant(p.id!, v.id!)" class="btn-danger">Sil</button>
                   </div>
                 </div>
               </td>

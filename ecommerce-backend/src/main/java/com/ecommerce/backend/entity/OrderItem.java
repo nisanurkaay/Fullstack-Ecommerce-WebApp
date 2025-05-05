@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 
+
 @Entity
 @Table(name = "order_items")
 
@@ -22,7 +23,25 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     @JsonIgnore // Bunu eklemen çok önemli!
     private Order order;
-    
+    @ManyToOne
+@JoinColumn(name = "variant_id", referencedColumnName = "id", nullable = true)
+private ProductVariant variant;
+@Enumerated(EnumType.STRING)
+private OrderItemStatus itemStatus = OrderItemStatus.ACTIVE;
+
+public OrderItemStatus getItemStatus() {
+    return itemStatus;
+}
+public void setItemStatus(OrderItemStatus itemStatus) {
+    this.itemStatus = itemStatus;
+}
+    public ProductVariant getVariant() {
+        return variant;
+    }
+
+    public void setVariant(ProductVariant variant) {
+        this.variant = variant;
+    }
 
     public Long getId() {
         return id;

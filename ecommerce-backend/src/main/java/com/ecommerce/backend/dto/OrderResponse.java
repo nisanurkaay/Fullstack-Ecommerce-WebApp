@@ -9,6 +9,15 @@ public class OrderResponse {
     private String status;
     private LocalDateTime createdAt;
     private List<OrderItemResponse> items;
+    private String userName;
+
+
+    public String getUserName() {
+        return userName;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public Long getId() {
         return id;

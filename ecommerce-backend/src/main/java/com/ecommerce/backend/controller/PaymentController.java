@@ -1,6 +1,9 @@
 package com.ecommerce.backend.controller;
 import com.ecommerce.backend.service.StripePaymentService;
 import com.stripe.model.PaymentIntent;
+
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
@@ -14,10 +17,11 @@ public class PaymentController {
     private StripePaymentService stripePaymentService;
 
     @PostMapping("/create")
-    public ResponseEntity<String> createPaymentIntent(@RequestParam long amount) {
-        PaymentIntent intent = stripePaymentService.createPaymentIntent(amount, "usd");
-          return ResponseEntity.ok(intent.getClientSecret()); // UI'ya PaymentIntentId dönebilirsin
+    public ResponseEntity<Map<String, String>> createPaymentIntent(@RequestParam long amount) {
+        Map<String, String> paymentIntent = stripePaymentService.createPaymentIntent(amount, "try");
+        return ResponseEntity.ok(paymentIntent); // id ve clientSecret birlikte döner
     }
+    
 
     @PostMapping("/refund")
     public ResponseEntity<String> refundPayment(@RequestParam String paymentIntentId) {
