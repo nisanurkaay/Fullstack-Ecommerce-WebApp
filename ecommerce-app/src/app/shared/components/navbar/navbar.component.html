@@ -112,12 +112,17 @@
     <ng-container *ngIf="cartItems.length; else emptyCart">
       <ng-container *ngFor="let item of cartItems">
         <button mat-menu-item class="flex items-center gap-3">
-          <img [src]="item.product.imageUrls?.[0]" alt="{{ item.product.name }}" class="w-10 h-10 object-cover rounded" />
+          <img [src]="'http://localhost:8081' + item.product.imageUrls![0]"
+          [alt]="item.product.name"
+          class="w-full md:w-48 h-48 object-contain bg-gray-50" />
           <div class="flex-1 text-left">
             <p class="font-medium">{{ item.product.name }}</p>
             <p class="text-sm text-gray-600">${{ item.product.price }} x {{ item.quantity }}</p>
           </div>
-          <button mat-icon-button (click)="removeFromCart(item.product.id!)"><mat-icon>delete</mat-icon></button>
+          <button mat-icon-button (click)="removeFromCart(item.product.id!, item.color, item.size)">
+            <mat-icon>delete</mat-icon>
+          </button>
+
         </button>
       </ng-container>
       <mat-divider></mat-divider>
