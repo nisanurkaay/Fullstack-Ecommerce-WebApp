@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.plugins.tiff.GeoTIFFTagSet;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -29,8 +31,12 @@ private User seller;
     private String description;
     private Double price;
     private Integer stockQuantity;
-    
 
+
+    @Column(nullable = false)
+    private int amountSold = 0;
+
+    
     @Column(name="color")
     @Enumerated(EnumType.STRING)
     private ColorEnum color;
@@ -40,8 +46,53 @@ private User seller;
         return color;
     }
  
+public int getAmountSold() {
+    return amountSold;
+}
+public void setAmountSold(int amountSold) {
+    this.amountSold = amountSold;
+}
+private LocalDateTime lastSoldAt;
 
-  
+public LocalDateTime getLastSoldAt() {
+    return lastSoldAt;
+}
+public void setLastSoldAt(LocalDateTime lastSoldAt) {
+    this.lastSoldAt = lastSoldAt;
+}
+@Column(name = "total_revenue")
+private double totalRevenue = 0.0;
+
+public double getTotalRevenue() {
+    return totalRevenue;
+}
+public void setTotalRevenue(double totalRevenue) {
+    this.totalRevenue = totalRevenue;
+}
+
+@OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+@JsonIgnore // Review'lar ayrı endpoint’ten çağrılacağı için
+private List<Review> reviews;
+
+
+public List<Review> getReviews() {
+    return reviews;
+}
+public void setReviews(List<Review> reviews) {
+    this.reviews = reviews;
+}
+
+
+@Column(name = "view_count")
+private int viewCount = 0;
+
+public int getViewCount() {
+    return viewCount;
+}
+public void setViewCount(int viewCount) {
+    this.viewCount = viewCount;
+}
+
     public void setColor(ColorEnum  color) {
         this.color = color;
     }
@@ -148,5 +199,23 @@ private User seller;
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
-    
+    @Column(name = "review_count")
+private int reviewCount = 0;
+
+@Column(name = "rating_average")
+private double ratingAverage = 0.0;
+
+public double getRatingAverage() {
+    return ratingAverage;
+}
+public void setRatingAverage(double ratingAverage) {
+    this.ratingAverage = ratingAverage;
+}
+
+public int getReviewCount() {
+    return reviewCount;
+}
+public void setReviewCount(int reviewCount) {
+    this.reviewCount = reviewCount;
+}
 }

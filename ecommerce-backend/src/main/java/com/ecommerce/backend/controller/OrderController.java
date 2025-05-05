@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 
 @RestController
@@ -47,4 +48,21 @@ public class OrderController {
         Order order = orderService.placeOrder(user, request);
         return ResponseEntity.ok(order);
     }
+
+    @GetMapping
+    @PreAuthorize("hasRole('USER') or hasRole('SELLER') or hasRole('ADMIN')")
+    public ResponseEntity<List<Order>> getOrders(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    
+        if (user.getRole().name().equals("ROLE_ADMIN")) {
+            return ResponseEntity.ok(orderService.getAllOrders());
+        } else if (user.getRole().name().equals("ROLE_SELLER")) {
+            return ResponseEntity.ok(orderService.getOrdersForSeller(user));
+        } else {
+            return ResponseEntity.ok(orderService.getOrdersByUser(user));
+        }
+    }
+    
+    
 }

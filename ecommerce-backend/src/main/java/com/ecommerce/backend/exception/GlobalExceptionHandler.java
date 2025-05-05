@@ -6,6 +6,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.ecommerce.backend.dto.ApiErrorResponse;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
  @ExceptionHandler(BadCredentialsException.class)
@@ -18,10 +20,16 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage()); // veya custom JSON dön
     }
-    @ExceptionHandler(UserNotActiveException.class)
-    public ResponseEntity<String> handleUserNotActive(UserNotActiveException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
-    }
+  @ExceptionHandler(UserNotActiveException.class)
+public ResponseEntity<ApiErrorResponse> handleUserNotActive(UserNotActiveException ex) {
+    ApiErrorResponse error = new ApiErrorResponse(ex.getMessage(), HttpStatus.FORBIDDEN.value());
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+}
 
-    // Diğer handler'lar da eklenebilir
+@ExceptionHandler(OutOfStockException.class)
+public ResponseEntity<ApiErrorResponse> handleOutOfStock(OutOfStockException ex) {
+    ApiErrorResponse error = new ApiErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+}
+
 }

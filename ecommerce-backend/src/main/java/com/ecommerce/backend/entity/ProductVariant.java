@@ -1,6 +1,8 @@
 package com.ecommerce.backend.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;;
@@ -76,4 +78,54 @@ private ProductStatus productStatus;
     public void setStock(Integer stock) {
         this.stock = stock;
     }
+
+    @Column(name = "amount_sold")
+private int amountSold = 0;
+
+@Column(name = "total_revenue")
+private double totalRevenue = 0.0;
+
+@Column(name = "last_sold_at")
+private LocalDateTime lastSoldAt;
+
+
+public int getAmountSold() {
+    return amountSold;
+
+
+
+}
+
+
+public double getTotalRevenue() {
+    return totalRevenue;
+
+
+}
+
+
+public void setTotalRevenue(double totalRevenue) {
+    this.totalRevenue = totalRevenue;
+
+
+}
+public LocalDateTime getLastSoldAt() {
+    return lastSoldAt;
+
+
+}
+
+public void setLastSoldAt(LocalDateTime lastSoldAt) {
+    this.lastSoldAt = lastSoldAt;
+
+
+}
+
+public void setAmountSold(int amountSold) {
+    this.amountSold = amountSold;
+
+
+}
+
+
 }

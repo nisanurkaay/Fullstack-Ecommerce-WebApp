@@ -24,7 +24,15 @@ public class Order {
         createdAt = LocalDateTime.now();
     }
 
+    @OneToMany(mappedBy = "order")
+    private List<Review> reviews;
 
+    public List<Review> getReviews() {
+        return reviews;
+    }
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
     private double totalAmount;
 
     @Enumerated(EnumType.STRING)
