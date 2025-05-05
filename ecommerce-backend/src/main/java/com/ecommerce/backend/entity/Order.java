@@ -89,4 +89,16 @@ public class Order {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    @Column(name = "payment_intent_id")
+private String paymentIntentId;
+
+public String getPaymentIntentId() {
+    return paymentIntentId;
+}
+
+public void setPaymentIntentId(String paymentIntentId) {
+    this.paymentIntentId = paymentIntentId;
+}
+
 }

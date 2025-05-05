@@ -27,13 +27,16 @@ import com.ecommerce.backend.repository.ProductVariantRepository;
 import com.ecommerce.backend.exception.OutOfStockException;
 import com.ecommerce.backend.exception.TokenRefreshException;
 import com.ecommerce.backend.exception.UserNotActiveException;
+import com.ecommerce.backend.service.StripePaymentService;
 
 @Service
 public class OrderService {
     @Autowired private OrderRepository orderRepository;
     @Autowired private ProductRepository productRepository;
     @Autowired private ProductVariantRepository variantRepository;
-
+    @Autowired
+    private StripePaymentService stripePaymentService;
+    
     @Transactional
     public Order placeOrder(User user, OrderRequest request) {
         if (!user.getUserStatus().equals(UserStatus.ACTIVE)) {
@@ -124,5 +127,27 @@ public class OrderService {
     
         return filtered;
     }
-    
+
+public void cancelOrderBySeller(Long orderId) {
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    // Order statüsü iptal değilse devam et
+    if (order.getStatus() != OrderStatus.CANCELLED) {
+        order.setStatus(OrderStatus.CANCELLED);
+
+        // Stoğu geri ekle
+        for (OrderItem item : order.getItems()) {
+            Product product = item.getProduct();
+            product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+            productRepository.save(product);
+        }
+
+        // Refund işlemi
+        stripePaymentService.refundPayment(order.getPaymentIntentId()); // Ödeme ID'si burada tutulmalı
+
+        orderRepository.save(order);
+    }
+}
+
 }

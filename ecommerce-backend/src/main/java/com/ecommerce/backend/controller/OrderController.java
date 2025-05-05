@@ -63,6 +63,12 @@ public class OrderController {
             return ResponseEntity.ok(orderService.getOrdersByUser(user));
         }
     }
-    
+
+    @PutMapping("/{orderId}/cancel-by-seller")
+    @PreAuthorize("hasRole('SELLER')")
+    public ResponseEntity<String> cancelOrderBySeller(@PathVariable Long orderId) {
+        orderService.cancelOrderBySeller(orderId);
+        return ResponseEntity.ok("Order has been cancelled and refunded (if paid).");
+    }
     
 }

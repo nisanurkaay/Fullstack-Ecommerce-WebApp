@@ -56,6 +56,11 @@
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+<dependency>
+    <groupId>com.stripe</groupId>
+    <artifactId>stripe-java</artifactId>
+    <version>24.20.0</version>
+</dependency>
 
 		<!-- Spring Security + JWT -->
 		<dependency>
