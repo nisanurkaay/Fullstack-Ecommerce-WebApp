@@ -49,6 +49,7 @@ public class SecurityConfig {
     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
     .requestMatchers("/api/auth/**").permitAll() // ✅ GİRİŞ ve KAYIT burada
     .requestMatchers("/uploads/**").permitAll()
+    .requestMatchers("/api/orders/**").authenticated()
     .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
     .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll() 
     .requestMatchers("/api/products/colors").permitAll()

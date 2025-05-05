@@ -2,7 +2,7 @@ package com.ecommerce.backend.entity;
 
 import jakarta.persistence.*;
 
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -16,6 +16,14 @@ public class Order {
 
     @ManyToOne
     private User user;
+
+    
+    private LocalDateTime createdAt;
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
+
 
     private double totalAmount;
 
@@ -65,5 +73,12 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

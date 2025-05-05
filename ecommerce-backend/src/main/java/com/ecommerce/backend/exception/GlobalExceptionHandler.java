@@ -18,6 +18,10 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage()); // veya custom JSON dön
     }
+    @ExceptionHandler(UserNotActiveException.class)
+    public ResponseEntity<String> handleUserNotActive(UserNotActiveException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+    }
 
     // Diğer handler'lar da eklenebilir
 }
