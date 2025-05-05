@@ -9,9 +9,9 @@ import { Component, OnInit } from '@angular/core';
 export class HeroCarouselComponent implements OnInit {
   currentSlide = 0;
   slides = [
-    'https://via.placeholder.com/1200x500/FF5733/FFFFFF?text=Summer+Collection',
-    'https://via.placeholder.com/1200x500/33A8FF/FFFFFF?text=Denim+Styles',
-    'https://via.placeholder.com/1200x500/33FF57/FFFFFF?text=Tech+Gadgets'
+    'assets/summer24.jpg',
+    'assets/denim.jpg',
+    'assets/tech.jpg'
   ];
 
   ngOnInit(): void {

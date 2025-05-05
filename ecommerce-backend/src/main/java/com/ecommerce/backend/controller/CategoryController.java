@@ -40,4 +40,8 @@ public class CategoryController {
     public ResponseEntity<List<ProductResponse>> getProductsByCategory(@PathVariable Long id) {
         return ResponseEntity.ok(categoryService.getProductsByCategory(id));
     }
+    @GetMapping("/top")
+public ResponseEntity<List<CategoryResponse>> getTopCategoriesByProductCount() {
+    return ResponseEntity.ok(categoryService.getTopCategoriesByProductCount());
+}
 } 
