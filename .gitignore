@@ -67,3 +67,9 @@ ecommerce_backend/.idea/
 ecommerce_backend/.classpath
 ecommerce_backend/.project
 ecommerce_backend/.settings/
+# === Angular Vite ve Deps Cache (özellikle VS Code cache sorunları için) ===
+ecommerce_app/.vite/
+ecommerce_app/.angular/cache/
+ecommerce_app/angular/cache/
+ecommerce_app/angular/cache/**
+ecommerce_app/angular/**/vite/deps/
