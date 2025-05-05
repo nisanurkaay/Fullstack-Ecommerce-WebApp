@@ -18,4 +18,8 @@ export class CategoryService {
   create(category: Category): Observable<Category> {
     return this.http.post<Category>(this.apiUrl, category);
   }
+  getTopCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(`${this.apiUrl}/top`);
+  }
+
 }

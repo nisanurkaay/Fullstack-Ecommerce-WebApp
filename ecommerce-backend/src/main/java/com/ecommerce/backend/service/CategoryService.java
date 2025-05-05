@@ -11,4 +11,5 @@ public interface CategoryService {
     List<CategoryResponse> getAllCategories();
     List<CategoryResponse> getSubcategories(Long parentId); // ✅ BURAYI EKLE
     List<ProductResponse> getProductsByCategory(Long categoryId);
+    List<CategoryResponse> getTopCategoriesByProductCount();
 }

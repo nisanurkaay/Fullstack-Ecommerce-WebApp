@@ -5,7 +5,12 @@ import com.ecommerce.backend.dto.CategoryResponse;
 import com.ecommerce.backend.dto.ProductResponse;
 import com.ecommerce.backend.entity.Category;
 import com.ecommerce.backend.repository.CategoryRepository;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+
 
 import java.util.List;
 
@@ -72,5 +77,13 @@ public class CategoryServiceImpl implements CategoryService {
         res.setParentId(cat.getParentCategory() != null ? cat.getParentCategory().getId() : null); // 👈 BU SATIR
         return res;
     }
+    @Override
+public List<CategoryResponse> getTopCategoriesByProductCount() {
+    Pageable top5 = PageRequest.of(0, 5);
+    return categoryRepository.findTop5ByProductCount(top5)
+            .stream()
+            .map(this::toResponse)
+            .toList();
+}
     
 }
