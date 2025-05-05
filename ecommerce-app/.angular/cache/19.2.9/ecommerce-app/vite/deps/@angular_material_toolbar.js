@@ -1,31 +1,17 @@
-<<<<<<< HEAD
 import "./chunk-2N55NYQO.js";
 import "./chunk-CQF2LB5Q.js";
 import {
   MatCommonModule
-} from "./chunk-37IVR6H6.js";
-import "./chunk-IJ7SZWRZ.js";
+} from "./chunk-PLNC2Q3H.js";
 import "./chunk-KVKAZYEP.js";
-=======
-import "./chunk-6JSTKULT.js";
-import "./chunk-IJ3KGSPX.js";
-import {
-  MatCommonModule
-} from "./chunk-DOR2O6BL.js";
-import "./chunk-Q5GE6IRN.js";
-import "./chunk-E3YEYTGH.js";
->>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f
+import "./chunk-IJ7SZWRZ.js";
 import {
   Platform
-} from "./chunk-D7URE75M.js";
+} from "./chunk-TQ5OV6KP.js";
 import "./chunk-AZ3RN2ZO.js";
 import {
   DOCUMENT
-<<<<<<< HEAD
 } from "./chunk-LI7YMH5D.js";
-=======
-} from "./chunk-7MFUTISS.js";
->>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f
 import {
   ChangeDetectionStrategy,
   Component,
@@ -48,17 +34,10 @@ import {
   ɵɵprojection,
   ɵɵprojectionDef,
   ɵɵqueryRefresh
-<<<<<<< HEAD
 } from "./chunk-WZFYOW4A.js";
 import "./chunk-BEKK4LPA.js";
 import "./chunk-FUKUZFP3.js";
 import "./chunk-NUMT5ELH.js";
-=======
-} from "./chunk-JSWM5O77.js";
-import "./chunk-PEBH6BBU.js";
-import "./chunk-WPM5VTLQ.js";
-import "./chunk-4S3KYZTJ.js";
->>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f
 import "./chunk-WDMUDEB6.js";
 
 // node_modules/@angular/material/fesm2022/toolbar.mjs

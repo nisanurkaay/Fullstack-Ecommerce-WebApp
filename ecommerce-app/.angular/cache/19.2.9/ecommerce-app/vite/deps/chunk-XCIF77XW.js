@@ -3,11 +3,7 @@ import {
   setClassMetadata,
   ɵɵdefineInjector,
   ɵɵdefineNgModule
-<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-XCIF77XW.js
 } from "./chunk-WZFYOW4A.js";
-=======
-} from "./chunk-JSWM5O77.js";
->>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-DXSZLABY.js
 
 // node_modules/@angular/cdk/fesm2022/layout.mjs
 var LayoutModule = class _LayoutModule {
@@ -45,8 +41,4 @@ var Breakpoints = {
 export {
   Breakpoints
 };
-<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-XCIF77XW.js
 //# sourceMappingURL=chunk-XCIF77XW.js.map
-=======
-//# sourceMappingURL=chunk-DXSZLABY.js.map
->>>>>>> 59966a1e6514d918922983717fb8a0a545cb849f:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-DXSZLABY.js

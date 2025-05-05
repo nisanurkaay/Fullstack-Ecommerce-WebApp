@@ -37,3 +37,17 @@ img.main-image {
   outline: 2px solid #1825e4; /* Tailwind orange-500 */
   outline-offset: 2px;
 }
+.color-box {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.color-box.selected {
+  border: 3px solid black;
+}
+
+

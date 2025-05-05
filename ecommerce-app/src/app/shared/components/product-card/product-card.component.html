@@ -1,19 +1,21 @@
 <!-- src/app/shared/components/product-card/product-card.component.html -->
-<div class="relative flex flex-col border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow">
+<div
+  class="relative flex flex-col border rounded-lg p-4 bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+  (click)="viewDetails()"
+>
   <!-- Ürün Görseli -->
-<img
-*ngIf="product.imageUrls?.length"
-[src]="'http://localhost:8081' + product.imageUrls?.[0]"
-[alt]="product.name"
-class="h-48 object-cover mb-4 rounded cursor-pointer w-full"
-(click)="viewDetails()"
+  <img
+  *ngIf="product.imageUrls && product.imageUrls.length > 0"
+  [src]="'http://localhost:8081' + product.imageUrls[0]"
+  [alt]="product.name"
+  class="h-48 object-cover mb-4 rounded w-full"
 />
 
 
-  <!-- Kalp Butonu -->
+  <!-- Kalp Butonu (Wishlist) -->
   <button
-    class="absolute top-2 right-2 focus:outline-none"
-    (click)="toggleWishlist()"
+    class="absolute top-2 right-2 z-10 focus:outline-none"
+    (click)="toggleWishlist(); $event.stopPropagation()"
     [title]="isInWishlist ? 'Favorilerden çıkar' : 'Favorilere ekle'"
   >
     <mat-icon
@@ -27,10 +29,7 @@ class="h-48 object-cover mb-4 rounded cursor-pointer w-full"
   </button>
 
   <!-- Başlık -->
-  <h3
-    class="text-md font-semibold mb-2 line-clamp-2 cursor-pointer hover:underline"
-    (click)="viewDetails()"
-  >
+  <h3 class="text-md font-semibold mb-2 line-clamp-2 hover:underline">
     {{ product.name }}
   </h3>
 
@@ -39,14 +38,14 @@ class="h-48 object-cover mb-4 rounded cursor-pointer w-full"
     {{ product.description }}
   </p>
 
-  <!-- Fiyat ve Sepete Ekle Butonu -->
+  <!-- Fiyat ve Sepete Ekle -->
   <div class="mt-auto flex items-center justify-between">
     <span class="text-lg font-bold text-gray-800">
       {{ product.price | currency:'USD':'symbol':'1.2-2' }}
     </span>
     <button
       class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition"
-      (click)="addToCart()"
+      (click)="addToCart(); $event.stopPropagation()"
     >
       Add to Cart
     </button>
