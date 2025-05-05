@@ -127,5 +127,9 @@ export class ProductService {
     denyVariant(variantId: number): Observable<void> {
       return this.http.put<void>(`${this.apiUrl}/variants/${variantId}/deny-variant`, {});
     }
-
+    getVariantId(productId: number, color: string, size: string): Observable<number> {
+      return this.http.get<number>(
+        `${this.apiUrl}/${productId}/variant-id?color=${color}&size=${size}`
+      );
+    }
 }

@@ -231,4 +231,16 @@ public ResponseEntity<ProductResponse> addVariantToProduct(
     return ResponseEntity.ok(productService.addVariantToProduct(id, variantRequest));
 }
 
+
+@GetMapping("/{productId}/variant-id")
+public ResponseEntity<Long> getVariantIdByColorAndSize(
+        @PathVariable Long productId,
+        @RequestParam String color,
+        @RequestParam String size) {
+    
+    Long variantId = productService.getVariantIdByColorAndSize(productId, color, size);
+    return ResponseEntity.ok(variantId);
+}
+
+
 }

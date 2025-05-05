@@ -475,4 +475,18 @@ public ProductResponse addVariantToProduct(Long productId, ProductVariantRequest
     return modelMapper.map(product, ProductResponse.class); // veya özel dönüştürme
 }
 
+@Override
+public Long getVariantIdByColorAndSize(Long productId, String color, String size) {
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new RuntimeException("Product not found"));
+
+    return product.getVariants().stream()
+        .filter(v -> v.getColor().name().equalsIgnoreCase(color) &&
+                     v.getSize().equalsIgnoreCase(size))
+        .map(ProductVariant::getId)
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Variant not found for given color and size"));
+}
+
+
 }

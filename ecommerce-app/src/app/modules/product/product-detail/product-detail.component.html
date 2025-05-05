@@ -1,92 +1,73 @@
-<div *ngIf="product">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <!-- Görsel Galerisi -->
-    <div>
-      <!-- Ana Görsel -->
-      <img
-        [src]="'http://localhost:8081' + selectedImage"
-        [alt]="product.name"
-        class="main-image mb-4 w-full h-auto object-contain"
-      />
+<div class="product-detail-container p-4">
 
-      <!-- Küçük Görseller -->
-      <div class="thumbnail-strip flex overflow-x-auto space-x-2 mt-2">
-        <img
-          *ngFor="let img of currentImages"
-          [src]="'http://localhost:8081' + img"
-          (click)="selectImage(img)"
-          [class.border-black]="selectedImage === img"
-          class="w-16 h-16 object-cover cursor-pointer border-2 border-transparent hover:border-gray-400 rounded"
-        />
-      </div>
-    </div>
+  <!-- 🔹 Eğer variantId varsa sadece o varyantın bilgileri -->
+  <div *ngIf="variantId; else selectableVersion">
 
-    <!-- Ürün Bilgileri -->
-    <div>
-      <h1 class="text-3xl font-bold">{{ product.name }}</h1>
-      <p class="text-lg text-gray-600 mt-2">{{ product.description }}</p>
+    <h2 class="text-xl font-bold mb-2">{{ product.name }}</h2>
+    <img [src]="selectedImage" alt="Product image" class="w-64 h-64 object-cover mb-4" />
 
-      <div class="flex items-center space-x-2 mt-4">
-        <span class="text-2xl font-bold">${{ product.price }}</span>
-      </div>
+    <p class="text-lg"><strong>Color:</strong> {{ selectedVariant?.color }}</p>
+    <p class="text-lg"><strong>Size:</strong> {{ selectedVariant?.size }}</p>
+    <p class="text-lg"><strong>Price:</strong> {{ selectedVariant?.price | currency }}</p>
 
-      <!-- Color Selection -->
-      <div class="mt-4" *ngIf="colors.length > 0">
-        <label class="font-semibold block mb-1">Color:</label>
-        <div class="flex space-x-2">
-          <div
-            *ngFor="let color of colors"
-            (click)="selectColor(color)"
-            [ngStyle]="{
-              'background-color': color.toLowerCase(),
-              'border': selectedColor === color ? '3px solid black' : '1px solid #ccc'
-            }"
-            class="w-6 h-6 rounded-full cursor-pointer"
-            [title]="color"
-          ></div>
-        </div>
-        <p *ngIf="selectedColor" class="text-sm mt-1">Selected: {{ selectedColor }}</p>
-      </div>
+    <button (click)="addToCart()" class="bg-blue-600 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">
+      Add to Cart
+    </button>
 
-      <!-- Size Selection -->
-      <div class="mt-4" *ngIf="sizes.length > 0">
-        <label class="font-semibold block mb-1">Size:</label>
-        <div class="flex space-x-2">
-          <button
-            *ngFor="let size of sizes"
-            (click)="selectSize(size)"
-            [ngClass]="{
-              'bg-black text-white': selectedSize === size,
-              'bg-white text-black border': selectedSize !== size
-            }"
-            class="px-3 py-1 border rounded transition"
-          >
-            {{ size }}
-          </button>
-        </div>
-        <p *ngIf="selectedSize" class="text-sm mt-1">Selected: {{ selectedSize }}</p>
-      </div>
-
-      <!-- Add to Cart Button -->
-      <button
-        (click)="addToCart()"
-        class="mt-6 bg-black text-white py-2 px-6 rounded hover:bg-gray-700"
-      >
-        Add to Cart
-      </button>
-    </div>
   </div>
 
-  <!-- Tabs -->
-  <mat-tab-group class="mt-10">
-    <mat-tab label="Product Details">
-      <p class="mt-4 text-gray-600">{{ product.description }}</p>
-    </mat-tab>
-    <mat-tab label="Ratings & Reviews">
-      <app-review-list [reviews]="productReviews"></app-review-list>
-    </mat-tab>
-    <mat-tab label="FAQs">
-      <p class="mt-4 text-gray-600">Frequently Asked Questions will go here.</p>
-    </mat-tab>
-  </mat-tab-group>
+  <!-- 🔹 Eğer varyant ID yoksa kullanıcı seçiyor -->
+  <ng-template #selectableVersion>
+    <h2 class="text-xl font-bold mb-2">{{ product.name }}</h2>
+
+    <img [src]="selectedImage" alt="Product image" class="w-64 h-64 object-cover mb-4" />
+
+    <!-- 🔸 Görsel seçimi -->
+    <div class="flex gap-2 mb-4">
+      <img *ngFor="let img of currentImages"
+           [src]="img"
+           alt="Product thumbnail"
+           class="w-16 h-16 object-cover cursor-pointer border"
+           [class.border-blue-500]="img === selectedImage"
+           (click)="selectImage(img)" />
+    </div>
+
+    <!-- 🔸 Renk seçimi -->
+    <div class="mb-2">
+      <label class="font-semibold mr-2">Select Color:</label>
+      <button *ngFor="let color of colors"
+              (click)="selectColor(color)"
+              class="px-3 py-1 mr-2 rounded border"
+              [class.bg-blue-100]="selectedColor === color">
+        {{ color }}
+      </button>
+    </div>
+
+    <!-- 🔸 Beden seçimi -->
+    <div class="mb-2">
+      <label class="font-semibold mr-2">Select Size:</label>
+      <button *ngFor="let size of sizes"
+              (click)="selectSize(size)"
+              class="px-3 py-1 mr-2 rounded border"
+              [class.bg-green-100]="selectedSize === size">
+        {{ size }}
+      </button>
+    </div>
+
+    <p class="text-lg mt-2"><strong>Price:</strong> {{ product.price | currency }}</p>
+
+    <button (click)="addToCart()" class="bg-blue-600 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">
+      Add to Cart
+    </button>
+  </ng-template>
+
+  <!-- 🔹 Reviews
+  <div class="mt-8">
+    <h3 class="text-lg font-bold mb-2">Reviews</h3>
+    <div *ngFor="let review of productReviews" class="mb-2 border-b pb-2">
+      <p class="text-sm text-gray-600">{{ review.username }}</p>
+      <p>{{ review.comment }}</p>
+    </div>
+  </div>
+-->
 </div>

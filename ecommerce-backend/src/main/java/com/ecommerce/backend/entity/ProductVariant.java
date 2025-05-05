@@ -11,7 +11,9 @@ public class ProductVariant {
     @Id @GeneratedValue
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private ColorEnum color;
+    
     @Column(name = "size")
     private String size;
     

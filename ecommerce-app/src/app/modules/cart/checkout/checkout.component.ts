@@ -48,19 +48,29 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
 
   calculateTotal(): number {
     return this.cartItems.reduce((sum, item) => {
-      const price = item.variantId
-        ? item.product.variants?.find(v => v.id === item.variantId)?.price
-        : item.product.price;
-      return sum + (price ?? 0) * item.quantity;
+      let price = item.product.price;
+
+      if (item.variantId && item.product.variants) {
+        const variant = item.product.variants.find(v => v.id === item.variantId);
+        if (variant) price = variant.price;
+      }
+
+      return sum + price * item.quantity;
     }, 0);
   }
 
   async payWithStripe() {
     try {
       const amountInCents = Math.round(this.totalAmount * 100);
-      const intentId = await this.stripeService.createPaymentIntent(amountInCents);
 
-      const result = await this.stripe!.confirmCardPayment(intentId, {
+      if (amountInCents === 0) {
+        alert("Sepet tutarı 0 olamaz.");
+        return;
+      }
+
+      const clientSecret = await this.stripeService.createPaymentIntent(amountInCents);
+
+      const result = await this.stripe!.confirmCardPayment(clientSecret, {
         payment_method: {
           card: this.card,
           billing_details: { name: 'Ad Soyad' }
@@ -70,7 +80,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
       if (result.error) {
         alert('💳 Ödeme başarısız: ' + result.error.message);
       } else if (result.paymentIntent?.status === 'succeeded') {
-        this.createOrder(intentId);
+        this.createOrder(clientSecret);
       }
     } catch (err) {
       console.error(err);
@@ -79,6 +89,17 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   }
 
   createOrder(paymentIntentId: string): void {
+    const orderPayload = {
+      items: this.cartItems.map(item => ({
+        productId: item.product.id,
+        variantId: item.variantId,
+        quantity: item.quantity
+      })),
+      paymentIntentId
+    };
+
+    console.log("📦 GÖNDERİLEN ORDER REQUEST:", JSON.stringify(orderPayload, null, 2));
+
     this.orderService.createOrderFromCart(this.cartItems, paymentIntentId).subscribe({
       next: () => {
         alert('🎉 Siparişiniz başarıyla oluşturuldu!');
@@ -86,7 +107,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
         this.router.navigate(['/orders']);
       },
       error: err => {
-        console.error(err);
+        console.error("❌ Backend Hatası:", err);
         alert('⚠️ Sipariş oluşturulamadı.');
       }
     });

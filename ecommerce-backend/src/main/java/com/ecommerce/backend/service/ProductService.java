@@ -21,6 +21,7 @@ void deleteVariant(Long productId, Long variantId);
     void adminBanProduct(Long id);
     List<ProductResponse> filterProductsByRole(Long categoryId, List<String> colors, List<String> sizes, Long userId);
     List<String> getUsedColors();
+    Long getVariantIdByColorAndSize(Long productId, String color, String size);
     ProductResponse deactivateProduct(Long id, Long userId);
      void unbanProduct(Long id);
     List<ProductResponse> getAllPendingProducts();

@@ -55,6 +55,7 @@ public class SecurityConfig {
     .requestMatchers(HttpMethod.POST, "/api/orders").authenticated()
     .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
     .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll() 
+    .requestMatchers("/api/products/*/variant-id").permitAll()
     .requestMatchers("/api/products/colors").permitAll()
     .requestMatchers("/api/products/filter").permitAll()
    // Korunan endpointler

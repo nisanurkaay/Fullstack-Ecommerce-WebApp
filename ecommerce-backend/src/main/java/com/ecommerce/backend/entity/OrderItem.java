@@ -24,6 +24,17 @@ public class OrderItem {
     private Order order;
     
 
+    @ManyToOne
+@JoinColumn(name = "variant_id") // Eğer bu adla bir sütun yoksa, değiştirebilirsin
+private ProductVariant variant;
+
+
+    public ProductVariant getVariant() {
+        return variant;
+    }
+    public void setVariant(ProductVariant variant) {
+        this.variant = variant;
+    }
     public Long getId() {
         return id;
     }

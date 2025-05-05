@@ -15,4 +15,14 @@ public class OrderItemRequest {
     public int getQuantity() {
         return quantity;
     }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    public void setVariantId(Long variantId) {
+        this.variantId = variantId;
+    }
 }

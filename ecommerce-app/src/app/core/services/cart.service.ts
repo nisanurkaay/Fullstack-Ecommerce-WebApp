@@ -13,22 +13,29 @@ export class CartService {
   private cartSubject = new BehaviorSubject<CartItem[]>([]);
   cart$ = this.cartSubject.asObservable();
 
-  // Ürünü sepete ekle
-  addToCart(product: Product, color: string = '', size: string = ''): void {
+  addToCart(product: Product, color: string = '', size: string = '', variantId?: number): void {
+    if (product.variants?.length && variantId == null) {
+      console.warn('⚠️ Varyantlı ürün ama variantId yok! Sepete eklenmeyecek.');
+      return;
+    }
+
+    // Aynı varyanttan mı?
     const existingItem = this.cartItems.find(item =>
       item.product.id === product.id &&
       item.color === color &&
-      item.size === size
+      item.size === size &&
+      item.variantId === variantId
     );
 
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
-      this.cartItems.push({ product, quantity: 1, color, size });
+      this.cartItems.push({ product, quantity: 1, color, size, variantId });
     }
 
     this.cartSubject.next(this.cartItems);
   }
+
 
   // Miktar artır
   incrementQuantity(productId: number, color?: string, size?: string): void {

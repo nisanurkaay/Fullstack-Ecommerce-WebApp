@@ -78,6 +78,7 @@ public class OrderService {
                 productRepository.save(product);
     
                 item.setProduct(product);
+                item.setVariant(variant); // ✅ VARIANT’I SET ET!
                 totalAmount += variant.getPrice() * itemRequest.getQuantity();
             } else {
                 Product product = productRepository.findById(itemRequest.getProductId())
@@ -94,6 +95,7 @@ public class OrderService {
                 productRepository.save(product);
     
                 item.setProduct(product);
+                item.setVariant(null); // ✅ Varyant yoksa null açıkça set edelim
                 totalAmount += product.getPrice() * itemRequest.getQuantity();
             }
     
@@ -102,8 +104,8 @@ public class OrderService {
     
         order.setItems(items);
         order.setTotalAmount(totalAmount);
-        order.setPaymentIntentId(request.getPaymentIntentId()); // ✅ Burası eksik olan!
-
+        order.setPaymentIntentId(request.getPaymentIntentId()); // ✅ Stripe payment ID
+    
         return orderRepository.save(order);
     }
     
