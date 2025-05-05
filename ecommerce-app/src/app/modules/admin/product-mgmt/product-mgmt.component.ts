@@ -38,6 +38,49 @@ export class ProductMgmtComponent implements OnInit {
 
     this.selectedStatus = status;
   }
+  expandedProductIds: Set<number> = new Set();
+
+  toggleVariants(productId: number): void {
+    if (this.expandedProductIds.has(productId)) {
+      this.expandedProductIds.delete(productId);
+    } else {
+      this.expandedProductIds.add(productId);
+    }
+  }
+
+  isExpanded(productId: number): boolean {
+    return this.expandedProductIds.has(productId);
+  }
+
+  activateVariant(variantId: number) {
+    this.productService.activateVariant(variantId).subscribe(() => this.loadProductsByStatus(this.selectedStatus));
+  }
+
+  deactivateVariant(variantId: number) {
+    this.productService.deactivateVariant(variantId).subscribe(() => this.loadProductsByStatus(this.selectedStatus));
+  }
+
+  confirmDeleteVariant(productId: number, variantId: number) {
+    const confirmed = confirm('Bu varyantı silmek istediğinizden emin misiniz?');
+    if (!confirmed) return;
+
+    this.productService.deleteVariant(productId, variantId).subscribe(() => this.loadProductsByStatus(this.selectedStatus));
+  }
+
+  approveVariant(id: number): void {
+    console.log('Varyant ID:', id);
+    this.productService.approveVariant(id).subscribe({
+      next: () => this.loadProductsByStatus(this.selectedStatus),
+      error: err => console.error('Error approving variant', err)
+    });
+  }
+
+  denyVariant(id: number): void {
+    this.productService.denyVariant(id).subscribe({
+      next: () => this.loadProductsByStatus(this.selectedStatus),
+      error: err => console.error('Error denying variant', err)
+    });
+  }
 
   toggleBan(product: Product): void {
     const action = product.productStatus === 'BANNED'

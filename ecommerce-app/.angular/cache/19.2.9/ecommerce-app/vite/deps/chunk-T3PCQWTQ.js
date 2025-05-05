@@ -1,37 +1,16 @@
 import {
   MatRippleModule
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HK3X34TY.js
-} from "./chunk-77SKZ7CT.js";
-========
 } from "./chunk-7GWB5NGS.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-T3PCQWTQ.js
 import {
   MAT_RIPPLE_GLOBAL_OPTIONS,
   RippleRenderer,
   _StructuralStylesLoader,
   defaultRippleAnimationConfig
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HK3X34TY.js
-} from "./chunk-6M3CCHG4.js";
-========
 } from "./chunk-MFPAF4ZN.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-T3PCQWTQ.js
 import {
   FocusMonitor,
   MatCommonModule,
   _getEventTarget
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HK3X34TY.js
-} from "./chunk-MNHZP7IT.js";
-import {
-  _CdkPrivateStyleLoader,
-  _bindEventWithOptions
-} from "./chunk-6NZFXLU6.js";
-import {
-  Platform
-} from "./chunk-7ZF6DXPD.js";
-import {
-  DOCUMENT
-} from "./chunk-SWX5W6VE.js";
-========
 } from "./chunk-DOR2O6BL.js";
 import {
   _CdkPrivateStyleLoader,
@@ -43,7 +22,6 @@ import {
 import {
   DOCUMENT
 } from "./chunk-7MFUTISS.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-T3PCQWTQ.js
 import {
   ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
@@ -78,19 +56,11 @@ import {
   ɵɵgetInheritedFactory,
   ɵɵprojection,
   ɵɵprojectionDef
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HK3X34TY.js
-} from "./chunk-7W27O5A6.js";
-import {
-  __spreadProps,
-  __spreadValues
-} from "./chunk-4GNDKFTC.js";
-========
 } from "./chunk-JSWM5O77.js";
 import {
   __spreadProps,
   __spreadValues
 } from "./chunk-WDMUDEB6.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-T3PCQWTQ.js
 
 // node_modules/@angular/material/fesm2022/ripple-loader-BiPcTQRh.mjs
 var eventListenerOptions = {
@@ -1221,8 +1191,4 @@ export {
   MatMiniFabAnchor,
   MatButtonModule
 };
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HK3X34TY.js
-//# sourceMappingURL=chunk-HK3X34TY.js.map
-========
 //# sourceMappingURL=chunk-T3PCQWTQ.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-T3PCQWTQ.js

@@ -24,7 +24,14 @@ public class ProductVariant {
 @JoinColumn(name = "product_id")
 @JsonIgnore // ✅ Bu olmazsa sonsuz döngüye girer
 private Product product;
-
+@Enumerated(EnumType.STRING)
+private ProductStatus productStatus;
+    public ProductStatus getProductStatus() {
+        return productStatus;
+    }
+    public void setProductStatus(ProductStatus productStatus) {
+        this.productStatus = productStatus;
+    }
     public ColorEnum getColor() {
         return color;
     }

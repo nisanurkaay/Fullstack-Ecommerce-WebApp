@@ -1,10 +1,6 @@
 import {
   InjectionToken
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-SWX5W6VE.js
-} from "./chunk-7W27O5A6.js";
-========
 } from "./chunk-JSWM5O77.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-7MFUTISS.js
 
 // node_modules/@angular/common/fesm2022/dom_tokens-rA0ACyx7.mjs
 var DOCUMENT = new InjectionToken(ngDevMode ? "DocumentToken" : "");
@@ -57,8 +53,4 @@ export {
    * License: MIT
    *)
 */
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-SWX5W6VE.js
-//# sourceMappingURL=chunk-SWX5W6VE.js.map
-========
 //# sourceMappingURL=chunk-7MFUTISS.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-7MFUTISS.js

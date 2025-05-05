@@ -1,33 +1,18 @@
 import {
   BidiModule
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-MNHZP7IT.js
-} from "./chunk-Q5FHN2ZP.js";
-import {
-  _CdkPrivateStyleLoader,
-  _bindEventWithOptions
-} from "./chunk-6NZFXLU6.js";
-========
 } from "./chunk-Q5GE6IRN.js";
 import {
   _CdkPrivateStyleLoader,
   _bindEventWithOptions
 } from "./chunk-E3YEYTGH.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-DOR2O6BL.js
 import {
   Platform,
   coerceElement,
   coerceNumberProperty
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-MNHZP7IT.js
-} from "./chunk-7ZF6DXPD.js";
-import {
-  DOCUMENT
-} from "./chunk-SWX5W6VE.js";
-========
 } from "./chunk-KLGHZHJC.js";
 import {
   DOCUMENT
 } from "./chunk-7MFUTISS.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-DOR2O6BL.js
 import {
   APP_ID,
   CSP_NONCE,
@@ -59,17 +44,10 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
   ɵɵdefineNgModule
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-MNHZP7IT.js
-} from "./chunk-7W27O5A6.js";
-import {
-  isObservable
-} from "./chunk-2LVKW5TZ.js";
-========
 } from "./chunk-JSWM5O77.js";
 import {
   isObservable
 } from "./chunk-WPM5VTLQ.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-DOR2O6BL.js
 import {
   BehaviorSubject,
   Observable,
@@ -87,14 +65,10 @@ import {
   take,
   takeUntil,
   tap
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-MNHZP7IT.js
-} from "./chunk-4GNDKFTC.js";
-========
 } from "./chunk-4S3KYZTJ.js";
 import {
   __spreadValues
 } from "./chunk-WDMUDEB6.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-DOR2O6BL.js
 
 // node_modules/@angular/cdk/fesm2022/fake-event-detection-D0_6qVp2.mjs
 function isFakeMousedownFromScreenReader(event) {
@@ -3194,8 +3168,4 @@ export {
   AriaDescriber,
   MatCommonModule
 };
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-MNHZP7IT.js
-//# sourceMappingURL=chunk-MNHZP7IT.js.map
-========
 //# sourceMappingURL=chunk-DOR2O6BL.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-DOR2O6BL.js

@@ -1,31 +1,19 @@
 import {
   withHttpTransferCache
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-P72RPTTW.js
-} from "./chunk-4JYX6HXK.js";
-========
 } from "./chunk-3GNNSTKW.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JHQM4Z7E.js
 import {
   CommonModule,
   DomAdapter,
   getDOM,
   setRootDomAdapter
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-P72RPTTW.js
-} from "./chunk-JINLRPIQ.js";
-========
 } from "./chunk-OFWNEWDS.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JHQM4Z7E.js
 import {
   DOCUMENT,
   PLATFORM_BROWSER_ID,
   XhrFactory,
   isPlatformServer,
   parseCookieValue
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-P72RPTTW.js
-} from "./chunk-SWX5W6VE.js";
-========
 } from "./chunk-7MFUTISS.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JHQM4Z7E.js
 import {
   APP_ID,
   ApplicationModule,
@@ -84,19 +72,11 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵinject
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-P72RPTTW.js
-} from "./chunk-7W27O5A6.js";
-import {
-  __spreadProps,
-  __spreadValues
-} from "./chunk-4GNDKFTC.js";
-========
 } from "./chunk-JSWM5O77.js";
 import {
   __spreadProps,
   __spreadValues
 } from "./chunk-WDMUDEB6.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JHQM4Z7E.js
 
 // node_modules/@angular/platform-browser/fesm2022/dom_renderer-DGKzginR.mjs
 var EVENT_MANAGER_PLUGINS = new InjectionToken(ngDevMode ? "EventManagerPlugins" : "");
@@ -2047,8 +2027,4 @@ export {
    * License: MIT
    *)
 */
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-P72RPTTW.js
-//# sourceMappingURL=chunk-P72RPTTW.js.map
-========
 //# sourceMappingURL=chunk-JHQM4Z7E.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JHQM4Z7E.js

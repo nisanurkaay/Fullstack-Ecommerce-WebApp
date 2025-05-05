@@ -7,14 +7,8 @@ import {
 import {
   __async,
   __spreadProps,
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-7W27O5A6.js
-  __spreadValues,
-  map
-} from "./chunk-4GNDKFTC.js";
-========
   __spreadValues
 } from "./chunk-WDMUDEB6.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JSWM5O77.js
 
 // node_modules/@angular/core/fesm2022/untracked-BKcld_ew.mjs
 function defaultEquals(a, b) {
@@ -27005,8 +26999,4 @@ export {
    * found in the LICENSE file at https://angular.dev/license
    *)
 */
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-7W27O5A6.js
-//# sourceMappingURL=chunk-7W27O5A6.js.map
-========
 //# sourceMappingURL=chunk-JSWM5O77.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JSWM5O77.js

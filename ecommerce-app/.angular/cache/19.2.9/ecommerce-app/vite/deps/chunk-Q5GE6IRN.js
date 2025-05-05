@@ -1,10 +1,6 @@
 import {
   DOCUMENT
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-Q5FHN2ZP.js
-} from "./chunk-SWX5W6VE.js";
-========
 } from "./chunk-7MFUTISS.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-Q5GE6IRN.js
 import {
   Directive,
   EventEmitter,
@@ -21,11 +17,7 @@ import {
   ɵɵdefineInjectable,
   ɵɵdefineInjector,
   ɵɵdefineNgModule
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-Q5FHN2ZP.js
-} from "./chunk-7W27O5A6.js";
-========
 } from "./chunk-JSWM5O77.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-Q5GE6IRN.js
 
 // node_modules/@angular/cdk/fesm2022/directionality-DPQw3n2b.mjs
 var DIR_DOCUMENT = new InjectionToken("cdk-dir-doc", {
@@ -188,8 +180,4 @@ export {
   Dir,
   BidiModule
 };
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-Q5FHN2ZP.js
-//# sourceMappingURL=chunk-Q5FHN2ZP.js.map
-========
 //# sourceMappingURL=chunk-Q5GE6IRN.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-Q5GE6IRN.js

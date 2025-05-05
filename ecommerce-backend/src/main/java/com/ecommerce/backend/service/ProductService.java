@@ -32,5 +32,5 @@ void deleteVariant(Long productId, Long variantId);
     List<ProductResponse> getProductsByStatus(ProductStatus status);
     public List<ProductResponse> filterProducts(Long categoryId, List<String> colors, List<String> sizes);
     List<ProductResponse> getAllProductsForAdmin();
-    
+    ProductResponse activateProductWithVariants(Long productId, Long sellerId);
 }

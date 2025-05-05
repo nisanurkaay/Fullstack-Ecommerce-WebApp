@@ -8,7 +8,7 @@ import { Product } from '../../../core/models/product.model';
 @Component({
   selector: 'app-my-products',
   templateUrl: './my-products.component.html',
-  styleUrls: ['./my-products.component.css'],
+  styleUrl: './my-products.component.css',
   standalone: false
 })
 export class MyProductsComponent implements OnInit {
@@ -20,7 +20,7 @@ export class MyProductsComponent implements OnInit {
   selectedColors: string[] = [];
   selectedSizes: string[] = [];
   showVariantsAsProducts = false;
-  availableColors: string[] = [];  // Will store available colors fetched from backend
+  availableColors: string[] = [];
   availableSizes = ['S', 'M', 'L', 'XL'];
 
   constructor(
@@ -32,7 +32,7 @@ export class MyProductsComponent implements OnInit {
   ngOnInit(): void {
     this.loadMyProducts();
     this.loadCategories();
-    this.loadAvailableColors();  // Call the method to load colors
+    this.loadAvailableColors();
   }
 
   loadMyProducts(): void {
@@ -42,7 +42,7 @@ export class MyProductsComponent implements OnInit {
     this.productService.getMyProducts(sellerId).subscribe({
       next: (data) => {
         this.products = data;
-        this.applyFilters();  // Apply filters immediately after products are loaded
+        this.applyFilters();
       },
       error: (err) => console.error('Error loading products:', err)
     });
@@ -55,6 +55,13 @@ export class MyProductsComponent implements OnInit {
     });
   }
 
+  hasStockOrVariantStock(p: Product): boolean {
+    if (p.stockQuantity && p.stockQuantity > 0) {
+      return true;
+    }
+    return !!(p.variants && p.variants.length > 0 && p.variants.some(v => v.stock && v.stock > 0));
+  }
+
   loadAvailableColors(): void {
     this.productService.getColors().subscribe({
       next: (data) => this.availableColors = data,
@@ -64,19 +71,16 @@ export class MyProductsComponent implements OnInit {
 
   setFilter(status: 'ALL' | 'ACTIVE' | 'INACTIVE' | 'PENDING') {
     this.filter = status;
-    this.applyFilters();  // Apply filters immediately after status change
+    this.applyFilters();
   }
 
-  // Apply filters dynamically based on selected options
   applyFilters(): void {
     let filteredProducts = this.products;
 
-    // Category filter
     if (this.selectedCategory) {
       filteredProducts = filteredProducts.filter(p => p.categoryId === this.selectedCategory);
     }
 
-    // Color filter
     if (this.selectedColors.length > 0) {
       filteredProducts = filteredProducts.filter(p =>
         p.color && this.selectedColors.includes(p.color) ||
@@ -84,19 +88,16 @@ export class MyProductsComponent implements OnInit {
       );
     }
 
-    // Size filter
     if (this.selectedSizes.length > 0) {
       filteredProducts = filteredProducts.filter(p =>
         p.variants?.some(v => this.selectedSizes.includes(v.size))
       );
     }
 
-    // Filter by status (ALL, ACTIVE, INACTIVE, PENDING)
     if (this.filter !== 'ALL') {
       filteredProducts = filteredProducts.filter(p => p.productStatus === this.filter);
     }
 
-    // Update the product list after applying all filters
     this.products = filteredProducts;
   }
 
@@ -105,32 +106,17 @@ export class MyProductsComponent implements OnInit {
       ? this.products
       : this.products.filter(p => p.productStatus === this.filter);
 
-    // Varyantları ayrı ürün gibi göster
-    if (this.showVariantsAsProducts) {
-      const flat: Product[] = [];
-      baseList.forEach(p => {
-        if (p.variants && p.variants.length > 0) {
-          for (const v of p.variants) {
-            flat.push({
-              ...p,
-              price: v.price,
-              stockQuantity: v.stock,
-              imageUrls: v.imageUrls,
-              color: v.color,
-              variants: [], // varyantı varyantsız ürün gibi göster
-            });
-          }
-        } else {
-          flat.push(p); // varyantsız ürünü direkt ekle
-        }
-      });
-      return flat;
-    }
-
-    return baseList;
+    return baseList.filter(p => {
+      const matchCategory = !this.selectedCategory || p.categoryId === this.selectedCategory;
+      const matchColor = this.selectedColors.length === 0 ||
+        (p.color && this.selectedColors.includes(p.color)) ||
+        p.variants?.some(v => this.selectedColors.includes(v.color));
+      const matchSize = this.selectedSizes.length === 0 ||
+        p.variants?.some(v => this.selectedSizes.includes(v.size));
+      return matchCategory && matchColor && matchSize;
+    });
   }
 
-  // Toggle color filter
   toggleColor(color: string): void {
     if (this.selectedColors.includes(color)) {
       this.selectedColors = this.selectedColors.filter(c => c !== color);
@@ -138,10 +124,9 @@ export class MyProductsComponent implements OnInit {
     } else {
       this.selectedColors.push(color);
     }
-    this.applyFilters();  // Apply filter immediately after toggle
+    this.applyFilters();
   }
 
-  // Toggle size filter
   toggleSize(size: string): void {
     if (this.selectedSizes.includes(size)) {
       this.selectedSizes = this.selectedSizes.filter(s => s !== size);
@@ -149,10 +134,9 @@ export class MyProductsComponent implements OnInit {
     } else {
       this.selectedSizes.push(size);
     }
-    this.applyFilters();  // Apply filter immediately after toggle
+    this.applyFilters();
   }
 
-  // Deactivate product
   deactivateProduct(id: number) {
     const sellerId = Number(localStorage.getItem('userId'));
     this.productService.deactivate(id, sellerId).subscribe({
@@ -161,7 +145,28 @@ export class MyProductsComponent implements OnInit {
     });
   }
 
-  // Confirm product deletion
+  deactivateVariant(variantId: number) {
+    this.productService.deactivateVariant(variantId).subscribe({
+      next: () => this.loadMyProducts(),
+      error: (err) => console.error('Varyant yayından kaldırma hatası:', err)
+    });
+  }
+
+  activateVariant(variantId: number) {
+    this.productService.activateVariant(variantId).subscribe({
+      next: () => this.loadMyProducts(),
+      error: (err) => console.error('Varyant yayına alma hatası:', err)
+    });
+  }
+
+  activateWithVariants(productId: number): void {
+    const sellerId = Number(localStorage.getItem('userId'));
+    this.productService.activateWithVariants(productId, sellerId).subscribe({
+      next: () => this.loadMyProducts(),
+      error: err => alert(err.error?.message || 'Aktifleştirme başarısız!')
+    });
+  }
+
   confirmDeleteProduct(id: number) {
     const confirmed = confirm('Are you sure you want to delete this product and all variants?');
     if (!confirmed) return;
@@ -173,7 +178,6 @@ export class MyProductsComponent implements OnInit {
     });
   }
 
-  // Confirm variant deletion
   confirmDeleteVariant(productId: number, variantId: number) {
     const confirmed = confirm('Are you sure you want to delete this variant?');
     if (!confirmed) return;
@@ -184,7 +188,6 @@ export class MyProductsComponent implements OnInit {
     });
   }
 
-  // Activate product
   activateProduct(id: number) {
     const sellerId = Number(localStorage.getItem('userId'));
 
@@ -192,18 +195,26 @@ export class MyProductsComponent implements OnInit {
       next: (product) => {
         const hasVariants = product.variants && product.variants.length > 0;
 
-        // Check for 3 images in product or variants
-        if (!hasVariants && (!product.imageUrls || product.imageUrls.length !== 3)) {
-          alert('Varyantsız ürünlerde tam 3 görsel yüklenmelidir.');
-          return;
-        }
+        if (hasVariants) {
+          const allVariantsValid = product.variants!.every(v =>
+            v.stock > 0 && v.imageUrls?.length === 3
+          );
 
-        if (hasVariants && product.variants?.some(v => !v.imageUrls || v.imageUrls.length !== 3)) {
-          alert('Her varyant için tam 3 görsel yüklenmelidir.');
-          return;
-        }
+          if (!allVariantsValid) {
+            alert('Her varyantın en az 1 stoğu olmalı ve 3 görseli olmalı.');
+            return;
+          }
 
-        this.productService.activate(id, sellerId).subscribe(() => this.loadMyProducts());
+          this.productService.activateWithVariants(id, sellerId).subscribe(() => this.loadMyProducts());
+
+        } else {
+          if (!product.imageUrls || product.imageUrls.length !== 3 || product.stockQuantity === 0) {
+            alert('Varyantsız ürünlerde 3 görsel ve en az 1 stok olmalı.');
+            return;
+          }
+
+          this.productService.activate(id, sellerId).subscribe(() => this.loadMyProducts());
+        }
       },
       error: (err) => {
         console.error('Ürün detayları alınamadı:', err);
@@ -211,12 +222,10 @@ export class MyProductsComponent implements OnInit {
     });
   }
 
-  // Edit product
   editProduct(product: Product) {
     this.router.navigate(['/seller/edit-product', product.id]);
   }
 
-  // Toggle variants visibility
   toggleVariants(productId: number): void {
     if (this.expandedProductIds.has(productId)) {
       this.expandedProductIds.delete(productId);

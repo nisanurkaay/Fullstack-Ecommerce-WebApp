@@ -82,6 +82,7 @@ public class ProductServiceImpl implements ProductService {
                 variant.setPrice(variantReq.getPrice());
                 variant.setImageUrls(variantReq.getImageUrls());
                 variant.setProduct(product);
+                variant.setProductStatus(ProductStatus.PENDING);
                 variantEntities.add(variant);
             }
         }
@@ -232,7 +233,17 @@ public ProductResponse approveProduct(Long id) {
         throw new RuntimeException("Only PENDING products can be approved.");
     }
 
-    product.setProductStatus(ProductStatus.INACTIVE); // ✅ yayına almıyoruz
+    product.setProductStatus(ProductStatus.INACTIVE);
+
+    // ✅ Varyantlar da INACTIVE yapılmalı
+    if (product.getVariants() != null) {
+        for (ProductVariant v : product.getVariants()) {
+            if (v.getProductStatus() == ProductStatus.PENDING) {
+                v.setProductStatus(ProductStatus.INACTIVE);
+            }
+        }
+    }
+
     return mapToResponse(productRepository.save(product));
 }
 @Override
@@ -278,14 +289,18 @@ public ProductResponse denyProduct(Long id) {
     }
 
     @Override
-    @Transactional
     public void unbanProduct(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
-
-        product.setProductStatus(ProductStatus.INACTIVE);
+            .orElseThrow(() -> new RuntimeException("Product not found"));
+        product.setProductStatus(ProductStatus.INACTIVE); // veya önceki durumu varsa onu çek
+    
+        if (product.getVariants() != null) {
+            product.getVariants().forEach(v -> v.setProductStatus(ProductStatus.INACTIVE));
+        }
+    
         productRepository.save(product);
     }
+    
     public List<ProductResponse> getAllProductsForAdmin() {
         return productRepository.findAll().stream()
             .map(this::mapToResponse)
@@ -310,6 +325,42 @@ public ProductResponse denyProduct(Long id) {
         product.setProductStatus(ProductStatus.ACTIVE);
         return mapToResponse(productRepository.save(product));
     }
+
+    @Override
+@Transactional
+public ProductResponse activateProductWithVariants(Long productId, Long sellerId) {
+    Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new RuntimeException("Product not found"));
+
+    if (!product.getSeller().getId().equals(sellerId)) {
+        throw new RuntimeException("Unauthorized");
+    }
+
+    if (product.getVariants() == null || product.getVariants().isEmpty()) {
+        throw new RuntimeException("This product has no variants.");
+    }
+
+    for (ProductVariant v : product.getVariants()) {
+        if (v.getStock() == 0) {
+            throw new RuntimeException("Cannot activate. Variant with size " + v.getSize() + " has 0 stock.");
+        }
+        if (v.getImageUrls() == null || v.getImageUrls().size() != 3) {
+            throw new RuntimeException("Each variant must have exactly 3 images.");
+        }
+    }
+    product.setProductStatus(ProductStatus.ACTIVE);
+
+    if (product.getVariants() != null) {
+        for (ProductVariant v : product.getVariants()) {
+            if (v.getProductStatus() == ProductStatus.INACTIVE) {
+                v.setProductStatus(ProductStatus.ACTIVE); // ✅ Admin onayladıysa yayına alınır
+            }
+        }
+    }
+    
+    return mapToResponse(productRepository.save(product));
+}
+
     @Override
     @Transactional
     public ProductResponse deactivateProduct(Long id, Long userId) {
@@ -391,6 +442,12 @@ public ProductResponse addVariantToProduct(Long productId, ProductVariantRequest
     variant.setProduct(product);
 
     product.getVariants().add(variant);
+    if (variant.getStock() > 0) {
+        variant.setProductStatus(ProductStatus.ACTIVE);
+    } else {
+        variant.setProductStatus(ProductStatus.INACTIVE);
+    }
+    
     productRepository.save(product); // cascade varsa bu yeterli
 
     return modelMapper.map(product, ProductResponse.class); // veya özel dönüştürme

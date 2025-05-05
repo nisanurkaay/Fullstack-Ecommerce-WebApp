@@ -5,22 +5,14 @@ import {
   inject,
   setClassMetadata,
   ɵɵdefineInjectable
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-QADRLZXQ.js
-} from "./chunk-7W27O5A6.js";
-========
 } from "./chunk-JSWM5O77.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-5CZHM5UE.js
 import {
   Observable,
   Subject,
   filter,
   shareReplay,
   takeUntil
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-QADRLZXQ.js
-} from "./chunk-4GNDKFTC.js";
-========
 } from "./chunk-4S3KYZTJ.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-5CZHM5UE.js
 
 // node_modules/@angular/cdk/fesm2022/observers/private.mjs
 var loopLimitExceededErrorHandler = (e) => {
@@ -138,8 +130,4 @@ var SharedResizeObserver = class _SharedResizeObserver {
 export {
   SharedResizeObserver
 };
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-QADRLZXQ.js
-//# sourceMappingURL=chunk-QADRLZXQ.js.map
-========
 //# sourceMappingURL=chunk-5CZHM5UE.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-5CZHM5UE.js

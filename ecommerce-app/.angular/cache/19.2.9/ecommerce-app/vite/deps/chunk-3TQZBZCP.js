@@ -1,18 +1,10 @@
 import {
   MatRippleModule
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-K7DCOVXI.js
-} from "./chunk-77SKZ7CT.js";
-import {
-  MatRipple,
-  _StructuralStylesLoader
-} from "./chunk-6M3CCHG4.js";
-========
 } from "./chunk-7GWB5NGS.js";
 import {
   MatRipple,
   _StructuralStylesLoader
 } from "./chunk-MFPAF4ZN.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-3TQZBZCP.js
 import {
   ENTER,
   MatCommonModule,
@@ -20,17 +12,10 @@ import {
   _IdGenerator,
   _VisuallyHiddenLoader,
   hasModifierKey
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-K7DCOVXI.js
-} from "./chunk-MNHZP7IT.js";
-import {
-  _CdkPrivateStyleLoader
-} from "./chunk-6NZFXLU6.js";
-========
 } from "./chunk-DOR2O6BL.js";
 import {
   _CdkPrivateStyleLoader
 } from "./chunk-E3YEYTGH.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-3TQZBZCP.js
 import {
   ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
@@ -71,17 +56,10 @@ import {
   ɵɵtext,
   ɵɵtextInterpolate1,
   ɵɵviewQuery
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-K7DCOVXI.js
-} from "./chunk-7W27O5A6.js";
-import {
-  Subject
-} from "./chunk-4GNDKFTC.js";
-========
 } from "./chunk-JSWM5O77.js";
 import {
   Subject
 } from "./chunk-4S3KYZTJ.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-3TQZBZCP.js
 
 // node_modules/@angular/material/fesm2022/pseudo-checkbox-Dy35mUmj.mjs
 var MatPseudoCheckbox = class _MatPseudoCheckbox {
@@ -714,8 +692,4 @@ export {
   _getOptionScrollPosition,
   MatOptionModule
 };
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-K7DCOVXI.js
-//# sourceMappingURL=chunk-K7DCOVXI.js.map
-========
 //# sourceMappingURL=chunk-3TQZBZCP.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-3TQZBZCP.js

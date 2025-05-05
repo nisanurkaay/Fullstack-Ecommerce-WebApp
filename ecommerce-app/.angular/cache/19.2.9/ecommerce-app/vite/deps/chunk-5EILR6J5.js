@@ -2,11 +2,7 @@ import {
   Injectable,
   setClassMetadata,
   ɵɵdefineInjectable
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HVCQPBXH.js
-} from "./chunk-7W27O5A6.js";
-========
 } from "./chunk-JSWM5O77.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-5EILR6J5.js
 
 // node_modules/@angular/material/fesm2022/error-options-BPhcAVoK.mjs
 var ShowOnDirtyErrorStateMatcher = class _ShowOnDirtyErrorStateMatcher {
@@ -84,8 +80,4 @@ export {
   ErrorStateMatcher,
   _ErrorStateTracker
 };
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-HVCQPBXH.js
-//# sourceMappingURL=chunk-HVCQPBXH.js.map
-========
 //# sourceMappingURL=chunk-5EILR6J5.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-5EILR6J5.js

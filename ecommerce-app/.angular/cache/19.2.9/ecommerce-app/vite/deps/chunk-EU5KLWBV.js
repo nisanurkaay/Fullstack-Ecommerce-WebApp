@@ -2,30 +2,19 @@ import {
   RtlScrollAxisType,
   getRtlScrollAxisType,
   supportsScrollBehavior
-} from "./chunk-CQF2LB5Q.js";
+} from "./chunk-IJ3KGSPX.js";
 import {
   BidiModule,
   Directionality
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-S7WB3R76.js
-} from "./chunk-Q5FHN2ZP.js";
-========
 } from "./chunk-Q5GE6IRN.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EU5KLWBV.js
 import {
   Platform,
   coerceElement,
   coerceNumberProperty
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-S7WB3R76.js
-} from "./chunk-7ZF6DXPD.js";
-import {
-  DOCUMENT
-} from "./chunk-SWX5W6VE.js";
-========
 } from "./chunk-KLGHZHJC.js";
 import {
   DOCUMENT
 } from "./chunk-7MFUTISS.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EU5KLWBV.js
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -72,20 +61,12 @@ import {
   ɵɵqueryRefresh,
   ɵɵstyleProp,
   ɵɵviewQuery
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-S7WB3R76.js
-} from "./chunk-7W27O5A6.js";
-========
 } from "./chunk-JSWM5O77.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EU5KLWBV.js
 import {
   animationFrameScheduler,
   asapScheduler,
   isObservable
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-S7WB3R76.js
-} from "./chunk-2LVKW5TZ.js";
-========
 } from "./chunk-WPM5VTLQ.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EU5KLWBV.js
 import {
   ConnectableObservable,
   Observable,
@@ -100,11 +81,7 @@ import {
   startWith,
   switchMap,
   takeUntil
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-S7WB3R76.js
-} from "./chunk-4GNDKFTC.js";
-========
 } from "./chunk-4S3KYZTJ.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EU5KLWBV.js
 
 // node_modules/@angular/cdk/fesm2022/data-source-CL6Fasig.mjs
 var DataSource = class {
@@ -1712,8 +1689,4 @@ export {
   CdkScrollableModule,
   ScrollingModule
 };
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-S7WB3R76.js
-//# sourceMappingURL=chunk-S7WB3R76.js.map
-========
 //# sourceMappingURL=chunk-EU5KLWBV.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EU5KLWBV.js

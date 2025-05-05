@@ -3,16 +3,6 @@ import {
   isFakeMousedownFromScreenReader,
   isFakeTouchstartFromScreenReader,
   normalizePassiveListenerOptions
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-6M3CCHG4.js
-} from "./chunk-MNHZP7IT.js";
-import {
-  _CdkPrivateStyleLoader
-} from "./chunk-6NZFXLU6.js";
-import {
-  Platform,
-  coerceElement
-} from "./chunk-7ZF6DXPD.js";
-========
 } from "./chunk-DOR2O6BL.js";
 import {
   _CdkPrivateStyleLoader
@@ -21,7 +11,6 @@ import {
   Platform,
   coerceElement
 } from "./chunk-KLGHZHJC.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-MFPAF4ZN.js
 import {
   ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
@@ -38,17 +27,10 @@ import {
   ɵɵclassProp,
   ɵɵdefineComponent,
   ɵɵdefineDirective
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-6M3CCHG4.js
-} from "./chunk-7W27O5A6.js";
-import {
-  __spreadValues
-} from "./chunk-4GNDKFTC.js";
-========
 } from "./chunk-JSWM5O77.js";
 import {
   __spreadValues
 } from "./chunk-WDMUDEB6.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-MFPAF4ZN.js
 
 // node_modules/@angular/material/fesm2022/ripple-BPguEKwi.mjs
 var RippleState;
@@ -663,8 +645,4 @@ export {
   MatRipple,
   _StructuralStylesLoader
 };
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-6M3CCHG4.js
-//# sourceMappingURL=chunk-6M3CCHG4.js.map
-========
 //# sourceMappingURL=chunk-MFPAF4ZN.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-MFPAF4ZN.js

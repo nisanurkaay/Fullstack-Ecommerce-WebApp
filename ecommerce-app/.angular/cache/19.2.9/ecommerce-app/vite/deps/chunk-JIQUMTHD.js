@@ -1,27 +1,11 @@
 import {
   SharedResizeObserver
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EFQCKP35.js
-} from "./chunk-QADRLZXQ.js";
-========
 } from "./chunk-5CZHM5UE.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JIQUMTHD.js
 import {
   coerceBooleanProperty
 } from "./chunk-SVVIGFXE.js";
 import {
   _IdGenerator
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EFQCKP35.js
-} from "./chunk-MNHZP7IT.js";
-import {
-  Directionality
-} from "./chunk-Q5FHN2ZP.js";
-import {
-  Platform
-} from "./chunk-7ZF6DXPD.js";
-import {
-  NgTemplateOutlet
-} from "./chunk-JINLRPIQ.js";
-========
 } from "./chunk-DOR2O6BL.js";
 import {
   Directionality
@@ -32,7 +16,6 @@ import {
 import {
   NgTemplateOutlet
 } from "./chunk-OFWNEWDS.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JIQUMTHD.js
 import {
   ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
@@ -85,17 +68,10 @@ import {
   ɵɵtext,
   ɵɵtextInterpolate,
   ɵɵviewQuery
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EFQCKP35.js
-} from "./chunk-7W27O5A6.js";
-import {
-  merge
-} from "./chunk-2LVKW5TZ.js";
-========
 } from "./chunk-JSWM5O77.js";
 import {
   merge
 } from "./chunk-WPM5VTLQ.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JIQUMTHD.js
 import {
   Subject,
   Subscription,
@@ -104,11 +80,7 @@ import {
   pairwise,
   startWith,
   takeUntil
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EFQCKP35.js
-} from "./chunk-4GNDKFTC.js";
-========
 } from "./chunk-4S3KYZTJ.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JIQUMTHD.js
 
 // node_modules/@angular/material/fesm2022/form-field-BPX7ZLIc.mjs
 var _c0 = ["notch"];
@@ -1495,8 +1467,4 @@ export {
   MAT_FORM_FIELD_DEFAULT_OPTIONS,
   MatFormField
 };
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-EFQCKP35.js
-//# sourceMappingURL=chunk-EFQCKP35.js.map
-========
 //# sourceMappingURL=chunk-JIQUMTHD.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-JIQUMTHD.js

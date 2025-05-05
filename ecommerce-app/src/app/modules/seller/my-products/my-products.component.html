@@ -1,28 +1,23 @@
 <div class="my-products-container">
-
   <!-- Filter Form -->
   <div class="filter-form mb-4">
-    <!-- Category Filter -->
     <select [(ngModel)]="selectedCategory">
       <option [ngValue]="null">Tüm Kategoriler</option>
       <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
     </select>
 
-    <!-- Color Filters -->
     <div class="color-filters">
       <label *ngFor="let color of availableColors">
         <input type="checkbox" [value]="color" (change)="toggleColor(color)" [checked]="selectedColors.includes(color)" /> {{ color }}
       </label>
     </div>
 
-    <!-- Size Filters -->
     <div class="size-filters">
       <label *ngFor="let size of availableSizes">
         <input type="checkbox" [value]="size" (change)="toggleSize(size)" [checked]="selectedSizes.includes(size)" /> {{ size }}
       </label>
     </div>
 
-    <!-- Filter Button -->
     <button (click)="applyFilters()" class="btn-primary">Filtrele</button>
   </div>
 
@@ -36,7 +31,7 @@
     <button (click)="setFilter('PENDING')" [class.active-filter]="filter === 'PENDING'">Pending</button>
   </div>
 
-  <!-- Button to Toggle Variant Display -->
+  <!-- Toggle variant view -->
   <div class="flex justify-end mb-2">
     <button (click)="showVariantsAsProducts = !showVariantsAsProducts" class="btn-secondary">
       {{ showVariantsAsProducts ? 'Varyantları Grupla' : 'Varyantları Ürün Gibi Göster' }}
@@ -58,55 +53,70 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Loop through filtered products -->
-        <ng-container *ngFor="let p of filteredProducts">
-          <tr>
-            <td>
-              {{ p.name }}
-              <div class="flex gap-2 mt-1" *ngIf="!p.variants?.length">
-                <!-- Display product images if no variants -->
-                <img *ngFor="let img of p.imageUrls" [src]="'http://localhost:8081' + img" alt="Product image" class="thumbnail" />
-              </div>
-            </td>
-            <td>{{ p.productStatus }}</td>
-            <td>{{ p.stockQuantity }}</td>
-            <td>{{ p.price | currency }}</td>
-            <td>{{ p.categoryName }}</td>
-            <td>
-              <button *ngIf="p.variants?.length" (click)="toggleVariants(p.id!)" class="btn-outline">
-                {{ isExpanded(p.id!) ? 'Hide' : 'Show' }}
-              </button>
-              <span *ngIf="hasVaryingPrices(p)" class="price-alert">💡</span>
-            </td>
-            <td>
-              <button *ngIf="p.productStatus === 'ACTIVE'" (click)="deactivateProduct(p.id!)" class="btn-danger">Kaldır</button>
-              <button *ngIf="p.productStatus === 'INACTIVE' && p.stockQuantity > 0" (click)="activateProduct(p.id!)" class="btn-success">Yayına Al</button>
-            </td>
-            <td>
-              <button (click)="editProduct(p)" class="btn-secondary">Düzenle</button>
-              <button (click)="confirmDeleteProduct(p.id!)" class="btn-danger">Sil</button>
-            </td>
-          </tr>
+        <ng-container *ngIf="!showVariantsAsProducts">
+          <ng-container *ngFor="let p of filteredProducts">
+            <!-- ✅ Ürün satırı -->
+            <tr>
+              <td>
+                {{ p.name }}
+                <div class="flex gap-2 mt-1" *ngIf="!p.variants?.length">
+                  <img *ngFor="let img of p.imageUrls"
+                       [src]="img.startsWith('http') ? img : 'http://localhost:8081' + img"
+                       class="thumbnail" />
+                </div>
+              </td>
+              <td>{{ p.productStatus }}</td>
+              <td>{{ p.stockQuantity }}</td>
+              <td>{{ p.price | currency }}</td>
+              <td>{{ p.categoryName }}</td>
+              <td>
+                <button *ngIf="p.variants?.length"
+                        (click)="toggleVariants(p.id!)"
+                        class="btn-outline">
+                  {{ isExpanded(p.id!) ? 'Hide' : 'Show' }}
+                </button>
+              </td>
+              <td>
+                <button *ngIf="p.productStatus === 'ACTIVE'" (click)="deactivateProduct(p.id!)" class="btn-danger">Kaldır</button>
+                <button *ngIf="p.productStatus === 'INACTIVE' && hasStockOrVariantStock(p)" (click)="activateProduct(p.id!)" class="btn-success">Yayına Al</button>
+              </td>
+              <td>
+                <button (click)="editProduct(p)" class="btn-secondary">Düzenle</button>
+                <button (click)="confirmDeleteProduct(p.id!)" class="btn-danger">Sil</button>
+              </td>
+            </tr>
 
-          <!-- Variant Details -->
-          <ng-container *ngIf="isExpanded(p.id!) && p.variants?.length">
-            <tr *ngFor="let v of p.variants">
-              <td colspan="8" class="variant-row">
-                <div class="variant-box">
-                  <p><strong>Varyant:</strong> Renk: {{ v.color }}, Beden: {{ v.size }}, Fiyat: {{ v.price | currency }}, Stok: {{ v.stock }}</p>
+            <!-- ✅ Varyant satırı: ürün satırının hemen altında olacak şekilde -->
+            <tr *ngIf="isExpanded(p.id!) && p.variants?.length">
+              <td colspan="8" class="variant-row bg-gray-50">
+                <div *ngFor="let v of p.variants" class="variant-box mb-4 p-3 border rounded">
+                  <p>
+                    <strong>Varyant:</strong>
+                    Renk: {{ v.color || '—' }},
+                    Beden: {{ v.size || '—' }},
+                    Fiyat: {{ v.price | currency }},
+                    Stok: {{ v.stock }},
+                    Durum: <span class="font-semibold">{{ v.status }}</span>
+                  </p>
                   <div class="flex gap-2 mt-1">
-                    <img *ngFor="let img of v.imageUrls" [src]="img" alt="Variant image" class="thumbnail" />
+                    <img *ngFor="let img of v.imageUrls"
+                         [src]="img.startsWith('http') ? img : 'http://localhost:8081' + img"
+                         class="w-12 h-12 border object-cover" />
                   </div>
-                  <button (click)="confirmDeleteVariant(p.id!, v.id!)" class="btn-danger mt-2">Varyantı Sil</button>
+                  <div class="mt-2 flex gap-2">
+                    <button *ngIf="v.status === 'INACTIVE'" (click)="activateVariant(v.id!)" class="btn-success">Yayına Al</button>
+                    <button *ngIf="v.status === 'ACTIVE'" (click)="deactivateVariant(v.id!)" class="btn-danger">Kaldır</button>
+                    <button (click)="confirmDeleteVariant(p.id!, v.id!)" class="btn-danger">Sil</button>
+                  </div>
                 </div>
               </td>
             </tr>
           </ng-container>
         </ng-container>
+
       </tbody>
     </table>
   </div>
 
-  <!-- No Products Found -->
   <p *ngIf="filteredProducts.length === 0" class="no-products">No products found for this filter.</p>
 </div>

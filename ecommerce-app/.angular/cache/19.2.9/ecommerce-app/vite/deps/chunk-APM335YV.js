@@ -1,25 +1,14 @@
 import {
   _ViewRepeaterOperation
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-I5ITNHTU.js
-} from "./chunk-S7WB3R76.js";
-========
 } from "./chunk-EU5KLWBV.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-APM335YV.js
 import {
   Injectable,
   setClassMetadata,
   ɵɵdefineInjectable
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-I5ITNHTU.js
-} from "./chunk-7W27O5A6.js";
-import {
-  Subject
-} from "./chunk-4GNDKFTC.js";
-========
 } from "./chunk-JSWM5O77.js";
 import {
   Subject
 } from "./chunk-4S3KYZTJ.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-APM335YV.js
 
 // node_modules/@angular/cdk/fesm2022/dispose-view-repeater-strategy-BLw1RSwm.mjs
 var _DisposeViewRepeaterStrategy = class {
@@ -311,8 +300,4 @@ export {
   _DisposeViewRepeaterStrategy,
   SelectionModel
 };
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-I5ITNHTU.js
-//# sourceMappingURL=chunk-I5ITNHTU.js.map
-========
 //# sourceMappingURL=chunk-APM335YV.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-APM335YV.js

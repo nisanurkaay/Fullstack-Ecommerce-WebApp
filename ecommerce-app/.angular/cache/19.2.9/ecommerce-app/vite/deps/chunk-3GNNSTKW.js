@@ -3,11 +3,7 @@ import {
   XhrFactory,
   isPlatformServer,
   parseCookieValue
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-4JYX6HXK.js
-} from "./chunk-SWX5W6VE.js";
-========
 } from "./chunk-7MFUTISS.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-3GNNSTKW.js
 import {
   APP_BOOTSTRAP_LISTENER,
   ApplicationRef,
@@ -41,11 +37,7 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵinject
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-4JYX6HXK.js
-} from "./chunk-7W27O5A6.js";
-========
 } from "./chunk-JSWM5O77.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-3GNNSTKW.js
 import {
   Observable,
   concatMap,
@@ -56,16 +48,12 @@ import {
   of,
   switchMap,
   tap
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-4JYX6HXK.js
-} from "./chunk-4GNDKFTC.js";
-========
 } from "./chunk-4S3KYZTJ.js";
 import {
   __async,
   __objRest,
   __spreadValues
 } from "./chunk-WDMUDEB6.js";
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-3GNNSTKW.js
 
 // node_modules/@angular/common/fesm2022/module-BHk9jdTn.mjs
 var HttpHandler = class {
@@ -2575,8 +2563,4 @@ export {
    * License: MIT
    *)
 */
-<<<<<<<< HEAD:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-4JYX6HXK.js
-//# sourceMappingURL=chunk-4JYX6HXK.js.map
-========
 //# sourceMappingURL=chunk-3GNNSTKW.js.map
->>>>>>>> 1933d9acb7b07929052db2ebf2e8cd9c5a71bfae:ecommerce-app/.angular/cache/19.2.9/ecommerce-app/vite/deps/chunk-3GNNSTKW.js
