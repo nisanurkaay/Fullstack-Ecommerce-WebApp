@@ -1,1 +1,24 @@
-<p>my-orders works!</p>
+<div *ngFor="let order of orders">
+  <h3>Sipariş #{{ order.id }} - {{ order.status }}</h3>
+  <p>Tarih: {{ order.createdAt | date:'short' }}</p>
+  <p>Toplam: {{ order.totalAmount | currency:'TRY' }}</p>
+
+  <div *ngFor="let item of order.items" class="border p-2 my-2">
+    <p><strong>{{ item.productName }}</strong></p>
+    <img [src]="item.productImage" alt="" width="100" />
+    <p>Miktar: {{ item.quantity }}</p>
+    <p>Fiyat: {{ item.price | currency:'TRY' }}</p>
+    <p>Durum: {{ item.status }}</p>
+
+    <select
+  [(ngModel)]="item.status"
+  (change)="updateItemStatus(order.id, item.id, item.status)"
+  [disabled]="item.status === 'REFUNDED' || item.status === 'CANCELLED'">
+  <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
+</select>
+
+
+    <!-- İptal Et Butonu -->
+    <button (click)="cancelItem(order.id, item.id)">❌ İptal Et</button>
+  </div>
+</div>

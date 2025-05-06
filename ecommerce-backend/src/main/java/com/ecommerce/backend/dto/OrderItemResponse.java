@@ -6,6 +6,23 @@ public class OrderItemResponse {
     private String productImage;
     private double price;
     private int quantity;
+    private Long id;
+    private Long variantId;
+    private String status;
+    public Long getVariantId() {
+        return variantId;
+    }
+    
+    public void setVariantId(Long variantId) {
+        this.variantId = variantId;
+    }
+    
+   public Long getId() {
+       return id;
+   }
+   public void setId(Long id) {
+       this.id = id;
+   }
 
     public double getPrice() {
         return price;
@@ -31,7 +48,12 @@ public class OrderItemResponse {
     public void setProductImage(String productImage) {
         this.productImage = productImage;
     }
-
+public String getStatus() {
+    return status;
+}
+public void setStatus(String status) {
+    this.status = status;
+}
     public void setProductName(String productName) {
         this.productName = productName;
     }

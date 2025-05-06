@@ -53,20 +53,27 @@ public ResponseEntity<?> createOrder(@RequestBody OrderRequest request,
 
     return ResponseEntity.ok(response);
 }
-    @GetMapping
-    @PreAuthorize("hasRole('USER') or hasRole('SELLER') or hasRole('ADMIN')")
-    public ResponseEntity<List<Order>> getOrders(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userRepository.findByEmail(userDetails.getUsername())
+@GetMapping
+public ResponseEntity<List<OrderResponse>> getOrders(@AuthenticationPrincipal UserDetails userDetails) {
+    User user = userRepository.findByEmail(userDetails.getUsername())
             .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    
-        if (user.getRole().name().equals("ROLE_ADMIN")) {
-            return ResponseEntity.ok(orderService.getAllOrders());
-        } else if (user.getRole().name().equals("ROLE_SELLER")) {
-            return ResponseEntity.ok(orderService.getOrdersForSeller(user));
-        } else {
-            return ResponseEntity.ok(orderService.getOrdersByUser(user));
-        }
+
+    List<Order> orders;
+    if (user.getRole().name().equals("ROLE_ADMIN")) {
+        orders = orderService.getAllOrders();
+    } else if (user.getRole().name().equals("ROLE_SELLER")) {
+        orders = orderService.getOrdersForSeller(user);
+    } else {
+        orders = orderService.getOrdersByUser(user);
     }
+
+    // ❗️ DTO’ya mapleyerek döndür
+    List<OrderResponse> responseList = orders.stream()
+        .map(orderService::mapToResponse)
+        .toList();
+
+    return ResponseEntity.ok(responseList);
+}
 
     @PutMapping("/{orderId}/cancel-by-seller")
     @PreAuthorize("hasRole('SELLER')")
@@ -74,5 +81,32 @@ public ResponseEntity<?> createOrder(@RequestBody OrderRequest request,
         orderService.cancelOrderBySeller(orderId);
         return ResponseEntity.ok("Order has been cancelled and refunded (if paid).");
     }
-    
+    @PutMapping("/{orderId}/items/{itemId}/cancel")
+@PreAuthorize("hasRole('SELLER')")
+public ResponseEntity<String> cancelItemBySeller(@PathVariable Long orderId,
+                                                 @PathVariable Long itemId,
+                                                 @AuthenticationPrincipal UserDetails userDetails) {
+    User seller = userRepository.findByEmail(userDetails.getUsername())
+        .orElseThrow(() -> new UsernameNotFoundException("Seller not found"));
+
+    orderService.cancelItemBySeller(orderId, itemId, seller);
+    return ResponseEntity.ok("Item cancelled and refunded if paid.");
+}
+@PutMapping("/{orderId}/items/{itemId}/status")
+@PreAuthorize("hasRole('SELLER')")
+public ResponseEntity<String> updateOrderItemStatus(
+        @PathVariable Long orderId,
+        @PathVariable Long itemId,
+        @RequestParam("status") String status,
+        @AuthenticationPrincipal UserDetails userDetails) {
+
+    User seller = userRepository.findByEmail(userDetails.getUsername())
+            .orElseThrow(() -> new RuntimeException("Seller not found"));
+
+    orderService.updateOrderItemStatus(orderId, itemId, status, seller);
+
+    return ResponseEntity.ok("Order item status updated");
+}
+
+
 }

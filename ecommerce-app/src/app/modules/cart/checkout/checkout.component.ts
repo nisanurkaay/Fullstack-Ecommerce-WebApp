@@ -4,7 +4,7 @@ import { CartItem } from '../../../core/models/cart-item.model';
 import { OrderService } from '../../../core/services/order.service';
 import { StripeService } from '../../../core/services/stripe.service';
 import { Router } from '@angular/router';
-
+import { AuthService } from '../../../core/services/auth.service';
 import { loadStripe, Stripe, StripeCardElement, StripeElements } from '@stripe/stripe-js';
 import { environment } from 'environments/environment';
 
@@ -26,6 +26,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     private cartService: CartService,
     private orderService: OrderService,
     private stripeService: StripeService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -89,6 +90,7 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   }
 
   createOrder(paymentIntentId: string): void {
+    console.log("Token var mı:", this.authService.getAccessToken());
     const orderPayload = {
       items: this.cartItems.map(item => ({
         productId: item.product.id,

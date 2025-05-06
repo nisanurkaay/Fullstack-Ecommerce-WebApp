@@ -5,8 +5,10 @@ import com.ecommerce.backend.dto.OrderRequest;
 import com.ecommerce.backend.dto.OrderResponse;
 import com.ecommerce.backend.entity.Order;
 import com.ecommerce.backend.entity.OrderItem;
+import com.ecommerce.backend.entity.OrderItemStatus;
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductVariant;
+import com.ecommerce.backend.entity.ShipmentStatus;
 import com.ecommerce.backend.dto.OrderResponse;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.entity.UserStatus;
@@ -14,8 +16,15 @@ import com.ecommerce.backend.entity.OrderStatus;
 import com.ecommerce.backend.repository.OrderRepository;
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,77 +47,82 @@ public class OrderService {
     @Autowired
     private StripePaymentService stripePaymentService;
     
-    @Transactional
-    public Order placeOrder(User user, OrderRequest request) {
-        if (!user.getUserStatus().equals(UserStatus.ACTIVE)) {
-            throw new UserNotActiveException();
-        }
-    
-        Order order = new Order();
-        order.setUser(user);
-        order.setStatus(OrderStatus.PLACED);
-        order.setCreatedAt(LocalDateTime.now());
-    
-        List<OrderItem> items = new ArrayList<>();
-        double totalAmount = 0.0;
-    
-        for (OrderItemRequest itemRequest : request.getItems()) {
-            OrderItem item = new OrderItem();
-            item.setOrder(order);
-            item.setQuantity(itemRequest.getQuantity());
-    
-            if (itemRequest.getVariantId() != null) {
-                ProductVariant variant = variantRepository.findById(itemRequest.getVariantId())
-                        .orElseThrow(() -> new RuntimeException("Variant not found"));
-    
-                if (variant.getStock() < itemRequest.getQuantity()) {
-                    throw new OutOfStockException("Not enough stock for variant ID " + variant.getId());
-                }
-    
-                variant.setStock(variant.getStock() - itemRequest.getQuantity());
-                variant.setAmountSold(variant.getAmountSold() + itemRequest.getQuantity());
-                variant.setTotalRevenue(variant.getTotalRevenue() + variant.getPrice() * itemRequest.getQuantity());
-                variant.setLastSoldAt(LocalDateTime.now());
-                variantRepository.save(variant);
-    
-                Product product = variant.getProduct();
-                product.setAmountSold(product.getAmountSold() + itemRequest.getQuantity());
-                product.setTotalRevenue(product.getTotalRevenue() + variant.getPrice() * itemRequest.getQuantity());
-                product.setLastSoldAt(LocalDateTime.now());
-                productRepository.save(product);
-    
-                item.setProduct(product);
-                item.setVariant(variant); // ✅ VARIANT’I SET ET!
-                totalAmount += variant.getPrice() * itemRequest.getQuantity();
-            } else {
-                Product product = productRepository.findById(itemRequest.getProductId())
-                        .orElseThrow(() -> new RuntimeException("Product not found"));
-    
-                if (product.getStockQuantity() < itemRequest.getQuantity()) {
-                    throw new OutOfStockException("Not enough stock for product ID " + product.getId());
-                }
-    
-                product.setStockQuantity(product.getStockQuantity() - itemRequest.getQuantity());
-                product.setAmountSold(product.getAmountSold() + itemRequest.getQuantity());
-                product.setTotalRevenue(product.getTotalRevenue() + product.getPrice() * itemRequest.getQuantity());
-                product.setLastSoldAt(LocalDateTime.now());
-                productRepository.save(product);
-    
-                item.setProduct(product);
-                item.setVariant(null); // ✅ Varyant yoksa null açıkça set edelim
-                totalAmount += product.getPrice() * itemRequest.getQuantity();
-            }
-    
-            items.add(item);
-        }
-    
-        order.setItems(items);
-        order.setTotalAmount(totalAmount);
-        order.setPaymentIntentId(request.getPaymentIntentId()); // ✅ Stripe payment ID
-    
-        return orderRepository.save(order);
+public Order placeOrder(User user, OrderRequest request) {
+    if (!user.getUserStatus().equals(UserStatus.ACTIVE)) {
+        throw new UserNotActiveException();
     }
-    
+
+    Order order = new Order();
+    order.setUser(user);
+    order.setStatus(OrderStatus.PLACED);
+    order.setCreatedAt(LocalDateTime.now());
+
+    List<OrderItem> items = new ArrayList<>();
+    double totalAmount = 0.0;
+
+    for (OrderItemRequest itemRequest : request.getItems()) {
+        OrderItem item = new OrderItem();
+        item.setOrder(order);
+        item.setQuantity(itemRequest.getQuantity());
+        item.setStatus(OrderItemStatus.PLACED); // ✅ Zorunlu alan
+        item.setShipmentStatus(ShipmentStatus.PENDING); // opsiyonel ama istersen set et
+
+        if (itemRequest.getVariantId() != null) {
+            ProductVariant variant = variantRepository.findById(itemRequest.getVariantId())
+                    .orElseThrow(() -> new RuntimeException("Variant not found"));
+
+            if (variant.getStock() < itemRequest.getQuantity()) {
+                throw new OutOfStockException("Not enough stock for variant ID " + variant.getId());
+            }
+
+            variant.setStock(variant.getStock() - itemRequest.getQuantity());
+            variant.setAmountSold(variant.getAmountSold() + itemRequest.getQuantity());
+            variant.setTotalRevenue(variant.getTotalRevenue() + variant.getPrice() * itemRequest.getQuantity());
+            variant.setLastSoldAt(LocalDateTime.now());
+            variantRepository.save(variant);
+
+            Product product = variant.getProduct();
+            product.setAmountSold(product.getAmountSold() + itemRequest.getQuantity());
+            product.setTotalRevenue(product.getTotalRevenue() + variant.getPrice() * itemRequest.getQuantity());
+            product.setLastSoldAt(LocalDateTime.now());
+            productRepository.save(product);
+
+            item.setProduct(product);
+            item.setVariant(variant);
+            item.setSeller(product.getSeller());
+
+            totalAmount += variant.getPrice() * itemRequest.getQuantity();
+        } else {
+            Product product = productRepository.findById(itemRequest.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            if (product.getStockQuantity() < itemRequest.getQuantity()) {
+                throw new OutOfStockException("Not enough stock for product ID " + product.getId());
+            }
+
+            product.setStockQuantity(product.getStockQuantity() - itemRequest.getQuantity());
+            product.setAmountSold(product.getAmountSold() + itemRequest.getQuantity());
+            product.setTotalRevenue(product.getTotalRevenue() + product.getPrice() * itemRequest.getQuantity());
+            product.setLastSoldAt(LocalDateTime.now());
+            productRepository.save(product);
+
+            item.setProduct(product);
+            item.setVariant(null);
+            item.setSeller(product.getSeller());
+
+            totalAmount += product.getPrice() * itemRequest.getQuantity();
+        }
+
+        items.add(item);
+    }
+
+    order.setItems(items);
+    order.setTotalAmount(totalAmount);
+    order.setPaymentIntentId(request.getPaymentIntentId()); // ✅ Yalnızca pi_... olmalı
+
+    return orderRepository.save(order);
+}
+
     public List<Order> getOrdersByUser(User user) {
         return orderRepository.findByUser(user);
     }
@@ -132,27 +146,34 @@ public class OrderService {
         return filtered;
     }
 
-public void cancelOrderBySeller(Long orderId) {
-    Order order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new RuntimeException("Order not found"));
-
-    // Order statüsü iptal değilse devam et
-    if (order.getStatus() != OrderStatus.CANCELLED) {
-        order.setStatus(OrderStatus.CANCELLED);
-
-        // Stoğu geri ekle
-        for (OrderItem item : order.getItems()) {
-            Product product = item.getProduct();
-            product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-            productRepository.save(product);
+    public void cancelOrderBySeller(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+            .orElseThrow(() -> new RuntimeException("Order not found"));
+    
+        if (order.getStatus() != OrderStatus.CANCELLED) {
+            order.setStatus(OrderStatus.CANCELLED);
+    
+            // Stok iadesi
+            for (OrderItem item : order.getItems()) {
+                if (item.getVariant() != null) {
+                    ProductVariant variant = item.getVariant();
+                    variant.setStock(variant.getStock() + item.getQuantity());
+                    variantRepository.save(variant);
+                } else {
+                    Product product = item.getProduct();
+                    product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+                    productRepository.save(product);
+                }
+    
+                item.setStatus(OrderItemStatus.CANCELLED);
+            }
+    
+            // Refund
+            stripePaymentService.refundPayment(order.getPaymentIntentId()); // ❗ Bu tam refund
+            orderRepository.save(order);
         }
-
-        // Refund işlemi
-        stripePaymentService.refundPayment(order.getPaymentIntentId()); // Ödeme ID'si burada tutulmalı
-
-        orderRepository.save(order);
     }
-}
+    
 public OrderResponse mapToResponse(Order order) {
     OrderResponse response = new OrderResponse();
     response.setId(order.getId());
@@ -162,6 +183,7 @@ public OrderResponse mapToResponse(Order order) {
 
     List<OrderItemResponse> itemResponses = order.getItems().stream().map(item -> {
         OrderItemResponse itemRes = new OrderItemResponse();
+        itemRes.setId(item.getId());
         itemRes.setProductId(item.getProduct().getId());
         itemRes.setProductName(item.getProduct().getName());
         itemRes.setProductImage(
@@ -170,12 +192,108 @@ public OrderResponse mapToResponse(Order order) {
                 : null
         );
         itemRes.setPrice(item.getProduct().getPrice());
+        itemRes.setStatus(item.getStatus().toString());
         itemRes.setQuantity(item.getQuantity());
+        itemRes.setVariantId(item.getVariant() != null ? item.getVariant().getId() : null); // ✅ burası
+        
         return itemRes;
     }).toList();
 
     response.setItems(itemResponses);
     return response;
+}
+
+@Transactional
+public void cancelItemBySeller(Long orderId, Long itemId, User seller) {
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    OrderItem item = order.getItems().stream()
+        .filter(i -> i.getId().equals(itemId) && i.getSeller().getId().equals(seller.getId()))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Item not found or not your product"));
+
+    if (item.getStatus() == OrderItemStatus.CANCELLED) return;
+
+    item.setStatus(OrderItemStatus.CANCELLED);
+
+    // Stok iadesi
+    if (item.getVariant() != null) {
+        ProductVariant variant = item.getVariant();
+        variant.setStock(variant.getStock() + item.getQuantity());
+        variantRepository.save(variant);
+    } else {
+        Product product = item.getProduct();
+        product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+        productRepository.save(product);
+    }
+
+    // Refund (kuruş cinsinden)
+    long refundAmount = (long) ((item.getVariant() != null
+            ? item.getVariant().getPrice()
+            : item.getProduct().getPrice()) * item.getQuantity() * 100);
+
+    stripePaymentService.partialRefund(order.getPaymentIntentId(), refundAmount);
+
+    // Tüm ürünler iptal olduysa Order da CANCELLED
+    boolean allCancelled = order.getItems().stream()
+        .allMatch(i -> i.getStatus() == OrderItemStatus.CANCELLED);
+
+    if (allCancelled) {
+        order.setStatus(OrderStatus.CANCELLED);
+    }
+
+    orderRepository.save(order);
+}
+
+@Transactional
+public void updateOrderItemStatus(Long orderId, Long itemId, String newStatus, User seller) {
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    OrderItem item = order.getItems().stream()
+        .filter(i -> i.getId().equals(itemId) && i.getSeller().getId().equals(seller.getId()))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Item not found or not authorized"));
+
+    OrderItemStatus statusEnum;
+    try {
+        statusEnum = OrderItemStatus.valueOf(newStatus);
+    } catch (IllegalArgumentException e) {
+        throw new RuntimeException("Invalid status");
+    }
+
+    if (item.getStatus() == OrderItemStatus.REFUNDED || item.getStatus() == OrderItemStatus.CANCELLED) {
+        throw new RuntimeException("Bu ürün zaten iade veya iptal edilmiş.");
+    }
+
+    if (statusEnum == OrderItemStatus.CANCELLED) {
+        item.setStatus(OrderItemStatus.CANCELLED);
+    
+        // Güvenli şekilde refund kontrolü:
+        String intentId = order.getPaymentIntentId();
+        if (intentId != null && intentId.startsWith("pi_")) {
+            double refundAmount = (item.getVariant() != null
+                    ? item.getVariant().getPrice()
+                    : item.getProduct().getPrice()) * item.getQuantity();
+            stripePaymentService.partialRefund(intentId, (long) (refundAmount * 100));
+        }
+    }
+    
+    
+   
+    boolean allMatch = order.getItems().stream()
+        .map(OrderItem::getStatus)
+        .allMatch(s -> s == item.getStatus());
+
+    if (allMatch) {
+        try {
+            order.setStatus(OrderStatus.valueOf(item.getStatus().name()));
+        } catch (IllegalArgumentException ignored) {
+        }
+    }
+
+    orderRepository.save(order);
 }
 
 }
