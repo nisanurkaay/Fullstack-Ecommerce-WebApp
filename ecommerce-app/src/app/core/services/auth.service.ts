@@ -134,4 +134,13 @@ export class AuthService {
     const userJson = localStorage.getItem('user');
     return userJson ? JSON.parse(userJson).role : '';
   }
+
+  isAdmin(): boolean {
+    return this.getUserRole() === 'ROLE_ADMIN';
+  }
+
+  isSeller(): boolean {
+    return this.getUserRole() === 'ROLE_SELLER';
+  }
+
 }
