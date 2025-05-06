@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
         } else {
           this.router.navigate(['/']);
         }
-        this.router.navigate(['/']);
+
       },
       error: err => {
         this.error = err.status === 401

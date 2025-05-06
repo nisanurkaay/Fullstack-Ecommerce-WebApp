@@ -1,27 +1,35 @@
-<div class="checkout-container">
-  <h2>Ödeme Sayfası</h2>
+<div class="checkout-container max-w-2xl mx-auto p-6">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6">💳 Ödeme Sayfası</h2>
 
-  <div *ngIf="cartItems.length === 0" class="empty-cart">
-    <p>Sepetiniz boş.</p>
-    <a routerLink="/cart">Sepete Git</a>
+  <!-- Sepet boşsa -->
+  <div *ngIf="cartItems.length === 0" class="text-center text-gray-500 text-lg">
+    <p>Cart is empty.</p>
+    <a routerLink="/cart" class="text-blue-600 underline mt-2 inline-block">← Sepete Git</a>
   </div>
 
-  <div *ngIf="cartItems.length > 0" class="payment-box">
-    <ul class="cart-list">
-      <li *ngFor="let item of cartItems">
-        {{ item.product.name }} - {{ item.quantity }} adet
+  <!-- Sepette ürün varsa -->
+  <div *ngIf="cartItems.length > 0" class="bg-white shadow-md rounded-xl p-6 space-y-6">
+    <ul class="divide-y divide-gray-200 text-sm text-gray-700">
+      <li *ngFor="let item of cartItems" class="py-2">
+        <span class="block font-medium">{{ item.product.name }}</span>
+        <span class="text-gray-500">{{ item.quantity }} adet</span>
       </li>
     </ul>
 
-    <p class="total-amount">
-      Toplam Tutar: <strong>{{ totalAmount | currency:'TRY' }}</strong>
+    <p class="text-xl font-semibold text-gray-800">
+      Payment page <span class="text-green-600">{{ totalAmount | currency:'TRY' }}</span>
     </p>
 
-    <!-- Stripe Kart Alanı -->
-    <div id="card-element" class="card-element"></div>
+    <!-- Stripe Kart Alanı (readonly gibi davranır) -->
+    <div id="card-element"
+         class="card-element border rounded-lg p-3 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
 
-    <button class="pay-button" (click)="payWithStripe()">
-      💳 Stripe ile Öde
+    <!-- Stripe ile ödeme butonu -->
+    <button
+      class="w-full py-3 mt-4 bg-indigo-600 text-white rounded-lg text-center text-lg font-medium hover:bg-indigo-700 transition"
+      (click)="payWithStripe()">
+      💳 Pay with Stripe
     </button>
   </div>
 </div>

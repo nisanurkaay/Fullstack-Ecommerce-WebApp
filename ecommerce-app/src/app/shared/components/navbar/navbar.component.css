@@ -136,3 +136,25 @@ span, mat-icon {
   background-color: #f3f4f6;
   color: #0d6efd;
 }
+.cart-menu-panel {
+  min-width: 320px;
+  max-width: 360px;
+  border-radius: 12px;
+  padding: 0 !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+::ng-deep .cart-menu-panel {
+  min-width: 320px !important;
+  max-width: 360px !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08) !important;
+  overflow: hidden !important;
+}
+
+::ng-deep .cart-menu-panel .mat-menu-item {
+  padding: 0 !important;
+}
+
+

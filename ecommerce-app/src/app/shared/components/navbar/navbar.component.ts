@@ -23,6 +23,7 @@ export class NavbarComponent implements OnInit {
   expandedId: number | null = null;
   showDropdown = false;
   hoveredCategoryId: number | null = null;
+  isAdminOrSeller = false;
 
   constructor(
     public auth: AuthService,
@@ -39,6 +40,8 @@ export class NavbarComponent implements OnInit {
 
     this.auth.currentUser$.subscribe(user => {
       this.userName = user?.name ?? '';
+      const role = user?.role ?? '';
+      this.isAdminOrSeller = role === 'ROLE_ADMIN' || role === 'ROLE_SELLER';
     });
 
     this.loadCategories();
@@ -100,15 +103,8 @@ export class NavbarComponent implements OnInit {
   onLogoClick(): void {
     const user = localStorage.getItem('user');
     const role = user ? JSON.parse(user).role : null;
-    const currentUrl = this.router.url;
 
-    const isInDashboard =
-      currentUrl.includes('/seller/dashboard') || currentUrl.includes('/admin/dashboard');
-
-    if ((role === 'ROLE_SELLER' || role === 'ROLE_ADMIN') && isInDashboard) {
-      // Eğer zaten dashboard sayfasındaysa → anasayfaya gönder
-      this.router.navigate(['/']);
-    } else if (role === 'ROLE_SELLER') {
+    if (role === 'ROLE_SELLER') {
       this.router.navigate(['/seller/dashboard']);
     } else if (role === 'ROLE_ADMIN') {
       this.router.navigate(['/admin/dashboard']);
@@ -116,6 +112,7 @@ export class NavbarComponent implements OnInit {
       this.router.navigate(['/']);
     }
   }
+
 
 
 

@@ -9,7 +9,10 @@
     </span>
 
     <!-- Desktop: Categories + Search -->
-    <div class="hidden md:flex flex-1 justify-center items-center space-x-4 relative">
+    <div
+      class="hidden md:flex flex-1 justify-center items-center space-x-4 relative"
+      *ngIf="!isAdminOrSeller"
+    >
       <!-- Categories Dropdown -->
       <div class="relative category-wrapper" [class.open]="showDropdown">
         <button
@@ -57,14 +60,22 @@
           name="search"
           type="text"
         />
-        <button type="submit" aria-label="Search"><mat-icon>search</mat-icon></button>
-        <button type="reset" aria-label="Clear" (click)="onReset()"><mat-icon>close</mat-icon></button>
+        <button type="submit" aria-label="Search">
+          <mat-icon>search</mat-icon>
+        </button>
+        <button type="reset" aria-label="Clear" (click)="onReset()">
+          <mat-icon>close</mat-icon>
+        </button>
       </form>
     </div>
 
     <!-- Right Icons -->
     <div class="flex items-center space-x-4 ml-auto">
-      <button mat-button [matMenuTriggerFor]="userMenu" class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
+      <button
+        mat-button
+        [matMenuTriggerFor]="userMenu"
+        class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+      >
         <mat-icon>account_circle</mat-icon>
         <span class="hidden md:inline text-sm">
           <span *ngIf="isLoggedIn">Welcome, {{ userName }}!</span>
@@ -72,64 +83,104 @@
         </span>
       </button>
 
-      <button mat-button routerLink="/wishlist" class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
-        <mat-icon>favorite_border</mat-icon>
-        <span class="hidden md:inline text-sm">Wishlist</span>
-      </button>
+      <ng-container *ngIf="!isAdminOrSeller">
+        <button
+          mat-button
+          routerLink="/wishlist"
+          class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+        >
+          <mat-icon>favorite_border</mat-icon>
+          <span class="hidden md:inline text-sm">Wishlist</span>
+        </button>
 
-      <button mat-button [matMenuTriggerFor]="cartMenu" [matBadge]="cartCount" matBadgeColor="warn"
-              class="flex items-center gap-1 text-gray-700 hover:text-gray-900">
-        <mat-icon>shopping_cart</mat-icon>
-        <span class="hidden md:inline text-sm">Cart</span>
-      </button>
+        <button
+          mat-button
+          [matMenuTriggerFor]="cartMenu"
+          [matBadge]="cartCount"
+          matBadgeColor="warn"
+          class="flex items-center gap-1 text-gray-700 hover:text-gray-900"
+        >
+          <mat-icon>shopping_cart</mat-icon>
+          <span class="hidden md:inline text-sm">Cart</span>
+        </button>
+      </ng-container>
     </div>
   </div>
 
   <!-- Mobile Search -->
-  <div class="block md:hidden px-4 pb-2">
+  <div class="block md:hidden px-4 pb-2" *ngIf="!isAdminOrSeller">
     <form (submit)="onSearch()" class="form">
-      <input class="input w-full" placeholder="Search" [(ngModel)]="searchQuery" name="searchMobile" type="text" />
-      <button type="submit" aria-label="Search"><mat-icon>search</mat-icon></button>
-      <button type="reset" aria-label="Clear" (click)="onReset()"><mat-icon>close</mat-icon></button>
+      <input
+        class="input w-full"
+        placeholder="Search"
+        [(ngModel)]="searchQuery"
+        name="searchMobile"
+        type="text"
+      />
+      <button type="submit" aria-label="Search">
+        <mat-icon>search</mat-icon>
+      </button>
+      <button type="reset" aria-label="Clear" (click)="onReset()">
+        <mat-icon>close</mat-icon>
+      </button>
     </form>
   </div>
 
   <!-- Profile Menu -->
   <mat-menu #userMenu="matMenu">
     <ng-container *ngIf="isLoggedIn; else guestLinks">
-      <button mat-menu-item routerLink="/profile"><mat-icon>person</mat-icon> Profile</button>
-      <button mat-menu-item routerLink="/orders"><mat-icon>assignment</mat-icon> Orders</button>
-      <button mat-menu-item (click)="logout()"><mat-icon>logout</mat-icon> Logout</button>
+      <button mat-menu-item routerLink="/profile">
+        <mat-icon>person</mat-icon> Profile
+      </button>
+      <button
+        mat-menu-item
+        routerLink="/orders"
+        *ngIf="!isAdminOrSeller"
+      >
+        <mat-icon>assignment</mat-icon> Orders
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>logout</mat-icon> Logout
+      </button>
     </ng-container>
     <ng-template #guestLinks>
-      <button mat-menu-item routerLink="/auth/login"><mat-icon>login</mat-icon> Login</button>
-      <button mat-menu-item routerLink="/auth/register"><mat-icon>person_add</mat-icon> Register</button>
+      <button mat-menu-item routerLink="/auth/login">
+        <mat-icon>login</mat-icon> Login
+      </button>
+      <button mat-menu-item routerLink="/auth/register">
+        <mat-icon>person_add</mat-icon> Register
+      </button>
     </ng-template>
   </mat-menu>
 
-  <!-- Cart Menu -->
-  <mat-menu #cartMenu="matMenu" class="cart-menu-panel">
-    <ng-container *ngIf="cartItems.length; else emptyCart">
-      <ng-container *ngFor="let item of cartItems">
-        <button mat-menu-item class="flex items-center gap-3">
-          <img [src]="'http://localhost:8081' + item.product.imageUrls![0]"
-          [alt]="item.product.name"
-          class="w-full md:w-48 h-48 object-contain bg-gray-50" />
-          <div class="flex-1 text-left">
-            <p class="font-medium">{{ item.product.name }}</p>
-            <p class="text-sm text-gray-600">${{ item.product.price }} x {{ item.quantity }}</p>
-          </div>
-          <button mat-icon-button (click)="removeFromCart(item.product.id!, item.color, item.size)">
-            <mat-icon>delete</mat-icon>
-          </button>
-
+ <!-- Cart Menu -->
+<!-- Cart Menu -->
+<mat-menu #cartMenu="matMenu" class="cart-menu-panel">
+  <ng-container *ngIf="cartItems.length; else emptyCart">
+    <ng-container *ngFor="let item of cartItems">
+      <div class="flex items-center gap-3 px-4 py-3 w-[320px] hover:bg-gray-50">
+        <img [src]="'http://localhost:8081' + item.product.imageUrls![0]"
+             alt="{{ item.product.name }}"
+             class="w-14 h-14 rounded-lg border object-cover" />
+        <div class="flex-1 overflow-hidden">
+          <p class="truncate text-sm font-medium text-gray-800">{{ item.product.name }}</p>
+          <p class="text-xs text-gray-500">${{ item.product.price }} × {{ item.quantity }}</p>
+        </div>
+        <button mat-icon-button (click)="removeFromCart(item.product.id!, item.color, item.size)">
+          <mat-icon>delete</mat-icon>
         </button>
-      </ng-container>
-      <mat-divider></mat-divider>
-      <button mat-menu-item routerLink="/cart" class="justify-center">View Full Cart</button>
+      </div>
     </ng-container>
-    <ng-template #emptyCart>
-      <button mat-menu-item disabled>Cart is empty</button>
-    </ng-template>
-  </mat-menu>
+    <mat-divider></mat-divider>
+    <button mat-menu-item routerLink="/cart" class="justify-center py-3 text-sm font-medium text-blue-600 hover:text-blue-800">
+      View Full Cart
+    </button>
+  </ng-container>
+  <ng-template #emptyCart>
+    <div class="p-4 text-sm text-gray-500 text-center">Your cart is empty.</div>
+  </ng-template>
+</mat-menu>
+
+
+
 </header>

@@ -1,0 +1,63 @@
+/* Wishlist kartları */
+.wishlist-card {
+  background-color: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wishlist-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Ürün görseli */
+.wishlist-image {
+  background-color: #f9fafb;
+  border-right: 1px solid #e5e7eb;
+  object-fit: contain;
+}
+
+/* Ürün bilgisi alanı */
+.wishlist-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Ürün adı */
+.wishlist-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Açıklama */
+.wishlist-desc {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+/* Fiyat */
+.wishlist-price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+/* Buton grubu */
+.wishlist-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Boş şablon */
+.empty-message {
+  text-align: center;
+  color: #9ca3af;
+  padding: 4rem 0;
+  font-size: 1.25rem;
+}

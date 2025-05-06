@@ -1,66 +1,72 @@
-<div class="p-6 space-y-4">
-  <h2 class="text-2xl font-semibold">Your Cart</h2>
+<div class="p-6 max-w-5xl mx-auto">
+  <h2 class="text-3xl font-bold text-gray-800 mb-8">🛒 Your Cart</h2>
 
-  <div *ngIf="cartItems.length === 0" class="text-gray-500">
-    Sepetiniz boş.
+  <!-- Empty Cart -->
+  <div *ngIf="cartItems.length === 0" class="text-center text-gray-500 text-lg">
+    Cart is empty.
   </div>
 
-  <div *ngFor="let item of cartItems" class="flex items-center border rounded p-4">
+  <!-- Cart Items -->
+  <div *ngFor="let item of cartItems" class="bg-white shadow-md rounded-xl mb-6 flex flex-col md:flex-row items-center md:items-start p-4 gap-4 transition hover:shadow-lg">
     <img [src]="item.product.imageUrls!?.[0] ? 'http://localhost:8081' + item.product.imageUrls![0] : ''"
          [alt]="item.product.name"
-         class="w-20 h-20 object-contain mr-4" />
+         class="w-32 h-32 object-contain rounded-lg border bg-gray-50" />
 
-    <div class="flex-1">
-      <h3 class="font-semibold">{{ item.product.name }}</h3>
-      <p class="text-gray-600">{{ item.product.price | currency:'USD' }}</p>
+    <div class="flex-1 w-full">
+      <h3 class="text-xl font-semibold text-gray-800">{{ item.product.name }}</h3>
+      <p class="text-gray-600 text-sm">{{ item.product.price | currency:'USD' }}</p>
 
-      <!-- Color and Size Display -->
-      <p class="text-sm mt-1 text-gray-600">Color: {{ item.color }}</p>
-      <p class="text-sm text-gray-600">Size: {{ item.size }}</p>
+      <div class="text-sm text-gray-500 mt-1">
+        <p><span class="font-medium">Color:</span> {{ item.color }}</p>
+        <p><span class="font-medium">Size:</span> {{ item.size }}</p>
+      </div>
 
-      <div class="flex items-center mt-2">
+      <div class="flex items-center gap-2 mt-4">
         <button
-          class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 transition"
+          class="w-8 h-8 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
           (click)="decrementQuantity(item.product.id!, item.color, item.size)">
           -
         </button>
 
-        <span class="mx-3 font-semibold">{{ item.quantity }}</span>
+        <span class="w-8 text-center font-medium">{{ item.quantity }}</span>
 
         <button
-          class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 transition"
+          class="w-8 h-8 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition"
           (click)="incrementQuantity(item.product.id!, item.color, item.size)">
           +
         </button>
       </div>
 
-      <p class="mt-2 text-sm text-gray-600">
-        Subtotal: {{ item.product.price * item.quantity | currency:'USD' }}
+      <p class="mt-3 text-sm text-gray-600">
+        <span class="font-medium">Subtotal:</span> {{ item.product.price * item.quantity | currency:'USD' }}
       </p>
     </div>
 
     <button
-      class="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
+      class="mt-4 md:mt-0 md:ml-auto px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition text-sm"
       (click)="removeItem(item.product.id!, item.color, item.size)">
-      Ürünü Kaldır
+      Delete
     </button>
   </div>
 
-  <div *ngIf="cartItems.length > 0" class="mt-6 flex justify-between items-center">
-    <div class="text-lg font-semibold">
-      Toplam: {{ getTotal() | currency:'USD' }}
+  <!-- Cart Footer -->
+  <div *ngIf="cartItems.length > 0" class="mt-10 flex flex-col md:flex-row justify-between items-center gap-6">
+    <div class="text-xl font-bold text-gray-800">
+      Total: {{ getTotal() | currency:'USD' }}
     </div>
 
-    <button
-      class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
-      (click)="clearAll()">
-      Sepeti Temizle
-    </button>
+    <div class="flex gap-3">
+      <button
+        class="px-5 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded hover:bg-gray-200 transition"
+        (click)="clearAll()">
+        Clear all
+      </button>
 
-    <button
-      class="btn btn-success"
-      [routerLink]="['/cart/checkout']">
-      Sepeti Onayla
-    </button>
+      <button
+        class="px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded hover:bg-blue-700 transition"
+        [routerLink]="['/cart/checkout']">
+        Proceed to Checkout
+      </button>
+    </div>
   </div>
 </div>

@@ -165,6 +165,10 @@ export class ProductDetailComponent implements OnInit {
       this.cartService.addToCart(this.product);
     }
   }
+  fullImageUrl(path: string): string {
+    return `http://localhost:8081${path}`;
+  }
+
 
 
 }

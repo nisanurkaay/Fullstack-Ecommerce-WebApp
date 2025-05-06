@@ -1,53 +1,203 @@
-/* Ana ürün görseli */
-img.main-image {
+.product-detail-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .product-detail-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.image-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main-product {
   width: 100%;
   height: 400px;
   object-fit: contain;
-  border: 1px solid #0f4fc500; /* Tailwind border-gray-200 */
+  border: 1px solid #d1d5db00;
   border-radius: 0.5rem;
-  background-color: #367abe00;
+  background-color: #f9fafb09;
 }
 
-/* Küçük görsel alanı */
 .thumbnail-strip {
+  margin-top: 1rem;
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   overflow-x: auto;
   padding-bottom: 0.5rem;
 }
 
-/* Küçük görseller */
-.thumbnail-strip img {
-  width: 6rem;
-  height: 6rem;
-  object-fit: cover;
+.thumbnail {
+  width: 5rem;
+  height: 5rem;
+  object-fit: contain;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: border 0.2s ease;
+}
+
+.thumbnail.active {
+  border: 2px solid #3b82f6; /* blue-500 */
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.25rem;
+}
+
+.option-group {
+  margin-bottom: 1rem;
+}
+
+.option-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.variant-button {
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  border: 1px solid #d1d5db;
   border-radius: 0.375rem;
-  border: 1px solid #e5e7eb;
+  background-color: white;
   cursor: pointer;
-  transition: transform 0.2s ease;
-  flex-shrink: 0;
 }
 
-.thumbnail-strip img:hover {
-  transform: scale(1.05);
+.variant-button:hover {
+  background-color: #f3f4f6;
 }
 
-/* Seçili görsel çerçevesi */
-.selected {
-  outline: 2px solid #1825e4; /* Tailwind orange-500 */
-  outline-offset: 2px;
+.selected-color {
+  background-color: #dbeafe;
+  border-color: #3b82f6;
 }
-.color-box {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1px solid #ccc;
+
+.selected-size {
+  background-color: #d1fae5;
+  border-color: #10b981;
+}
+
+.price {
+  color: #2563eb;
+  font-weight: 600;
+  font-size: 1.25rem;
+  margin: 1rem 0;
+}
+
+.add-to-cart-btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+  background-color: #1d4ed8;
+}
+/* Seçenek butonları (renk ve beden) */
+.variant-button {
+  padding: 0.5rem 1.25rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: white;
+  color: #111827;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.2s ease-in-out;
+}
+
+.variant-button:hover {
+  background-color: #f3f4f6;
+  transform: translateY(-1px);
+}
+
+/* Renk seçimi aktif */
+.selected-color {
+  background-color: #e0f2fe;
+  border: 2px solid #3b82f6;
+  color: #1e3a8a;
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.5);
+}
+
+/* Beden seçimi aktif */
+.selected-size {
+  background-color: #d1fae5;
+  border: 2px solid #10b981;
+  color: #065f46;
+  box-shadow: 0 0 0 2px rgba(16,185,129,0.5);
+}
+/* Modern Color Circle */
+.color-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-right: 0.75rem;
   display: inline-block;
 }
 
-.color-box.selected {
-  border: 3px solid black;
+.color-circle:hover {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.4);
+  transform: scale(1.05);
 }
 
+.color-circle.selected {
+  border-color: #2563eb; /* Tailwind blue-600 */
+  box-shadow: 0 0 0 2px #2563eb;
+}
 
+/* Modern Size Box */
+.size-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.5rem;
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  color: #111827;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-right: 0.75rem;
+}
+
+.size-box:hover {
+  border-color: #9ca3af;
+  background-color: #f3f4f6;
+}
+
+.size-box.selected {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}

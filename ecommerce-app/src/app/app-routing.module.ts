@@ -18,6 +18,8 @@ const routes: Routes = [
   { path: 'seller', loadChildren: () => import('./modules/seller/seller.module').then(m => m.SellerModule) },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
 
+
+
   { path: '**', redirectTo: '' }
 ];
 
