@@ -73,3 +73,28 @@
 .btn-deny:hover {
   background-color: #dc2626;
 }
+.btn {
+  padding: 8px 16px;
+  margin-right: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+  background-color: #e0f2fe;
+  color: #1e40af;
+  border-color: #93c5fd;
+}
+
+.btn.active {
+  background-color: #2563eb; /* blue-600 */
+  color: white;
+  border-color: #1d4ed8;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}

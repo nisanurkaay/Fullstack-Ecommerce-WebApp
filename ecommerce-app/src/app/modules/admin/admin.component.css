@@ -1,23 +1,8 @@
-/* src/app/modules/admin/admin.component.css */
-.admin-layout {
-  display: flex;
-  height: 100vh;
-}
+/* Artık çoğu stil Tailwind ile sağlandığı için minimum CSS yeterlidir */
 
-.admin-sidenav {
-  width: 250px;
-  background-color: #1f2937; /* gray-800 */
-  color: #fff;
-}
 
-.admin-sidenav .active,
-.admin-sidenav a:hover {
+
+a.router-link-active {
   background-color: #374151; /* gray-700 */
-}
-
-.admin-main {
-  flex: 1;
-  background-color: #f3f4f6; /* gray-100 */
-  padding: 24px;
-  overflow-y: auto;
+  border-radius: 0.375rem;   /* rounded */
 }

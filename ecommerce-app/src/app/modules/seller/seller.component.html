@@ -1,50 +1,43 @@
-<!-- src/app/modules/seller/seller.component.html -->
-<div class="flex h-screen">
-  <!-- Yan Menü -->
-  <aside class="w-60 bg-gray-100 p-6 space-y-4">
-    <h2 class="text-xl font-bold mb-4">Seller Panel</h2>
-    <nav class="space-y-2">
-      <a
-        routerLink="dashboard"
-        routerLinkActive="font-semibold text-blue-600"
-        class="block hover:text-blue-500"
-      >
-        Dashboard
-      </a>
+<div class="flex h-screen overflow-hidden">
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-900 text-white hidden lg:block">
+    <div class="p-6 text-2xl font-bold border-b border-gray-700">
+      Seller Panel
+    </div>
+    <nav class="mt-6 space-y-1">
       <a
         routerLink="products"
-        routerLinkActive="font-semibold text-blue-600"
-        class="block hover:text-blue-500"
+        routerLinkActive="bg-gray-700"
+        class="block px-6 py-3 rounded hover:bg-gray-800 transition"
       >
-        My Products
+        🛍 My Products
       </a>
       <a
         routerLink="orders"
-        routerLinkActive="font-semibold text-blue-600"
-        class="block hover:text-blue-500"
+        routerLinkActive="bg-gray-700"
+        class="block px-6 py-3 rounded hover:bg-gray-800 transition"
       >
-        My Orders
+        📦 My Orders
       </a>
       <a
         routerLink="analytics"
-        routerLinkActive="font-semibold text-blue-600"
-        class="block hover:text-blue-500"
+        routerLinkActive="bg-gray-700"
+        class="block px-6 py-3 rounded hover:bg-gray-800 transition"
       >
-        Analytics
+        📊 Analytics
       </a>
       <a
-      routerLink="add-product"
-      routerLinkActive="font-semibold text-blue-600"
-      class="block hover:text-blue-500"
-    >
-     Add Product
-    </a>
+        routerLink="add-product"
+        routerLinkActive="bg-gray-700"
+        class="block px-6 py-3 rounded hover:bg-gray-800 transition"
+      >
+        ➕ Add Product
+      </a>
     </nav>
   </aside>
 
-  <!-- İçerik Alanı -->
-  <main class="flex-1 p-6 overflow-auto">
-    <!-- Child component'ler buraya yüklenecek -->
+  <!-- Main Content -->
+  <main class="flex-1 bg-gray-100 p-6 overflow-y-auto">
     <router-outlet></router-outlet>
   </main>
 </div>

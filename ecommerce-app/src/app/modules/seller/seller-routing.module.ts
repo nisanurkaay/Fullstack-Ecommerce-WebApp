@@ -16,7 +16,7 @@ const routes: Routes = [{
   canActivate: [AuthGuard, SellerGuard],
   children: [
     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: SellerDashboardComponent },
+    { path: 'dashboard', component: MyProductsComponent },
     { path: 'products',  component: MyProductsComponent },
     { path: 'orders',    component: MyOrdersComponent },
     { path: 'analytics', component: AnalyticsComponent },

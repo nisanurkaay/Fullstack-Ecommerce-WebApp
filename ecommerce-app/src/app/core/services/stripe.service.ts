@@ -9,9 +9,14 @@ export class StripeService {
 
   constructor(private http: HttpClient) {}
 
-  // Stripe PaymentIntent oluşturur
-  createPaymentIntent(amount: number): Promise<any> {
-    return this.http.post(`${this.baseUrl}/create?amount=${amount}`, {}, { responseType: 'text' }).toPromise();
+  createPaymentIntent(amount: number): Promise<string> {
+    return this.http
+      .post<{ clientSecret: string }>(
+        `${this.baseUrl}/create?amount=${amount}`,
+        {}
+      )
+      .toPromise()
+      .then((res) => res!.clientSecret);
   }
 
   // Tam iade

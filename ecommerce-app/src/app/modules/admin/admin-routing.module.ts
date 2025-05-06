@@ -16,8 +16,8 @@ const routes: Routes = [
     component: AdminComponent,
     canActivate: [AuthGuard, AdminGuard],
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: AdminDashboardComponent },
+      { path: '', redirectTo: 'ProductMgmtComponent', pathMatch: 'full' },
+      { path: 'dashboard', component: ProductMgmtComponent },
       { path: 'order-mgmt', component: OrderMgmtComponent },
       { path: 'product-mgmt', component: ProductMgmtComponent },
       { path: 'user-mgmt', component: UserMgmtComponent },

@@ -1,14 +1,15 @@
-<div class="product-detail-container grid grid-cols-1 md:grid-cols-2 gap-10 p-6">
+<div class="product-detail-container grid grid-cols-1 md:grid-cols-2 gap-10 p-6" *ngIf="product; else loadingTemplate">
+
   <!-- Sol taraf: Ana görsel + thumbnails -->
   <div>
-    <img [src]="'http://localhost:8081' + selectedImage"
+    <img [src]="fullImageUrl(selectedImage)"
          alt="Product image"
          class="w-full h-[500px] object-contain bg-gray-50 rounded-lg shadow-sm mb-4" />
 
     <!-- Thumbnail Galeri -->
     <div class="flex gap-3 flex-wrap">
       <img *ngFor="let img of currentImages"
-           [src]="'http://localhost:8081' + img"
+           [src]="fullImageUrl(img)"
            alt="Product thumbnail"
            class="w-20 h-20 object-contain cursor-pointer border rounded-md p-1 bg-white transition hover:shadow"
            [class.border-blue-500]="img === selectedImage"
@@ -81,3 +82,10 @@
     </div>
   </ng-template>
 </div>
+
+<!-- Yükleniyor Şablonu -->
+<ng-template #loadingTemplate>
+  <div class="p-10 text-center text-gray-600 text-lg">
+    Ürün bilgileri yükleniyor...
+  </div>
+</ng-template>
