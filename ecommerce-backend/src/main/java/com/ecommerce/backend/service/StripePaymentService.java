@@ -15,12 +15,12 @@ public class StripePaymentService {
     @Value("${stripe.secret.key}")
     private String stripeSecretKey;
 
-     public PaymentIntent createPaymentIntent(long amount, String currency) {
+    public PaymentIntent createPaymentIntent(long amount, String currency) {
         Stripe.apiKey = stripeSecretKey;
 
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                .setAmount(amount) // Örnek: 1000 = 10.00 TL
-                .setCurrency(currency) // "try" veya "usd"
+                .setAmount(amount)
+                .setCurrency(currency)
                 .build();
 
         try {
@@ -32,6 +32,7 @@ public class StripePaymentService {
 
     public void refundPayment(String paymentIntentId) {
         Stripe.apiKey = stripeSecretKey;
+        validateIntentId(paymentIntentId);
 
         try {
             Refund.create(RefundCreateParams.builder()
@@ -39,6 +40,26 @@ public class StripePaymentService {
                     .build());
         } catch (StripeException e) {
             throw new RuntimeException("Refund işlemi başarısız: " + e.getMessage());
+        }
+    }
+
+    public void partialRefund(String paymentIntentId, long amount) {
+        Stripe.apiKey = stripeSecretKey;
+        validateIntentId(paymentIntentId);
+
+        try {
+            Refund.create(RefundCreateParams.builder()
+                    .setPaymentIntent(paymentIntentId)
+                    .setAmount(amount)
+                    .build());
+        } catch (StripeException e) {
+            throw new RuntimeException("Partial refund işlemi başarısız: " + e.getMessage());
+        }
+    }
+
+    private void validateIntentId(String id) {
+        if (id.contains("_secret_")) {
+            throw new RuntimeException("Geçersiz PaymentIntent ID. Lütfen sadece pi_... formatındaki ID gönderin.");
         }
     }
 }

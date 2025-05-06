@@ -1,46 +1,50 @@
-import { Component, OnInit} from '@angular/core';
-import { OrderService } from '../../../core/services/order.service';
-import { Order } from '../../../core/models/order.model';
+import { Component, OnInit } from '@angular/core';
+import { OrderService } from '@core/services/order.service';
+import { HttpClient } from '@angular/common/http';
+
 @Component({
   selector: 'app-my-orders',
-  standalone: false,
   templateUrl: './my-orders.component.html',
-  styleUrl: './my-orders.component.css'
+  styleUrls: ['./my-orders.component.css'],
+  standalone: false
 })
 export class MyOrdersComponent implements OnInit {
+  orders: any[] = [];
+  selectedStatus: string = '';
 
-  allMyOrders: Order[] = [];
-  filteredOrders: Order[] = [];
-  selectedStatus: string = 'ALL';
-  statuses: string[] = ['ALL', 'PLACED', 'PROCESSING', 'SHIPPED', 'CANCELLED', 'REFUNDED'];
+  constructor(private orderService: OrderService, private http: HttpClient) {}
 
-  constructor(private orderService: OrderService) {}
+  ngOnInit(): void {
+    this.fetchOrders();
+  }
 
-  ngOnInit() {
-    this.orderService.getMyOrders().subscribe(data => {
-      this.allMyOrders = data;
-      this.filteredOrders = data;
+  fetchOrders(): void {
+    this.orderService.getAllOrders().subscribe({
+      next: (data) => {
+        this.orders = data;
+      },
+      error: (err) => {
+        console.error('Order fetch error:', err);
+      }
+    });
+  }
+  getSelectValue(event: Event): string {
+    return (event.target as HTMLSelectElement).value;
+  }
+
+  cancelItem(orderId: number, itemId: number) {
+    this.orderService.cancelItemBySeller(orderId, itemId).subscribe({
+      next: () => this.fetchOrders(),
+      error: err => console.error(err)
     });
   }
 
-  filterByStatus() {
-    if (this.selectedStatus === 'ALL') {
-      this.filteredOrders = this.allMyOrders;
-    } else {
-      this.filteredOrders = this.allMyOrders.filter(order => order.status === this.selectedStatus);
-    }
-  }
-
-  cancelOrder(orderId: number) {
-    this.orderService.cancelOrderBySeller(orderId).subscribe(response => {
-      // Handle the response after cancelling the order
-      console.log('Order cancelled:', response);
-      // Optionally, refresh the order list or update the UI
-      this.ngOnInit(); // Refresh the order list
-    }, error => {
-      console.error('Error cancelling order:', error);
+  updateItemStatus(orderId: number, itemId: number, newStatus: string) {
+    this.orderService.updateItemStatus(orderId, itemId, newStatus).subscribe({
+      next: () => this.fetchOrders(),
+      error: err => console.error(err)
     });
   }
 
-
+  statusOptions = ['PLACED', 'SHIPPED', 'DELIVERED', 'CANCELLED'];
 }
