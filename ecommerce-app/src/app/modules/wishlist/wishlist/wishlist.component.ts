@@ -6,6 +6,7 @@ import { Product } from '../../../core/models/product.model';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { VariantSelectorDialogComponent } from '../variant-selector-dialog/variant-selector-dialog.component';
+import { ProductService } from '../../../core/services/product.service';
 
 @Component({
   selector: 'app-wishlist',
@@ -20,7 +21,8 @@ export class WishlistComponent implements OnInit {
     private wishlistService: WishlistService,
     private cartService: CartService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
@@ -43,8 +45,25 @@ export class WishlistComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe((selectedVariant) => {
         if (selectedVariant) {
-          this.cartService.addToCart(product, selectedVariant.color, selectedVariant.size);
-          this.showSnackbar('Added to cart ✓');
+          const variantId = selectedVariant.id;
+
+          if (variantId) {
+            // Varyant ID zaten varsa direkt ekle
+            this.cartService.addToCart(product, selectedVariant.color, selectedVariant.size, variantId);
+            this.showSnackbar('Added to cart ✓');
+          } else {
+            // Varyant ID eksikse backend’den çek
+            this.productService.getVariantId(product.id!, selectedVariant.color, selectedVariant.size)
+              .subscribe({
+                next: (id) => {
+                  this.cartService.addToCart(product, selectedVariant.color, selectedVariant.size, id);
+                  this.showSnackbar('Added to cart ✓');
+                },
+                error: () => {
+                  this.showSnackbar('Variant not found');
+                }
+              });
+          }
         }
       });
     } else {
@@ -52,6 +71,7 @@ export class WishlistComponent implements OnInit {
       this.showSnackbar('Added to cart ✓');
     }
   }
+
 
   private showSnackbar(message: string): void {
     this.snackBar.open(message, 'Close', {

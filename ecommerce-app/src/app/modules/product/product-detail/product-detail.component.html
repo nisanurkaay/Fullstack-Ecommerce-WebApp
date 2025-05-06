@@ -1,73 +1,66 @@
-<div class="product-detail-container p-4">
+<div class="product-detail-container">
+  <!-- Sol taraf: Ana görsel + thumbnails -->
+  <div class="image-section">
+    <img [src]="'http://localhost:8081' + selectedImage"
+         alt="Product image"
+         class="main-product" />
 
-  <!-- 🔹 Eğer variantId varsa sadece o varyantın bilgileri -->
-  <div *ngIf="variantId; else selectableVersion">
-
-    <h2 class="text-xl font-bold mb-2">{{ product.name }}</h2>
-    <img [src]="selectedImage" alt="Product image" class="w-64 h-64 object-cover mb-4" />
-
-    <p class="text-lg"><strong>Color:</strong> {{ selectedVariant?.color }}</p>
-    <p class="text-lg"><strong>Size:</strong> {{ selectedVariant?.size }}</p>
-    <p class="text-lg"><strong>Price:</strong> {{ selectedVariant?.price | currency }}</p>
-
-    <button (click)="addToCart()" class="bg-blue-600 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">
-      Add to Cart
-    </button>
+    <!-- Thumbnail Galeri (VARYANTSIZ DA GÖRÜNÜR OLSUN) -->
+<div class="flex flex-wrap gap-3 mb-6">
+  <img *ngFor="let img of currentImages"
+       [src]="'http://localhost:8081' + img"
+       alt="Product thumbnail"
+       class="w-20 h-20 object-contain cursor-pointer border rounded-md p-1 bg-white"
+       [class.border-blue-500]="img === selectedImage"
+       (click)="selectImage(img)" />
+</div>
 
   </div>
 
-  <!-- 🔹 Eğer varyant ID yoksa kullanıcı seçiyor -->
-  <ng-template #selectableVersion>
-    <h2 class="text-xl font-bold mb-2">{{ product.name }}</h2>
+  <!-- Sağ taraf: Ürün bilgisi -->
+  <div class="info-section" *ngIf="variantId && selectedVariant; else selectSection">
+    <h2 class="title">{{ product.name }}</h2>
+    <p><strong>Color:</strong> {{ selectedVariant.color }}</p>
+    <p><strong>Size:</strong> {{ selectedVariant.size }}</p>
+    <p class="price">Price: {{ selectedVariant.price | currency }}</p>
+    <button (click)="addToCart()" class="add-to-cart-btn">Add to Cart</button>
+  </div>
 
-    <img [src]="selectedImage" alt="Product image" class="w-64 h-64 object-cover mb-4" />
+  <!-- Varyant seçme -->
+  <ng-template #selectSection>
+    <div class="info-section">
+      <h2 class="title">{{ product.name }}</h2>
 
-    <!-- 🔸 Görsel seçimi -->
-    <div class="flex gap-2 mb-4">
-      <img *ngFor="let img of currentImages"
-           [src]="img"
-           alt="Product thumbnail"
-           class="w-16 h-16 object-cover cursor-pointer border"
-           [class.border-blue-500]="img === selectedImage"
-           (click)="selectImage(img)" />
+      <div class="mb-4">
+        <label class="block font-semibold mb-2">Color:</label>
+        <div class="flex">
+          <div *ngFor="let color of colors"
+               class="color-circle"
+               [ngStyle]="{ 'background-color': color.toLowerCase() }"
+               [class.selected]="selectedColor === color"
+               (click)="selectColor(color)">
+          </div>
+        </div>
+
+      </div>
+
+      <div class="mb-4">
+        <label class="block font-semibold mb-2">Size:</label>
+        <div class="flex">
+          <div *ngFor="let size of sizes"
+               class="size-box"
+               [class.selected]="selectedSize === size"
+               (click)="selectSize(size)">
+            {{ size }}
+          </div>
+        </div>
+      </div>
+
+      <p class="text-xl font-semibold text-blue-600 mb-4"
+   *ngIf="product.price > 0">
+   Price: {{ product.price | currency }}
+</p>
+      <button (click)="addToCart()" class="add-to-cart-btn">Add to Cart</button>
     </div>
-
-    <!-- 🔸 Renk seçimi -->
-    <div class="mb-2">
-      <label class="font-semibold mr-2">Select Color:</label>
-      <button *ngFor="let color of colors"
-              (click)="selectColor(color)"
-              class="px-3 py-1 mr-2 rounded border"
-              [class.bg-blue-100]="selectedColor === color">
-        {{ color }}
-      </button>
-    </div>
-
-    <!-- 🔸 Beden seçimi -->
-    <div class="mb-2">
-      <label class="font-semibold mr-2">Select Size:</label>
-      <button *ngFor="let size of sizes"
-              (click)="selectSize(size)"
-              class="px-3 py-1 mr-2 rounded border"
-              [class.bg-green-100]="selectedSize === size">
-        {{ size }}
-      </button>
-    </div>
-
-    <p class="text-lg mt-2"><strong>Price:</strong> {{ product.price | currency }}</p>
-
-    <button (click)="addToCart()" class="bg-blue-600 text-white px-4 py-2 mt-4 rounded hover:bg-blue-700">
-      Add to Cart
-    </button>
   </ng-template>
-
-  <!-- 🔹 Reviews
-  <div class="mt-8">
-    <h3 class="text-lg font-bold mb-2">Reviews</h3>
-    <div *ngFor="let review of productReviews" class="mb-2 border-b pb-2">
-      <p class="text-sm text-gray-600">{{ review.username }}</p>
-      <p>{{ review.comment }}</p>
-    </div>
-  </div>
--->
 </div>
