@@ -16,8 +16,9 @@ public class PaymentController {
     @PostMapping("/create")
     public ResponseEntity<String> createPaymentIntent(@RequestParam long amount) {
         PaymentIntent intent = stripePaymentService.createPaymentIntent(amount, "usd");
-          return ResponseEntity.ok(intent.getClientSecret()); // UI'ya PaymentIntentId dönebilirsin
+        return ResponseEntity.ok(intent.getId()); // 🔥 clientSecret değil, ID dön
     }
+    
 
     @PostMapping("/refund")
     public ResponseEntity<String> refundPayment(@RequestParam String paymentIntentId) {

@@ -180,6 +180,7 @@ public OrderResponse mapToResponse(Order order) {
     response.setTotalAmount(order.getTotalAmount());
     response.setStatus(order.getStatus().toString());
     response.setCreatedAt(order.getCreatedAt());
+    response.setPaymentIntentId(order.getPaymentIntentId());
 
     List<OrderItemResponse> itemResponses = order.getItems().stream().map(item -> {
         OrderItemResponse itemRes = new OrderItemResponse();
@@ -194,6 +195,7 @@ public OrderResponse mapToResponse(Order order) {
         itemRes.setPrice(item.getProduct().getPrice());
         itemRes.setStatus(item.getStatus().toString());
         itemRes.setQuantity(item.getQuantity());
+        
         itemRes.setVariantId(item.getVariant() != null ? item.getVariant().getId() : null); // ✅ burası
         
         return itemRes;
@@ -233,7 +235,8 @@ public void cancelItemBySeller(Long orderId, Long itemId, User seller) {
             ? item.getVariant().getPrice()
             : item.getProduct().getPrice()) * item.getQuantity() * 100);
 
-    stripePaymentService.partialRefund(order.getPaymentIntentId(), refundAmount);
+            stripePaymentService.refundPayment(order.getPaymentIntentId());
+
 
     // Tüm ürünler iptal olduysa Order da CANCELLED
     boolean allCancelled = order.getItems().stream()
@@ -269,19 +272,33 @@ public void updateOrderItemStatus(Long orderId, Long itemId, String newStatus, U
 
     if (statusEnum == OrderItemStatus.CANCELLED) {
         item.setStatus(OrderItemStatus.CANCELLED);
-    
-        // Güvenli şekilde refund kontrolü:
+
+        // Stok iadesi
+        if (item.getVariant() != null) {
+            ProductVariant variant = item.getVariant();
+            variant.setStock(variant.getStock() + item.getQuantity());
+            variantRepository.save(variant);
+        } else {
+            Product product = item.getProduct();
+            product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
+            productRepository.save(product);
+        }
+
+        // Refund
         String intentId = order.getPaymentIntentId();
         if (intentId != null && intentId.startsWith("pi_")) {
             double refundAmount = (item.getVariant() != null
                     ? item.getVariant().getPrice()
                     : item.getProduct().getPrice()) * item.getQuantity();
-            stripePaymentService.partialRefund(intentId, (long) (refundAmount * 100));
+                    stripePaymentService.refundPayment(order.getPaymentIntentId());
+
         }
+    } else {
+        // 👇👇👇 Diğer statüler için status değiştir
+        item.setStatus(statusEnum);
     }
-    
-    
-   
+
+    // Siparişin tüm item'ları aynı statüde mi?
     boolean allMatch = order.getItems().stream()
         .map(OrderItem::getStatus)
         .allMatch(s -> s == item.getStatus());
@@ -289,8 +306,7 @@ public void updateOrderItemStatus(Long orderId, Long itemId, String newStatus, U
     if (allMatch) {
         try {
             order.setStatus(OrderStatus.valueOf(item.getStatus().name()));
-        } catch (IllegalArgumentException ignored) {
-        }
+        } catch (IllegalArgumentException ignored) {}
     }
 
     orderRepository.save(order);

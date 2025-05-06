@@ -43,19 +43,7 @@ public class StripePaymentService {
         }
     }
 
-    public void partialRefund(String paymentIntentId, long amount) {
-        Stripe.apiKey = stripeSecretKey;
-        validateIntentId(paymentIntentId);
-
-        try {
-            Refund.create(RefundCreateParams.builder()
-                    .setPaymentIntent(paymentIntentId)
-                    .setAmount(amount)
-                    .build());
-        } catch (StripeException e) {
-            throw new RuntimeException("Partial refund işlemi başarısız: " + e.getMessage());
-        }
-    }
+   
 
     private void validateIntentId(String id) {
         if (id.contains("_secret_")) {

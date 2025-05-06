@@ -1,24 +1,28 @@
-<div *ngFor="let order of orders">
-  <h3>Sipariş #{{ order.id }} - {{ order.status }}</h3>
-  <p>Tarih: {{ order.createdAt | date:'short' }}</p>
-  <p>Toplam: {{ order.totalAmount | currency:'TRY' }}</p>
+<div *ngFor="let order of orders" class="border rounded-lg p-6 mb-6 shadow-sm bg-white">
+  <div class="mb-4">
+    <h3 class="text-lg font-semibold flex justify-between items-center">
+      <span>🧾 Sipariş #{{ order.id }} - <span class="uppercase text-blue-600">{{ order.status }}</span></span>
+      <button
+        (click)="refundOrder(order.paymentIntentId)"
+        [disabled]="order.status === 'REFUNDED' || order.status === 'CANCELLED'"
+        class="bg-red-500 text-white text-sm px-4 py-1.5 rounded hover:bg-red-600 disabled:opacity-50"
+      >
+        ❌ Siparişi İade Et
+      </button>
+    </h3>
+    <p class="text-sm text-gray-600">📅 Tarih: {{ order.createdAt | date:'short' }}</p>
+    <p class="text-sm text-gray-600">💰 Toplam: {{ order.totalAmount | currency:'TRY' }}</p>
+  </div>
 
-  <div *ngFor="let item of order.items" class="border p-2 my-2">
-    <p><strong>{{ item.productName }}</strong></p>
-    <img [src]="item.productImage" alt="" width="100" />
-    <p>Miktar: {{ item.quantity }}</p>
-    <p>Fiyat: {{ item.price | currency:'TRY' }}</p>
-    <p>Durum: {{ item.status }}</p>
-
-    <select
-  [(ngModel)]="item.status"
-  (change)="updateItemStatus(order.id, item.id, item.status)"
-  [disabled]="item.status === 'REFUNDED' || item.status === 'CANCELLED'">
-  <option *ngFor="let s of statusOptions" [value]="s">{{ s }}</option>
-</select>
-
-
-    <!-- İptal Et Butonu -->
-    <button (click)="cancelItem(order.id, item.id)">❌ İptal Et</button>
+  <div *ngFor="let item of order.items" class="border rounded-md p-4 my-4 bg-gray-50 flex gap-4">
+    <img [src]="item.productImage" alt="Product Image" class="w-24 h-24 object-cover rounded-md border" />
+    <div class="flex-1">
+      <p class="font-semibold text-gray-800">{{ item.productName }}</p>
+      <p class="text-sm text-gray-600">Miktar: {{ item.quantity }}</p>
+      <p class="text-sm text-gray-600">Fiyat: {{ item.price | currency:'TRY' }}</p>
+      <p class="text-sm text-gray-600">Durum:
+        <span class="font-medium text-blue-700">{{ item.status }}</span>
+      </p>
+    </div>
   </div>
 </div>

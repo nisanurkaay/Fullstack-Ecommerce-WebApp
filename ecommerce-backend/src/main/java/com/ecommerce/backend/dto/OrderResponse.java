@@ -9,7 +9,15 @@ public class OrderResponse {
     private String status;
     private LocalDateTime createdAt;
     private List<OrderItemResponse> items;
+    private String paymentIntentId;
 
+    public String getPaymentIntentId() {
+        return paymentIntentId;
+    }
+
+    public void setPaymentIntentId(String paymentIntentId) {
+        this.paymentIntentId = paymentIntentId;
+    }
     public Long getId() {
         return id;
     }
