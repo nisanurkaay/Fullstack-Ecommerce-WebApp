@@ -1,66 +1,83 @@
-<div class="product-detail-container">
+<div class="product-detail-container grid grid-cols-1 md:grid-cols-2 gap-10 p-6">
   <!-- Sol taraf: Ana görsel + thumbnails -->
-  <div class="image-section">
+  <div>
     <img [src]="'http://localhost:8081' + selectedImage"
          alt="Product image"
-         class="main-product" />
+         class="w-full h-[500px] object-contain bg-gray-50 rounded-lg shadow-sm mb-4" />
 
-    <!-- Thumbnail Galeri (VARYANTSIZ DA GÖRÜNÜR OLSUN) -->
-<div class="flex flex-wrap gap-3 mb-6">
-  <img *ngFor="let img of currentImages"
-       [src]="'http://localhost:8081' + img"
-       alt="Product thumbnail"
-       class="w-20 h-20 object-contain cursor-pointer border rounded-md p-1 bg-white"
-       [class.border-blue-500]="img === selectedImage"
-       (click)="selectImage(img)" />
-</div>
-
+    <!-- Thumbnail Galeri -->
+    <div class="flex gap-3 flex-wrap">
+      <img *ngFor="let img of currentImages"
+           [src]="'http://localhost:8081' + img"
+           alt="Product thumbnail"
+           class="w-20 h-20 object-contain cursor-pointer border rounded-md p-1 bg-white transition hover:shadow"
+           [class.border-blue-500]="img === selectedImage"
+           (click)="selectImage(img)" />
+    </div>
   </div>
 
   <!-- Sağ taraf: Ürün bilgisi -->
-  <div class="info-section" *ngIf="variantId && selectedVariant; else selectSection">
-    <h2 class="title">{{ product.name }}</h2>
+  <div *ngIf="variantId && selectedVariant; else selectSection" class="space-y-4">
+    <h2 class="text-lg">
+      <span class="font-bold text-gray-800">{{ product.sellerName }}</span>
+      <span class="font-normal text-gray-700"> {{ product.name }}</span>
+    </h2>
+
     <p><strong>Color:</strong> {{ selectedVariant.color }}</p>
     <p><strong>Size:</strong> {{ selectedVariant.size }}</p>
-    <p class="price">Price: {{ selectedVariant.price | currency }}</p>
-    <button (click)="addToCart()" class="add-to-cart-btn">Add to Cart</button>
+    <p class="text-xl font-semibold text-blue-600">Price: {{ selectedVariant.price | currency }}</p>
+
+    <button (click)="addToCart()" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+      Add to Cart
+    </button>
   </div>
 
-  <!-- Varyant seçme -->
+  <!-- Varyant Seçimi -->
   <ng-template #selectSection>
-    <div class="info-section">
-      <h2 class="title">{{ product.name }}</h2>
+    <div class="space-y-6">
+      <!-- Başlık -->
+      <h2 class="text-lg">
+        <span class="font-bold text-gray-800">{{ product.sellerName }}</span>
+        <span class="font-normal text-gray-700"> {{ product.name }}</span>
+      </h2>
 
-      <div class="mb-4">
+      <!-- Renk -->
+      <div>
         <label class="block font-semibold mb-2">Color:</label>
-        <div class="flex">
+        <div class="flex gap-2">
           <div *ngFor="let color of colors"
-               class="color-circle"
+               class="w-8 h-8 rounded-full border border-gray-300 cursor-pointer transition"
                [ngStyle]="{ 'background-color': color.toLowerCase() }"
-               [class.selected]="selectedColor === color"
+               [class.ring-2]="selectedColor === color"
+               [class.ring-blue-500]="selectedColor === color"
                (click)="selectColor(color)">
           </div>
         </div>
-
       </div>
 
-      <div class="mb-4">
+      <!-- Beden -->
+      <div>
         <label class="block font-semibold mb-2">Size:</label>
-        <div class="flex">
+        <div class="flex gap-2">
           <div *ngFor="let size of sizes"
-               class="size-box"
-               [class.selected]="selectedSize === size"
+               class="px-4 py-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-100 transition"
+               [class.bg-blue-600]="selectedSize === size"
+               [class.text-white]="selectedSize === size"
                (click)="selectSize(size)">
             {{ size }}
           </div>
         </div>
       </div>
 
-      <p class="text-xl font-semibold text-blue-600 mb-4"
-   *ngIf="product.price > 0">
-   Price: {{ product.price | currency }}
-</p>
-      <button (click)="addToCart()" class="add-to-cart-btn">Add to Cart</button>
+      <!-- Fiyat -->
+      <p class="text-xl font-semibold text-blue-600" *ngIf="product.price > 0">
+        Price: {{ product.price | currency }}
+      </p>
+
+      <!-- Sepete Ekle Butonu -->
+      <button (click)="addToCart()" class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-medium">
+        Add to Cart
+      </button>
     </div>
   </ng-template>
 </div>

@@ -201,3 +201,39 @@
   border-color: #2563eb;
   color: #fff;
 }
+.color-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  border: 2px solid #d1d5db;
+  cursor: pointer;
+}
+
+.color-circle.selected {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.size-box {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.size-box.selected {
+  background-color: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  transition: background 0.2s;
+}
+
