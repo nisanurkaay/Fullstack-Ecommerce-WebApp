@@ -1,30 +1,30 @@
-<!-- src/app/modules/wishlist/wishlist/wishlist.component.html -->
-<div *ngIf="wishlist.length > 0; else emptyTpl" class="p-6 space-y-6">
-  <div *ngFor="let p of wishlist" class="flex flex-col md:flex-row border rounded-lg overflow-hidden">
+<div *ngIf="wishlist.length > 0; else emptyTpl" class="p-6 space-y-6 bg-gray-50 min-h-[80vh]">
+  <div *ngFor="let p of wishlist" class="flex flex-col md:flex-row items-center bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300">
+
     <img
-    [src]="'http://localhost:8081' + p.imageUrls![0]"
-    [alt]="p.name"
-    class="w-full md:w-48 h-48 object-contain bg-gray-50"
+      [src]="'http://localhost:8081' + p.imageUrls![0]"
+      [alt]="p.name"
+      class="w-full md:w-44 h-44 object-cover rounded-t-2xl md:rounded-l-2xl md:rounded-tr-none"
     />
-    <div class="flex-1 p-4 flex flex-col justify-between">
+
+    <div class="flex-1 p-5 flex flex-col justify-between gap-4">
       <div>
-        <h3 class="text-lg font-semibold">{{ p.name }}</h3>
-        <p class="text-sm text-gray-600 mt-1 line-clamp-3">{{ p.description }}</p>
+        <h3 class="text-lg font-semibold text-gray-800">{{ p.name }}</h3>
+        <p class="text-sm text-gray-500 mt-1 line-clamp-2">{{ p.description }}</p>
       </div>
-      <div class="mt-4 flex items-center justify-between">
-        <span class="text-xl font-bold">{{ p.price | currency:'USD' }}</span>
-        <div class="space-x-2">
+
+      <div class="flex items-center justify-between flex-wrap">
+        <span class="text-lg font-semibold text-blue-500">{{ p.price | currency:'USD' }}</span>
+        <div class="flex gap-2 mt-2 md:mt-0">
           <button
-            mat-flat-button
-            color="primary"
             (click)="addToCart(p)"
+            class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-500 hover:bg-blue-600 text-white transition"
           >
             Add to Cart
           </button>
           <button
-            mat-flat-button
-            color="warn"
             (click)="remove(p)"
+            class="px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
           >
             Remove
           </button>
@@ -35,7 +35,7 @@
 </div>
 
 <ng-template #emptyTpl>
-  <div class="text-center text-gray-500 py-16">
-    Your wishlist is empty.
+  <div class="text-center text-gray-400 py-24 text-lg font-medium">
+    Your wishlist is empty 💔
   </div>
 </ng-template>
