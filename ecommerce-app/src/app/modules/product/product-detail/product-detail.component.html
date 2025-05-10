@@ -82,7 +82,10 @@
     </div>
   </ng-template>
 </div>
-
+<app-review-list
+  [reviews]="productReviews"
+  [productId]="productId">
+</app-review-list>
 <!-- Yükleniyor Şablonu -->
 <ng-template #loadingTemplate>
   <div class="p-10 text-center text-gray-600 text-lg">
