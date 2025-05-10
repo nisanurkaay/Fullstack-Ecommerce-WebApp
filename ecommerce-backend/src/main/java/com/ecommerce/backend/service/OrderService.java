@@ -230,77 +230,19 @@ public OrderResponse mapToResponse(Order order) {
 
     response.setItems(itemResponses);
     return response;
-}
-@Transactional
+}@Transactional
 public void cancelItemBySeller(Long orderId, Long itemId, User seller) {
     Order order = orderRepository.findById(orderId)
         .orElseThrow(() -> new RuntimeException("Order not found"));
 
     OrderItem item = order.getItems().stream()
-        .filter(i -> i.getId().equals(itemId) && i.getSeller().getId().equals(seller.getId()))
+        .filter(i -> i.getId().equals(itemId)
+                  && i.getSeller().getId().equals(seller.getId()))
         .findFirst()
         .orElseThrow(() -> new RuntimeException("Item not found or not yours"));
 
     if (item.getStatus() != OrderItemStatus.CANCELLED) {
-        // stok iadesi…
-        item.setStatus(OrderItemStatus.CANCELLED);
-
-        // ➡️ Kısmi iade:
-        String piFull = order.getPaymentIntentId();
-        if (piFull != null && piFull.startsWith("pi_")) {
-            // örneğin 42.99 TL → 4299 kuruş
-            long cents = Math.round(
-                (item.getVariant() != null
-                    ? item.getVariant().getPrice()
-                    : item.getProduct().getPrice())
-                * item.getQuantity() * 100
-            );
-            stripePaymentService.refundPayment(piFull, cents);
-        }
-    }
-
-    boolean allCancelled = order.getItems().stream()
-        .allMatch(i -> i.getStatus() == OrderItemStatus.CANCELLED);
-    if (allCancelled) {
-        order.setStatus(OrderStatus.CANCELLED);
-    }
-
-    orderRepository.save(order);
-}
-
-@Transactional
-public void updateOrderItemStatus(Long orderId,
-                                  Long itemId,
-                                  String newStatus,
-                                  User seller) {
-    // 1) Siparişi al
-    Order order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new RuntimeException("Order not found"));
-
-    // 2) Sadece bu satıcıya ait kalemi al
-    OrderItem item = order.getItems().stream()
-        .filter(i -> i.getId().equals(itemId)
-                  && i.getSeller().getId().equals(seller.getId()))
-        .findFirst()
-        .orElseThrow(() -> new RuntimeException("Item not found or not authorized"));
-
-    // 3) Geçerli enum’a çevir
-    OrderItemStatus statusEnum;
-    try {
-        statusEnum = OrderItemStatus.valueOf(newStatus);
-    } catch (IllegalArgumentException e) {
-        throw new RuntimeException("Invalid status: " + newStatus);
-    }
-
-    // 4) Zaten iade veya iptal edilmişse engelle
-    if (item.getStatus() == OrderItemStatus.REFUNDED
-     || item.getStatus() == OrderItemStatus.CANCELLED) {
-        throw new RuntimeException("Bu ürün zaten iade veya iptal edilmiş.");
-    }
-
-    // 5) CANCELLED seçildiyse restock + kısmi refund yap
-    if (statusEnum == OrderItemStatus.CANCELLED) {
-        // a) stok iadesi
+        // 1) Stoğu iade et
         if (item.getVariant() != null) {
             ProductVariant v = item.getVariant();
             v.setStock(v.getStock() + item.getQuantity());
@@ -311,17 +253,102 @@ public void updateOrderItemStatus(Long orderId,
             productRepository.save(p);
         }
 
-        // b) kısmi refund (kuruş cinsinden)
+        // 2) Refund: tek ürün mü?
         String piFull = order.getPaymentIntentId();
         if (piFull != null && piFull.startsWith("pi_")) {
-            double unitPrice = (item.getVariant() != null
-                                ? item.getVariant().getPrice()
-                                : item.getProduct().getPrice());
-            long cents = Math.round(unitPrice * item.getQuantity() * 100);
-            stripePaymentService.refundPayment(piFull, cents);
+            boolean singleItemOrder = order.getItems().size() == 1;
+            if (singleItemOrder) {
+                // tam iade
+                stripePaymentService.refundPayment(piFull);
+            } else {
+                // kısmi iade: bu item tutarı kadar
+                double unitPrice = (item.getVariant() != null
+                                    ? item.getVariant().getPrice()
+                                    : item.getProduct().getPrice());
+                long cents = Math.round(unitPrice * item.getQuantity() * 100);
+                stripePaymentService.refundPayment(piFull, cents);
+            }
         }
 
-        // c) item statüsünü iptal olarak ata
+        // 3) Kalem statüsünü iptal olarak ata
+        item.setStatus(OrderItemStatus.CANCELLED);
+    }
+
+    // 4) Eğer tüm kalemler iptal edildiyse, siparişi de CANCELLED yap
+    boolean allCancelled = order.getItems().stream()
+        .allMatch(i -> i.getStatus() == OrderItemStatus.CANCELLED);
+    if (allCancelled) {
+        order.setStatus(OrderStatus.CANCELLED);
+    }
+
+    orderRepository.save(order);
+}
+@Transactional
+public void updateOrderItemStatus(Long orderId,
+                                  Long itemId,
+                                  String newStatus,
+                                  User seller) {
+    // 1) Siparişi al
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    // 2) Sadece bu satıcıya ait item’ı seç
+    OrderItem item = order.getItems().stream()
+        .filter(i -> i.getId().equals(itemId)
+                  && i.getSeller().getId().equals(seller.getId()))
+        .findFirst()
+        .orElseThrow(() -> new RuntimeException("Item not found or not authorized"));
+
+    // 3) newStatus string’ini enum’a çevir
+    OrderItemStatus statusEnum;
+    try {
+        statusEnum = OrderItemStatus.valueOf(newStatus);
+    } catch (IllegalArgumentException e) {
+        throw new RuntimeException("Invalid status: " + newStatus);
+    }
+
+    // 4) Eğer zaten iade veya iptal edilmişse hata fırlat
+    if (item.getStatus() == OrderItemStatus.REFUNDED
+     || item.getStatus() == OrderItemStatus.CANCELLED) {
+        throw new RuntimeException("Bu ürün zaten iade veya iptal edilmiş.");
+    }
+
+    // 5) CANCELLED statüsüne geçiş
+    if (statusEnum == OrderItemStatus.CANCELLED) {
+        // a) Stoğu geri yükle
+        if (item.getVariant() != null) {
+            ProductVariant v = item.getVariant();
+            v.setStock(v.getStock() + item.getQuantity());
+            variantRepository.save(v);
+        } else {
+            Product p = item.getProduct();
+            p.setStockQuantity(p.getStockQuantity() + item.getQuantity());
+            productRepository.save(p);
+        }
+
+        // b) Refund: tek kalemse full, değilse partial
+        String piFull = order.getPaymentIntentId();
+        if (piFull != null && piFull.startsWith("pi_")) {
+            // tek kalem mi?
+            boolean singleItemOrder = order.getItems().size() == 1;
+
+            if (singleItemOrder) {
+                // tam iade
+                System.out.println("tek iade");
+                stripePaymentService.refundPayment(piFull);
+
+            } else {
+                // kısmi iade: bu item tutarı kadar
+                double unitPrice = item.getVariant() != null
+                    ? item.getVariant().getPrice()
+                    : item.getProduct().getPrice();
+                long cents = Math.round(unitPrice * item.getQuantity() * 100);
+                   System.out.println("tek iade");
+                stripePaymentService.refundPayment(piFull, cents);
+            }
+        }
+
+        // c) item statüsünü iptal yap
         item.setStatus(OrderItemStatus.CANCELLED);
 
     } else {
@@ -329,7 +356,7 @@ public void updateOrderItemStatus(Long orderId,
         item.setStatus(statusEnum);
     }
 
-    // 7) Eğer tüm item’lar aynı statüye geldiyse, order.status’u da güncelle
+    // 7) Eğer siparişteki tüm item’lar aynı statüdeyse, order.status’u da eşitle
     boolean allMatch = order.getItems().stream()
         .map(OrderItem::getStatus)
         .allMatch(s -> s == item.getStatus());
@@ -337,9 +364,7 @@ public void updateOrderItemStatus(Long orderId,
     if (allMatch) {
         try {
             order.setStatus(OrderStatus.valueOf(item.getStatus().name()));
-        } catch (IllegalArgumentException ignored) {
-            // eğer birebir eşleşen OrderStatus yoksa atla
-        }
+        } catch (IllegalArgumentException ignored) { }
     }
 
     // 8) Kaydet
