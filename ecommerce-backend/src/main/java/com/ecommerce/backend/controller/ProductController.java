@@ -16,8 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
 import com.ecommerce.backend.service.FileStorageService;
 import com.ecommerce.backend.service.AnalyticsService;
-import com.ecommerce.backend.service.CustomUserDetailsService;// Import the FileStorageService class
-       
+
 import com.ecommerce.backend.entity.User;
 import java.util.List;
 import java.util.ArrayList;

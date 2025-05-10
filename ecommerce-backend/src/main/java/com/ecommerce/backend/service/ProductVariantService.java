@@ -1,10 +1,7 @@
 package com.ecommerce.backend.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
-import com.ecommerce.backend.dto.ProductResponse;
-import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.entity.ProductVariant;
 import com.ecommerce.backend.repository.ProductVariantRepository;

@@ -16,28 +16,20 @@ import com.ecommerce.backend.entity.OrderStatus;
 import com.ecommerce.backend.repository.OrderRepository;
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.Date;
-import java.time.Instant;
+
 import com.ecommerce.backend.repository.ProductRepository;
 import com.ecommerce.backend.repository.ProductVariantRepository;
 import com.ecommerce.backend.exception.OutOfStockException;
-import com.ecommerce.backend.exception.TokenRefreshException;
 import com.ecommerce.backend.exception.UserNotActiveException;
-import com.ecommerce.backend.service.StripePaymentService;
+
 
 @Service
 public class OrderService {

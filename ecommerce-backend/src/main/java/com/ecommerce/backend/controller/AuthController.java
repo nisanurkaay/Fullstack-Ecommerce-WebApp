@@ -5,11 +5,9 @@ import com.ecommerce.backend.dto.RegisterRequest;
 import com.ecommerce.backend.dto.TokenRefreshRequest;
 import com.ecommerce.backend.dto.TokenRefreshResponse;
 import com.ecommerce.backend.entity.User;
-import com.ecommerce.backend.exception.TokenRefreshException;
 import com.ecommerce.backend.security.JwtUtils;
 import com.ecommerce.backend.service.AuthService;
 import com.ecommerce.backend.service.RefreshTokenService;
-import com.ecommerce.backend.entity.RefreshToken;
 
 import jakarta.servlet.http.HttpServletRequest;
 

@@ -50,14 +50,17 @@ public class SecurityConfig {
     .requestMatchers("/api/auth/**").permitAll() // ✅ GİRİŞ ve KAYIT burada
     .requestMatchers("/uploads/**").permitAll()
     .requestMatchers("/api/orders/**").authenticated()
-    
+       .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll() 
+        .requestMatchers(HttpMethod.GET, "/api/reviews/product/**").permitAll()
     .requestMatchers(HttpMethod.GET, "/api/orders").authenticated() // ✅ BU ÖNEMLİ
     .requestMatchers(HttpMethod.POST, "/api/orders").authenticated()
     .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
-    .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll() 
+ 
+    
     .requestMatchers("/api/products/*/variant-id").permitAll()
     .requestMatchers("/api/products/colors").permitAll()
     .requestMatchers("/api/products/filter").permitAll()
+    
    // Korunan endpointler
     .requestMatchers("/api/products/pending").hasRole("ADMIN")
    

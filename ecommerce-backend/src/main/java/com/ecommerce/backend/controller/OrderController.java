@@ -1,27 +1,19 @@
 package com.ecommerce.backend.controller;
 
 
-import com.ecommerce.backend.dto.ProductRequest;
-import com.ecommerce.backend.dto.ProductResponse;
-import com.ecommerce.backend.dto.ProductVariantRequest;
+
 import com.ecommerce.backend.dto.TopSellerDto;
-import com.ecommerce.backend.entity.ProductStatus;
-import com.ecommerce.backend.service.ProductService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.http.MediaType;
+
 
 import com.ecommerce.backend.service.AnalyticsService;
-import com.ecommerce.backend.service.FileStorageService; // Import the FileStorageService class
+// Import the FileStorageService class
 
 import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.ecommerce.backend.entity.User;

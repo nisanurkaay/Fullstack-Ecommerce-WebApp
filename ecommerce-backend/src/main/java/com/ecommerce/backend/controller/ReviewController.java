@@ -6,6 +6,9 @@ import com.ecommerce.backend.entity.Review;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.repository.UserRepository;
 import com.ecommerce.backend.service.ReviewService;
+
+import jakarta.annotation.security.PermitAll;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,6 +35,7 @@ public class ReviewController {
     }
 
     @GetMapping("/product/{productId}")
+    @PermitAll
     public ResponseEntity<List<ReviewResponse>> getReviewsForProduct(@PathVariable Long productId) {
         return ResponseEntity.ok(reviewService.getReviewsByProductId(productId));
     }
