@@ -3,6 +3,7 @@ package com.ecommerce.backend.controller;
 import com.ecommerce.backend.dto.CategoryRequest;
 import com.ecommerce.backend.dto.CategoryResponse;
 import com.ecommerce.backend.dto.ProductResponse;
+import com.ecommerce.backend.entity.Role;
 import com.ecommerce.backend.entity.User;
 import com.ecommerce.backend.service.AnalyticsService;
 import com.ecommerce.backend.service.CategoryService;
@@ -57,23 +58,26 @@ public class CategoryController {
 public ResponseEntity<List<CategoryResponse>> getTopCategoriesByProductCount() {
     return ResponseEntity.ok(categoryService.getTopCategoriesByProductCount());
 }
-    @GetMapping("/top-sales")
-    public ResponseEntity<List<Map<String,Object>>> getTopCategories(
-            @AuthenticationPrincipal UserDetails principal,
+ @GetMapping("/top-sales")
+    @PreAuthorize("hasAnyRole('ADMIN','SELLER')")
+    public ResponseEntity<List<Map<String,Object>>> getTopSales(
+            @AuthenticationPrincipal UserDetails principal,      // JWT’den gelen user
             @RequestParam(defaultValue = "5") int topN) {
 
-        // 1) Giriş yapmış kullanıcının entity’sini al
-        User user = userRepository.findByEmail(principal.getUsername())
-                  .orElseThrow(() -> new RuntimeException("User not found"));
+        // 1) Giriş yapan kullanıcının email’ini al
+        String email = principal.getUsername();
 
-        boolean isAdmin = user.getRole().name().equals("ADMIN");
+        // 2) User entity’sini çek
+        User user = userRepository.findByEmail(email)
+                   .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 2) AnalyticsService’den doğru metodu çağır
+        boolean isAdmin = user.getRole() == Role.ROLE_ADMIN;   // veya .name().equals("ADMIN")
+
+        // 3) Rolüne göre servis metodunu seç
         List<Map<String,Object>> result = isAdmin
             ? analyticsService.getTopCategoriesAdmin(topN)
             : analyticsService.getTopCategoriesSeller(user.getId(), topN);
 
-        // 3) JSON olarak döndür
         return ResponseEntity.ok(result);
     }
 

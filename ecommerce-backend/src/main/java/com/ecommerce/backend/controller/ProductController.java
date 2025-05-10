@@ -268,7 +268,7 @@ public ResponseEntity<Long> getVariantIdByColorAndSize(
         Long sellerId = user.getId();
         boolean isAdmin = user.getRole().name().equals("ADMIN");
 
-        int threshold = 10;  // isteğe göre query param’a alabilirsiniz
+        int threshold = 5;  // isteğe göre query param’a alabilirsiniz
 
         long count = isAdmin
             ? analyticsService.getLowStockCountAdmin(threshold)

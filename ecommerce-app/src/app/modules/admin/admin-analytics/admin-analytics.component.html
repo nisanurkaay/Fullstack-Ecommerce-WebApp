@@ -1,9 +1,32 @@
 <!-- src/app/admin/analytics/admin-analytics.component.html -->
-<div class="p-6 space-y-4">
-  <h2 class="text-2xl font-semibold">Toplam Revenue: {{ totalRevenue | currency }}</h2>
+<div class="p-6 space-y-6">
 
+  <!-- KPI Kartları -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <!-- Total Revenue -->
+    <div class="bg-white shadow rounded-lg p-4">
+      <span class="text-gray-500">Total Revenue</span>
+      <div class="mt-2 text-3xl font-semibold">{{ totalRevenue | currency }}</div>
+    </div>
+
+    <!-- Top Categories -->
+    <div class="bg-white shadow rounded-lg p-4">
+      <span class="text-gray-500">Top Categories</span>
+      <ul class="mt-2 list-disc list-inside space-y-1">
+        <li *ngFor="let c of topCategories">
+          {{ c.category }} ({{ c.sold }})
+        </li>
+        <!-- Eğer topCategories boşsa bir mesaj göster: -->
+        <li *ngIf="!topCategories.length" class="text-sm text-gray-400">
+          No category data
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Mevcut grafik kartları -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Ürün Grafiği -->
+    <!-- En Çok Satılan Ürünler -->
     <div class="bg-white shadow rounded-lg p-4 flex flex-col">
       <h3 class="text-lg font-medium mb-2">En Çok Satılan Ürünler</h3>
       <div class="flex-1 relative" style="height:300px">
@@ -16,7 +39,7 @@
       </div>
     </div>
 
-    <!-- Satıcı Grafiği -->
+    <!-- En Çok Gelir Getiren Satıcılar -->
     <div class="bg-white shadow rounded-lg p-4 flex flex-col">
       <h3 class="text-lg font-medium mb-2">En Çok Gelir Getiren Satıcılar</h3>
       <div class="flex-1 relative" style="height:300px">
@@ -29,4 +52,6 @@
       </div>
     </div>
   </div>
+
+
 </div>

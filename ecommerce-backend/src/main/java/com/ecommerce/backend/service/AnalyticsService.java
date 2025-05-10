@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import com.ecommerce.backend.dto.TopSellerDto;
 import com.ecommerce.backend.repository.*;;
 @Service
 public class AnalyticsService {
@@ -42,23 +43,38 @@ public class AnalyticsService {
         return placed == 0 ? 0 : (double) refunded / placed * 100;
     }
 
-    // 9) Top Categories
-    public List<Map<String,Object>> getTopCategoriesAdmin(int topN) {
+     public List<Map<String,Object>> getTopCategoriesAdmin(int topN) {
         return productRepo.findCategorySales(PageRequest.of(0, topN))
-                          .stream()
-                          .map(arr -> Map.of(
-                            "category", arr[0],
-                            "sold", ((Number)arr[1]).longValue()
-                          ))
-                          .toList();
+              .stream()
+              .map(arr -> Map.of(
+                  "category", arr[0],
+                  "sold",     ((Number)arr[1]).longValue()
+              ))
+              .toList();
     }
+
+    // Seller: sadece kendi ürünlerinin kategorilerindeki satışları getir
     public List<Map<String,Object>> getTopCategoriesSeller(Long sellerId, int topN) {
-        return productRepo.findCategorySalesBySeller(sellerId, PageRequest.of(0, topN))
-                          .stream()
-                          .map(arr -> Map.of(
-                            "category", arr[0],
-                            "sold", ((Number)arr[1]).longValue()
-                          ))
-                          .toList();
+        return productRepo.findCategorySalesBySeller(
+                   sellerId, PageRequest.of(0, topN))
+              .stream()
+              .map(arr -> Map.of(
+                  "category", arr[0],
+                  "sold",     ((Number)arr[1]).longValue()
+              ))
+              .toList();
     }
+    
+    
+    public List<TopSellerDto> getTopSellersAdmin(int topN) {
+        return itemRepo.findSellerRevenue(PageRequest.of(0, topN))
+            .stream()
+            .map(arr -> {
+                Long sellerId = ((Number)arr[0]).longValue();
+                Double revenue = ((Number)arr[1]).doubleValue();
+                return new TopSellerDto(sellerId, null, revenue);
+            })
+            .toList();
+    }
+
 }

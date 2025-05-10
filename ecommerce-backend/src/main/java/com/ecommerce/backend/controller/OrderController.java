@@ -4,6 +4,7 @@ package com.ecommerce.backend.controller;
 import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.ProductResponse;
 import com.ecommerce.backend.dto.ProductVariantRequest;
+import com.ecommerce.backend.dto.TopSellerDto;
 import com.ecommerce.backend.entity.ProductStatus;
 import com.ecommerce.backend.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,6 +19,7 @@ import com.ecommerce.backend.service.AnalyticsService;
 import com.ecommerce.backend.service.FileStorageService; // Import the FileStorageService class
 
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -143,7 +145,7 @@ public ResponseEntity<String> updateOrderItemStatus(
 
     return ResponseEntity.ok("Order item status updated");
 }
-@GetMapping("/return-rate")
+   @GetMapping("/return-rate")
     public ResponseEntity<Double> getReturnRate(
             @AuthenticationPrincipal UserDetails principal
     ) {
@@ -158,4 +160,27 @@ public ResponseEntity<String> updateOrderItemStatus(
         return ResponseEntity.ok(rate);
     }
 
+    /**
+     *  Top 5 sellers (admin only):
+     *  /api/orders/top-sellers?topN=5
+     */
+   @GetMapping("/top-sellers")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<TopSellerDto>> getTopSellers(
+            @RequestParam(defaultValue = "5") int topN) {
+
+        List<TopSellerDto> raw = analyticsService.getTopSellersAdmin(topN);
+
+        List<TopSellerDto> enriched = raw.stream().map(dto -> {
+            User u = userRepository.findById(dto.sellerId())
+                      .orElseThrow(() -> new RuntimeException("Seller not found"));
+            return new TopSellerDto(
+                dto.sellerId(),
+                u.getName(),         // veya u.getUsername()
+                dto.revenue()
+            );
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(enriched);
+    }
 }
