@@ -8,7 +8,6 @@ import com.stripe.param.PaymentIntentCreateParams;
 import com.stripe.param.RefundCreateParams;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 @Service
 public class StripePaymentService {
 
@@ -19,35 +18,50 @@ public class StripePaymentService {
         Stripe.apiKey = stripeSecretKey;
 
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-                .setAmount(amount)
-                .setCurrency(currency)
-                .build();
+            .setAmount(amount)
+            .setCurrency(currency)
+            .build();
 
         try {
             return PaymentIntent.create(params);
         } catch (StripeException e) {
-            throw new RuntimeException("PaymentIntent oluşturulamadı: " + e.getMessage());
+            throw new RuntimeException("PaymentIntent oluşturulamadı: " + e.getMessage(), e);
         }
     }
 
-    public void refundPayment(String paymentIntentId) {
+    /** Tam iade (kuruş girmeye gerek yok) */
+    public Refund refundPayment(String paymentIntentId) {
         Stripe.apiKey = stripeSecretKey;
-        validateIntentId(paymentIntentId);
+        String pi = cleanIntentId(paymentIntentId);
 
         try {
-            Refund.create(RefundCreateParams.builder()
-                    .setPaymentIntent(paymentIntentId)
-                    .build());
+            RefundCreateParams params = RefundCreateParams.builder()
+                .setPaymentIntent(pi)
+                .build();
+            return Refund.create(params);
         } catch (StripeException e) {
-            throw new RuntimeException("Refund işlemi başarısız: " + e.getMessage());
+            throw new RuntimeException("Stripe full refund failed: " + e.getMessage(), e);
         }
     }
 
-   
+  /** Kısmi iade: amountCents kuruş cinsinden */
+  public Refund refundPayment(String paymentIntentId, long amountCents) {
+    Stripe.apiKey = stripeSecretKey;
+    String pi = cleanIntentId(paymentIntentId);
 
-    private void validateIntentId(String id) {
-        if (id.contains("_secret_")) {
-            throw new RuntimeException("Geçersiz PaymentIntent ID. Lütfen sadece pi_... formatındaki ID gönderin.");
-        }
+    try {
+      RefundCreateParams params = RefundCreateParams.builder()
+          .setPaymentIntent(pi)
+          .setAmount(amountCents)
+          .build();
+      return Refund.create(params);
+    } catch (StripeException e) {
+      throw new RuntimeException("Stripe partial refund failed: " + e.getMessage(), e);
     }
+  }
+
+  private String cleanIntentId(String full) {
+    int idx = full.indexOf("_secret_");
+    return idx>0 ? full.substring(0,idx) : full;
+  }
 }

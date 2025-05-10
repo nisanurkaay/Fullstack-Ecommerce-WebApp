@@ -1,7 +1,11 @@
-<div *ngFor="let order of orders" class="border rounded-lg p-6 mb-6 shadow-sm bg-white">
+<div *ngFor="let order of orders"
+     class="border rounded-lg p-6 mb-6 shadow-sm bg-white">
+
   <div class="mb-4">
     <h3 class="text-lg font-semibold flex justify-between items-center">
-      <span>🧾 Sipariş #{{ order.id }} - <span class="uppercase text-blue-600">{{ order.status }}</span></span>
+      <span>🧾 Sipariş #{{ order.id }} —
+        <span class="uppercase text-blue-600">{{ order.status }}</span>
+      </span>
       <button
         (click)="refundOrder(order.paymentIntentId)"
         [disabled]="order.status === 'REFUNDED' || order.status === 'CANCELLED'"
@@ -10,19 +14,52 @@
         ❌ Siparişi İade Et
       </button>
     </h3>
-    <p class="text-sm text-gray-600">📅 Tarih: {{ order.createdAt | date:'short' }}</p>
-    <p class="text-sm text-gray-600">💰 Toplam: {{ order.totalAmount | currency:'TRY' }}</p>
+    <p class="text-sm text-gray-600">
+      📅 Tarih: {{ order.createdAt | date:'short' }}
+    </p>
+    <p class="text-sm text-gray-600">
+      💰 Toplam: {{ order.totalAmount | currency:'TRY' }}
+    </p>
   </div>
 
-  <div *ngFor="let item of order.items" class="border rounded-md p-4 my-4 bg-gray-50 flex gap-4">
-    <img [src]="item.productImage" alt="Product Image" class="w-24 h-24 object-cover rounded-md border" />
-    <div class="flex-1">
-      <p class="font-semibold text-gray-800">{{ item.productName }}</p>
-      <p class="text-sm text-gray-600">Miktar: {{ item.quantity }}</p>
-      <p class="text-sm text-gray-600">Fiyat: {{ item.price | currency:'TRY' }}</p>
-      <p class="text-sm text-gray-600">Durum:
-        <span class="font-medium text-blue-700">{{ item.status }}</span>
-      </p>
+  <div *ngFor="let item of order.items"
+       class="border p-4 rounded mb-4 flex items-center">
+    <img
+      [src]="item.productImage"
+      alt="{{ item.productName }}"
+      class="w-20 h-20 object-cover rounded"
+    />
+    <div class="ml-4 flex-1">
+      <h4 class="font-semibold">{{ item.productName }}</h4>
+      <p>Miktar: {{ item.quantity }}</p>
+      <p>Fiyat: {{ item.price | currency:'TRY' }}</p>
+      <p>Durum: {{ item.status }}</p>
+    </div>
+    <div class="flex space-x-2">
+      <button
+        (click)="cancelItem(order.id, item.id)"
+        [disabled]="item.status !== 'PLACED'"
+        class="px-3 py-1 bg-yellow-500 rounded text-white hover:bg-yellow-600 disabled:opacity-50"
+      >
+        İptal Et
+      </button>
+
+      <!-- use a template ref instead of $event.target -->
+ <select
+  #statusSelect
+  (change)="
+    statusSelect.value === 'CANCELLED'
+      ? cancelItem(order.id, item.id)
+      : updateItemStatus(order.id, item.id, statusSelect.value)
+  "
+  [value]="item.status"
+  class="border rounded px-2 py-1"
+>
+  <option *ngFor="let s of statusOptions" [value]="s">
+    {{ s }}
+  </option>
+</select>
+
     </div>
   </div>
 </div>

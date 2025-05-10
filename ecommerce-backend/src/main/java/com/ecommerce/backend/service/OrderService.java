@@ -145,35 +145,62 @@ public Order placeOrder(User user, OrderRequest request) {
     
         return filtered;
     }
+public OrderResponse mapToSellerResponse(Order order, User seller) {
+    OrderResponse resp = new OrderResponse();
+    resp.setId(order.getId());
+    resp.setCreatedAt(order.getCreatedAt());
+    resp.setTotalAmount(order.getTotalAmount());
+    resp.setStatus(order.getStatus().name());
+    resp.setPaymentIntentId(order.getPaymentIntentId());
 
-    public void cancelOrderBySeller(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-            .orElseThrow(() -> new RuntimeException("Order not found"));
-    
-        if (order.getStatus() != OrderStatus.CANCELLED) {
-            order.setStatus(OrderStatus.CANCELLED);
-    
-            // Stok iadesi
-            for (OrderItem item : order.getItems()) {
-                if (item.getVariant() != null) {
-                    ProductVariant variant = item.getVariant();
-                    variant.setStock(variant.getStock() + item.getQuantity());
-                    variantRepository.save(variant);
-                } else {
-                    Product product = item.getProduct();
-                    product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-                    productRepository.save(product);
-                }
-    
-                item.setStatus(OrderItemStatus.CANCELLED);
-            }
-    
-            // Refund
-            stripePaymentService.refundPayment(order.getPaymentIntentId()); // ❗ Bu tam refund
-            orderRepository.save(order);
-        }
+    // **only** map the items belonging to this seller:
+    List<OrderItemResponse> itemResponses = order.getItems().stream()
+        .filter(item -> item.getSeller().getId().equals(seller.getId()))
+        .map(item -> {
+            OrderItemResponse ir = new OrderItemResponse();
+            ir.setId(item.getId());
+            ir.setProductId(item.getProduct().getId());
+            ir.setProductName(item.getProduct().getName());
+            ir.setProductImage(
+              item.getProduct().getImageUrls().isEmpty() ? null
+                  : item.getProduct().getImageUrls().get(0)
+            );
+            ir.setQuantity(item.getQuantity());
+            ir.setPrice(item.getVariant()!=null
+                ? item.getVariant().getPrice()
+                : item.getProduct().getPrice()
+            );
+            ir.setVariantId(item.getVariant()!=null
+                ? item.getVariant().getId()
+                : null
+            );
+            ir.setStatus(item.getStatus().name());
+            return ir;
+        })
+        .toList();
+
+    resp.setItems(itemResponses);
+    return resp;
+}
+
+  @Transactional
+public void cancelOrderBySeller(Long orderId, User seller) {
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    // … stok iadesi, item.setStatus(OrderItemStatus.CANCELLED) gibi işlemler …
+
+    // **Stripe tam iade**  
+    String pi = order.getPaymentIntentId();
+    if (pi != null && pi.startsWith("pi_")) {
+        stripePaymentService.refundPayment(pi);
     }
-    
+
+    order.setStatus(OrderStatus.CANCELLED);
+    orderRepository.save(order);
+}
+
+
 public OrderResponse mapToResponse(Order order) {
     OrderResponse response = new OrderResponse();
     response.setId(order.getId());
@@ -204,7 +231,6 @@ public OrderResponse mapToResponse(Order order) {
     response.setItems(itemResponses);
     return response;
 }
-
 @Transactional
 public void cancelItemBySeller(Long orderId, Long itemId, User seller) {
     Order order = orderRepository.findById(orderId)
@@ -213,35 +239,28 @@ public void cancelItemBySeller(Long orderId, Long itemId, User seller) {
     OrderItem item = order.getItems().stream()
         .filter(i -> i.getId().equals(itemId) && i.getSeller().getId().equals(seller.getId()))
         .findFirst()
-        .orElseThrow(() -> new RuntimeException("Item not found or not your product"));
+        .orElseThrow(() -> new RuntimeException("Item not found or not yours"));
 
-    if (item.getStatus() == OrderItemStatus.CANCELLED) return;
+    if (item.getStatus() != OrderItemStatus.CANCELLED) {
+        // stok iadesi…
+        item.setStatus(OrderItemStatus.CANCELLED);
 
-    item.setStatus(OrderItemStatus.CANCELLED);
-
-    // Stok iadesi
-    if (item.getVariant() != null) {
-        ProductVariant variant = item.getVariant();
-        variant.setStock(variant.getStock() + item.getQuantity());
-        variantRepository.save(variant);
-    } else {
-        Product product = item.getProduct();
-        product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-        productRepository.save(product);
+        // ➡️ Kısmi iade:
+        String piFull = order.getPaymentIntentId();
+        if (piFull != null && piFull.startsWith("pi_")) {
+            // örneğin 42.99 TL → 4299 kuruş
+            long cents = Math.round(
+                (item.getVariant() != null
+                    ? item.getVariant().getPrice()
+                    : item.getProduct().getPrice())
+                * item.getQuantity() * 100
+            );
+            stripePaymentService.refundPayment(piFull, cents);
+        }
     }
 
-    // Refund (kuruş cinsinden)
-    long refundAmount = (long) ((item.getVariant() != null
-            ? item.getVariant().getPrice()
-            : item.getProduct().getPrice()) * item.getQuantity() * 100);
-
-            stripePaymentService.refundPayment(order.getPaymentIntentId());
-
-
-    // Tüm ürünler iptal olduysa Order da CANCELLED
     boolean allCancelled = order.getItems().stream()
         .allMatch(i -> i.getStatus() == OrderItemStatus.CANCELLED);
-
     if (allCancelled) {
         order.setStatus(OrderStatus.CANCELLED);
     }
@@ -250,55 +269,67 @@ public void cancelItemBySeller(Long orderId, Long itemId, User seller) {
 }
 
 @Transactional
-public void updateOrderItemStatus(Long orderId, Long itemId, String newStatus, User seller) {
+public void updateOrderItemStatus(Long orderId,
+                                  Long itemId,
+                                  String newStatus,
+                                  User seller) {
+    // 1) Siparişi al
     Order order = orderRepository.findById(orderId)
         .orElseThrow(() -> new RuntimeException("Order not found"));
 
+    // 2) Sadece bu satıcıya ait kalemi al
     OrderItem item = order.getItems().stream()
-        .filter(i -> i.getId().equals(itemId) && i.getSeller().getId().equals(seller.getId()))
+        .filter(i -> i.getId().equals(itemId)
+                  && i.getSeller().getId().equals(seller.getId()))
         .findFirst()
         .orElseThrow(() -> new RuntimeException("Item not found or not authorized"));
 
+    // 3) Geçerli enum’a çevir
     OrderItemStatus statusEnum;
     try {
         statusEnum = OrderItemStatus.valueOf(newStatus);
     } catch (IllegalArgumentException e) {
-        throw new RuntimeException("Invalid status");
+        throw new RuntimeException("Invalid status: " + newStatus);
     }
 
-    if (item.getStatus() == OrderItemStatus.REFUNDED || item.getStatus() == OrderItemStatus.CANCELLED) {
+    // 4) Zaten iade veya iptal edilmişse engelle
+    if (item.getStatus() == OrderItemStatus.REFUNDED
+     || item.getStatus() == OrderItemStatus.CANCELLED) {
         throw new RuntimeException("Bu ürün zaten iade veya iptal edilmiş.");
     }
 
+    // 5) CANCELLED seçildiyse restock + kısmi refund yap
     if (statusEnum == OrderItemStatus.CANCELLED) {
+        // a) stok iadesi
+        if (item.getVariant() != null) {
+            ProductVariant v = item.getVariant();
+            v.setStock(v.getStock() + item.getQuantity());
+            variantRepository.save(v);
+        } else {
+            Product p = item.getProduct();
+            p.setStockQuantity(p.getStockQuantity() + item.getQuantity());
+            productRepository.save(p);
+        }
+
+        // b) kısmi refund (kuruş cinsinden)
+        String piFull = order.getPaymentIntentId();
+        if (piFull != null && piFull.startsWith("pi_")) {
+            double unitPrice = (item.getVariant() != null
+                                ? item.getVariant().getPrice()
+                                : item.getProduct().getPrice());
+            long cents = Math.round(unitPrice * item.getQuantity() * 100);
+            stripePaymentService.refundPayment(piFull, cents);
+        }
+
+        // c) item statüsünü iptal olarak ata
         item.setStatus(OrderItemStatus.CANCELLED);
 
-        // Stok iadesi
-        if (item.getVariant() != null) {
-            ProductVariant variant = item.getVariant();
-            variant.setStock(variant.getStock() + item.getQuantity());
-            variantRepository.save(variant);
-        } else {
-            Product product = item.getProduct();
-            product.setStockQuantity(product.getStockQuantity() + item.getQuantity());
-            productRepository.save(product);
-        }
-
-        // Refund
-        String intentId = order.getPaymentIntentId();
-        if (intentId != null && intentId.startsWith("pi_")) {
-            double refundAmount = (item.getVariant() != null
-                    ? item.getVariant().getPrice()
-                    : item.getProduct().getPrice()) * item.getQuantity();
-                    stripePaymentService.refundPayment(order.getPaymentIntentId());
-
-        }
     } else {
-        // 👇👇👇 Diğer statüler için status değiştir
+        // 6) Diğer statülerde sadece güncelle
         item.setStatus(statusEnum);
     }
 
-    // Siparişin tüm item'ları aynı statüde mi?
+    // 7) Eğer tüm item’lar aynı statüye geldiyse, order.status’u da güncelle
     boolean allMatch = order.getItems().stream()
         .map(OrderItem::getStatus)
         .allMatch(s -> s == item.getStatus());
@@ -306,9 +337,12 @@ public void updateOrderItemStatus(Long orderId, Long itemId, String newStatus, U
     if (allMatch) {
         try {
             order.setStatus(OrderStatus.valueOf(item.getStatus().name()));
-        } catch (IllegalArgumentException ignored) {}
+        } catch (IllegalArgumentException ignored) {
+            // eğer birebir eşleşen OrderStatus yoksa atla
+        }
     }
 
+    // 8) Kaydet
     orderRepository.save(order);
 }
 

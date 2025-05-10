@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CartItem } from '../models/cart-item.model';
+import { HttpHeaders } from '@angular/common/http';
 
 export interface OrderItemRequest {
   productId: number;
@@ -53,12 +54,24 @@ export class OrderService {
     const params = new HttpParams().set('status', newStatus);
     return this.http.put(`${this.apiUrl}/${orderId}/items/${itemId}/status`, {}, { params, responseType: 'text' });
   }
-  cancelItemBySeller(orderId: number, itemId: number): Observable<string> {
-    return this.http.put<string>(`${this.apiUrl}/${orderId}/items/${itemId}/cancel`, {});
-  }
+cancelItemBySeller(orderId: number, itemId: number): Observable<string> {
+  const token = localStorage.getItem('jwt');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.put(
+    `${this.apiUrl}/${orderId}/items/${itemId}/cancel`,
+    {},
+    { headers, responseType: 'text' }
+  );
+}
 
 
   getAllOrders(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}`); // Admin ve seller için de aynı endpoint
   }
+cancelAndRefundOrder(orderId: number): Observable<string> {
+  return this.http.put<string>(
+    `${this.apiUrl}/${orderId}/cancel-by-seller`, {}
+  );
+}
+
 }

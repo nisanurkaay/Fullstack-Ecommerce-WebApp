@@ -53,45 +53,70 @@ public ResponseEntity<?> createOrder(@RequestBody OrderRequest request,
 
     return ResponseEntity.ok(response);
 }
-@GetMapping
-public ResponseEntity<List<OrderResponse>> getOrders(@AuthenticationPrincipal UserDetails userDetails) {
-    User user = userRepository.findByEmail(userDetails.getUsername())
-            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+   @GetMapping
+    public ResponseEntity<List<OrderResponse>> getOrders(
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-    List<Order> orders;
-    if (user.getRole().name().equals("ROLE_ADMIN")) {
-        orders = orderService.getAllOrders();
-    } else if (user.getRole().name().equals("ROLE_SELLER")) {
-        orders = orderService.getOrdersForSeller(user);
-    } else {
-        orders = orderService.getOrdersByUser(user);
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        List<OrderResponse> responseList;
+
+        switch (user.getRole()) {
+            case ROLE_ADMIN:
+                // everyone sees every order
+                responseList = orderService.getAllOrders().stream()
+                    .map(orderService::mapToResponse)
+                    .toList();
+                break;
+
+            case ROLE_SELLER:
+                // only orders that include this seller’s products,
+                // and only map the items sold by them
+                responseList = orderService.getOrdersForSeller(user).stream()
+                    .map(order -> orderService.mapToSellerResponse(order, user))
+                    .toList();
+                break;
+
+            default:
+                // buyer: only their own orders
+                responseList = orderService.getOrdersByUser(user).stream()
+                    .map(orderService::mapToResponse)
+                    .toList();
+        }
+
+        return ResponseEntity.ok(responseList);
     }
 
-    // ❗️ DTO’ya mapleyerek döndür
-    List<OrderResponse> responseList = orders.stream()
-        .map(orderService::mapToResponse)
-        .toList();
 
-    return ResponseEntity.ok(responseList);
-}
 
-    @PutMapping("/{orderId}/cancel-by-seller")
-    @PreAuthorize("hasRole('SELLER')")
-    public ResponseEntity<String> cancelOrderBySeller(@PathVariable Long orderId) {
-        orderService.cancelOrderBySeller(orderId);
-        return ResponseEntity.ok("Order has been cancelled and refunded (if paid).");
-    }
-    @PutMapping("/{orderId}/items/{itemId}/cancel")
+ @PutMapping("/{orderId}/cancel-by-seller")
 @PreAuthorize("hasRole('SELLER')")
-public ResponseEntity<String> cancelItemBySeller(@PathVariable Long orderId,
-                                                 @PathVariable Long itemId,
-                                                 @AuthenticationPrincipal UserDetails userDetails) {
-    User seller = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new UsernameNotFoundException("Seller not found"));
-
-    orderService.cancelItemBySeller(orderId, itemId, seller);
-    return ResponseEntity.ok("Item cancelled and refunded if paid.");
+public ResponseEntity<String> cancelOrderBySeller(
+    @PathVariable Long orderId,
+    @AuthenticationPrincipal UserDetails ud
+) {
+    User seller = userRepository.findByEmail(ud.getUsername())
+        .orElseThrow(() -> new RuntimeException("Seller not found"));
+    orderService.cancelOrderBySeller(orderId, seller);
+    return ResponseEntity.ok("Sipariş iptal edildi ve ödeme iadesi gerçekleştirildi.");
 }
+
+@PutMapping("/{orderId}/items/{itemId}/cancel")
+@PreAuthorize("hasRole('SELLER')")
+public ResponseEntity<String> cancelItemBySeller(
+    @PathVariable Long orderId,
+    @PathVariable Long itemId,
+    @AuthenticationPrincipal UserDetails ud
+) {
+    User seller = userRepository.findByEmail(ud.getUsername())
+        .orElseThrow(() -> new RuntimeException("Seller not found"));
+    orderService.cancelItemBySeller(orderId, itemId, seller);
+    return ResponseEntity.ok("Ürün iptal edildi ve ödeme iadesi gerçekleştirildi.");
+}
+
+
+
 @PutMapping("/{orderId}/items/{itemId}/status")
 @PreAuthorize("hasRole('SELLER')")
 public ResponseEntity<String> updateOrderItemStatus(
