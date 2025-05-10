@@ -1,20 +1,32 @@
 <!-- src/app/admin/analytics/admin-analytics.component.html -->
-<h2>Toplam Revenue: {{ totalRevenue | currency }}</h2>
+<div class="p-6 space-y-4">
+  <h2 class="text-2xl font-semibold">Toplam Revenue: {{ totalRevenue | currency }}</h2>
 
-<div style="display:flex; gap:2rem">
-  <div style="width:45%">
-    <h3>En Çok Satılan Ürünler</h3>
-    <canvas baseChart
-            [data]="productChartData"
-            chartType="bar">
-    </canvas>
-  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Ürün Grafiği -->
+    <div class="bg-white shadow rounded-lg p-4 flex flex-col">
+      <h3 class="text-lg font-medium mb-2">En Çok Satılan Ürünler</h3>
+      <div class="flex-1 relative" style="height:300px">
+        <canvas
+          baseChart
+          [data]="productChartData"
+          [options]="chartOptions"
+          chartType="bar">
+        </canvas>
+      </div>
+    </div>
 
-  <div style="width:45%">
-    <h3>En Çok Gelir Getiren Satıcılar</h3>
-    <canvas baseChart
-            [data]="sellerChartData"
-            chartType="pie">
-    </canvas>
+    <!-- Satıcı Grafiği -->
+    <div class="bg-white shadow rounded-lg p-4 flex flex-col">
+      <h3 class="text-lg font-medium mb-2">En Çok Gelir Getiren Satıcılar</h3>
+      <div class="flex-1 relative" style="height:300px">
+        <canvas
+          baseChart
+          [data]="sellerChartData"
+          [options]="chartOptions"
+          chartType="pie">
+        </canvas>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,0 +1,36 @@
+/* İç kapsayıcıya padding ve kartlar arası boşluk */
+.p-6 {
+  padding: 1.5rem;
+}
+
+/* Chart wrapper: responsive boyutlandırma */
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 350px;  /* isteğe göre ayarla */
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+/* Utility’ler, Tailwind yoksa */
+/* Eğer Tailwind kullanıyorsan bu kısmı atlayabilirsin */
+.bg-white { background-color: #fff; }
+.shadow   { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.rounded-lg { border-radius: 0.5rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.text-gray-500 { color: #6B7280; }
+.text-2xl { font-size: 1.5rem; }
+.font-semibold { font-weight: 600; }
+.grid { display: grid; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.sm\:grid-cols-2 { @media (min-width: 640px) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.gap-4 { gap: 1rem; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.space-y-6 > :not(template) ~ :not(template) { margin-top: 1.5rem; }
+
+

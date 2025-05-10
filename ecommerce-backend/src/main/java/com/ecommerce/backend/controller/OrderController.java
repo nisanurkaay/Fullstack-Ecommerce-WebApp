@@ -13,6 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
+
+import com.ecommerce.backend.service.AnalyticsService;
 import com.ecommerce.backend.service.FileStorageService; // Import the FileStorageService class
 
 import java.util.List;
@@ -37,9 +39,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    @Autowired private OrderService orderService;
-    @Autowired private UserRepository userRepository;
+     private final OrderService orderService;
+    private final AnalyticsService analyticsService;
+    private final UserRepository userRepository;
 
+    @Autowired
+    public OrderController(OrderService orderService,
+                           AnalyticsService analyticsService,
+                           UserRepository userRepository) {
+        this.orderService     = orderService;
+        this.analyticsService = analyticsService;
+        this.userRepository   = userRepository;
+    }
  @PostMapping
 public ResponseEntity<?> createOrder(@RequestBody OrderRequest request,
                                      @AuthenticationPrincipal UserDetails userDetails) {
@@ -132,6 +143,19 @@ public ResponseEntity<String> updateOrderItemStatus(
 
     return ResponseEntity.ok("Order item status updated");
 }
+@GetMapping("/return-rate")
+    public ResponseEntity<Double> getReturnRate(
+            @AuthenticationPrincipal UserDetails principal
+    ) {
+        User user = userRepository.findByEmail(principal.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        boolean isAdmin = user.getRole().name().equals("ADMIN");
+        double rate = isAdmin
+            ? analyticsService.getReturnRateAdmin()
+            : analyticsService.getReturnRateSeller(user.getId());
+
+        return ResponseEntity.ok(rate);
+    }
 
 }

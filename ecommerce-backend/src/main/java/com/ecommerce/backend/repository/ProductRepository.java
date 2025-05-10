@@ -2,6 +2,8 @@ package com.ecommerce.backend.repository;
 
 import com.ecommerce.backend.entity.Product;
 import com.ecommerce.backend.entity.ProductStatus;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,5 +20,29 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 List<Product> findAllWithFilters(@Param("categoryId") Long categoryId,
                                  @Param("colors") List<String> colors,
                                  @Param("sizes") List<String> sizes);
+
+
+
+                                    // Admin için kategori satışları
+    @Query("""
+      SELECT p.category.name, SUM(i.quantity)
+      FROM OrderItem i
+      JOIN i.product p
+      GROUP BY p.category.name
+      ORDER BY SUM(i.quantity) DESC
+    """)
+    List<Object[]> findCategorySales(Pageable pageable);
+
+    // Seller için kategori satışları
+    @Query("""
+      SELECT p.category.name, SUM(i.quantity)
+      FROM OrderItem i
+      JOIN i.product p
+      WHERE i.seller.id = :sellerId
+      GROUP BY p.category.name
+      ORDER BY SUM(i.quantity) DESC
+    """)
+    List<Object[]> findCategorySalesBySeller(@Param("sellerId") Long sellerId,
+                                             Pageable pageable);
 
 }

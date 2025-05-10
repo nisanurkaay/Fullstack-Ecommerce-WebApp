@@ -1,8 +1,54 @@
 <!-- src/app/seller/analytics/seller-analytics.component.html -->
-<h2>Benim Toplam Gelirim: {{ totalRevenue }}</h2>
+<div class="p-6 space-y-6">
 
-<h3>En Çok Satılan 5 Ürünüm</h3>
-<canvas baseChart
+  <!-- KPI Kartları: 5 adet -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+    <!-- Revenue -->
+    <div class="bg-white shadow rounded-lg p-4 flex flex-col">
+      <span class="text-gray-500">Revenue</span>
+      <div class="mt-1 text-2xl font-semibold">{{ totalRevenue | currency }}</div>
+    </div>
+
+    <!-- Total Products -->
+    <div class="bg-white shadow rounded-lg p-4 flex flex-col">
+      <span class="text-gray-500">Total Products</span>
+      <div class="mt-1 text-2xl font-semibold">{{ totalProducts }}</div>
+    </div>
+
+    <!-- Low Stock Items -->
+    <div class="bg-white shadow rounded-lg p-4 flex flex-col">
+      <span class="text-gray-500">Low Stock Items</span>
+      <div class="mt-1 text-2xl font-semibold">{{ lowStockCount }}</div>
+    </div>
+
+    <!-- Return Rate -->
+    <div class="bg-white shadow rounded-lg p-4 flex flex-col">
+      <span class="text-gray-500">Return Rate</span>
+      <div class="mt-1 text-2xl font-semibold">{{ returnRate | number:'1.0-1' }}%</div>
+    </div>
+
+    <!-- Top Categories -->
+    <div class="bg-white shadow rounded-lg p-4 flex flex-col">
+      <span class="text-gray-500">Top Categories</span>
+      <ul class="mt-1 list-disc list-inside text-sm">
+        <li *ngFor="let c of topCategories">
+          {{ c.category }} ({{ c.sold }})
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Best Selling Products Chart -->
+  <div class="bg-white shadow rounded-lg p-6">
+    <h3 class="text-lg font-semibold mb-4">Best Selling Products</h3>
+    <div class="chart-wrapper">
+      <canvas
+        baseChart
         [data]="productChartData"
+        [options]="chartOptions"
         chartType="bar">
-</canvas>
+      </canvas>
+    </div>
+  </div>
+
+</div>

@@ -4,16 +4,21 @@ import com.ecommerce.backend.dto.ProductRequest;
 import com.ecommerce.backend.dto.ProductResponse;
 import com.ecommerce.backend.dto.ProductVariantRequest;
 import com.ecommerce.backend.entity.ProductStatus;
+import com.ecommerce.backend.repository.UserRepository;
 import com.ecommerce.backend.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.MediaType;
-import com.ecommerce.backend.service.FileStorageService; // Import the FileStorageService class
-
+import com.ecommerce.backend.service.FileStorageService;
+import com.ecommerce.backend.service.AnalyticsService;
+import com.ecommerce.backend.service.CustomUserDetailsService;// Import the FileStorageService class
+       
+import com.ecommerce.backend.entity.User;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,12 +29,18 @@ public class ProductController {
 
     private final ProductService productService;
     private final FileStorageService fileStorageService; // Assuming you have a file storage service
-
+    private final AnalyticsService analyticsService;
+    private final UserRepository userRepository;
     public ProductController(ProductService productService,
-                             FileStorageService fileStorageService) {   
+                             FileStorageService fileStorageService,
+                             AnalyticsService analyticsService,
+                                  UserRepository userRepository
+                             ) {   
         this.productService = productService;
         this.fileStorageService = fileStorageService; 
-        
+         this.analyticsService = analyticsService; 
+         this.userRepository = userRepository;
+      
     }
 
     @PostMapping(path = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
@@ -242,5 +253,26 @@ public ResponseEntity<Long> getVariantIdByColorAndSize(
     return ResponseEntity.ok(variantId);
 }
 
+     @GetMapping("/low-stock-count")
+    public ResponseEntity<Long> getLowStockCount(
+            // Spring Security’nin kendi UserDetails objesi
+            @AuthenticationPrincipal UserDetails principal
+    ) {
+        // 1) E-postayı al
+        String email = principal.getUsername();
 
-}
+        // 2) Entity olarak user’ı çek
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Long sellerId = user.getId();
+        boolean isAdmin = user.getRole().name().equals("ADMIN");
+
+        int threshold = 10;  // isteğe göre query param’a alabilirsiniz
+
+        long count = isAdmin
+            ? analyticsService.getLowStockCountAdmin(threshold)
+            : analyticsService.getLowStockCountSeller(sellerId, threshold);
+
+        return ResponseEntity.ok(count);
+    }}

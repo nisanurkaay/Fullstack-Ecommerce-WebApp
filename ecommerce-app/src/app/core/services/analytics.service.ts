@@ -9,7 +9,6 @@ export interface OrderItem {
   quantity: number;
   price: number;
   sellerId: number;
-  sellerName?: string; // eğer backend’den geliyorsa
 }
 
 export interface OrderResponse {
@@ -18,25 +17,36 @@ export interface OrderResponse {
   items: OrderItem[];
 }
 
-export interface ProductResponse {
-  id: number;
-  name: string;
-  price: number;
-  amountSold: number;
-  totalRevenue: number;
+export interface CategorySold {
+  category: string;
+  sold: number;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
-     private apiUrl = 'http://localhost:8081/api';
+  private baseUrl = 'http://localhost:8081/api';
 
   constructor(private http: HttpClient) {}
 
+  /** All orders (seller-only filtered by backend) */
   getAllOrders(): Observable<OrderResponse[]> {
-    return this.http.get<OrderResponse[]>(`${this.apiUrl}/orders`);
+    return this.http.get<OrderResponse[]>(`${this.baseUrl}/orders`);
   }
 
-  getAllProducts(): Observable<ProductResponse[]> {
-    return this.http.get<ProductResponse[]>(`${this.apiUrl}/products/all`);
+  /** Low stock count */
+  getLowStockCount(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/products/low-stock-count`);
+  }
+
+  /** Return rate in % */
+  getReturnRate(): Observable<number> {
+    return this.http.get<number>(`${this.baseUrl}/orders/return-rate`);
+  }
+
+  /** Top categories, default top 5 */
+  getTopCategories(topN: number = 5): Observable<CategorySold[]> {
+    return this.http.get<CategorySold[]>(
+      `${this.baseUrl}/categories/top-sales?topN=${topN}`
+    );
   }
 }
