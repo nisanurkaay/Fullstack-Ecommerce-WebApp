@@ -1,0 +1,8 @@
+<!-- src/app/seller/analytics/seller-analytics.component.html -->
+<h2>Benim Toplam Gelirim: {{ totalRevenue }}</h2>
+
+<h3>En Çok Satılan 5 Ürünüm</h3>
+<canvas baseChart
+        [data]="productChartData"
+        chartType="bar">
+</canvas>

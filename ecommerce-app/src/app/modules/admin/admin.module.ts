@@ -16,7 +16,12 @@ import { OrderMgmtComponent } from './order-mgmt/order-mgmt.component';
 import { ProductMgmtComponent } from './product-mgmt/product-mgmt.component';
 import { UserMgmtComponent } from './user-mgmt/user-mgmt.component';
 import { FormsModule } from '@angular/forms';
+import { AdminAnalyticsComponent } from './admin-analytics/admin-analytics.component';
+import { BaseChartDirective } from 'ng2-charts';
+import { Chart, registerables } from 'chart.js';
 
+// Chart.js’in tüm registerable öğelerini kaydet
+Chart.register(...registerables);
 @NgModule({
   declarations: [
     AdminComponent,
@@ -24,7 +29,8 @@ import { FormsModule } from '@angular/forms';
     OrderMgmtComponent,
     ProductMgmtComponent,
     UserMgmtComponent,
-    CategoryMgmtComponent
+    CategoryMgmtComponent,
+    AdminAnalyticsComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +43,8 @@ ReactiveFormsModule,
     MatSelectModule,
     MatSlideToggleModule,
     MatIconModule,
-    FormsModule
+    FormsModule,
+    BaseChartDirective
   ]
 })
 export class AdminModule {}

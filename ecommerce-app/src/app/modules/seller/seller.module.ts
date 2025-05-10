@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { AnalyticsComponent } from './analytics/analytics.component';
 import { MyOrdersComponent } from './my-orders/my-orders.component';
 import { MyProductsComponent } from './my-products/my-products.component';
 import { SellerDashboardComponent } from './seller-dashboard/seller-dashboard.component';
@@ -15,15 +14,20 @@ import { MatIconModule } from '@angular/material/icon';         // (opsiyonel, i
 import { MatSnackBarModule } from '@angular/material/snack-bar'; // (opsiyonel, bildirim için)
 import { ReactiveFormsModule , FormsModule} from '@angular/forms';
 import { EditProductComponent } from './edit-product/edit-product.component';
+import { SellerAnalyticsComponent } from './seller-analytics/seller-analytics.component';
+import { BaseChartDirective } from 'ng2-charts';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
 @NgModule({
   declarations: [
     SellerComponent,
     SellerDashboardComponent,
     MyProductsComponent,
     MyOrdersComponent,
-    AnalyticsComponent,
     AddProductComponent,
-    EditProductComponent
+    EditProductComponent,
+    SellerAnalyticsComponent
   ],
   imports: [
     CommonModule,
@@ -36,7 +40,8 @@ import { EditProductComponent } from './edit-product/edit-product.component';
     MatButtonModule,
     MatIconModule,         // (opsiyonel, ikon kullanıyorsan)
     MatSnackBarModule,    // (opsiyonel, bildirim için)
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BaseChartDirective
 
   ]
 })

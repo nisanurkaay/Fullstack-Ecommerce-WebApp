@@ -9,6 +9,7 @@ import { OrderMgmtComponent } from './order-mgmt/order-mgmt.component';
 import { ProductMgmtComponent } from './product-mgmt/product-mgmt.component';
 import { UserMgmtComponent } from './user-mgmt/user-mgmt.component';
 import { CategoryMgmtComponent } from './category-mgmt/category-mgmt.component';
+import { AdminAnalyticsComponent } from './admin-analytics/admin-analytics.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'ProductMgmtComponent', pathMatch: 'full' },
       { path: 'dashboard', component: ProductMgmtComponent },
+      {path:'analytics', component:AdminAnalyticsComponent},
       { path: 'order-mgmt', component: OrderMgmtComponent },
       { path: 'product-mgmt', component: ProductMgmtComponent },
       { path: 'user-mgmt', component: UserMgmtComponent },

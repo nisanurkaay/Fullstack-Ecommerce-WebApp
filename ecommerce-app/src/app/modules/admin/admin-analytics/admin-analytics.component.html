@@ -1,0 +1,20 @@
+<!-- src/app/admin/analytics/admin-analytics.component.html -->
+<h2>Toplam Revenue: {{ totalRevenue | currency }}</h2>
+
+<div style="display:flex; gap:2rem">
+  <div style="width:45%">
+    <h3>En Çok Satılan Ürünler</h3>
+    <canvas baseChart
+            [data]="productChartData"
+            chartType="bar">
+    </canvas>
+  </div>
+
+  <div style="width:45%">
+    <h3>En Çok Gelir Getiren Satıcılar</h3>
+    <canvas baseChart
+            [data]="sellerChartData"
+            chartType="pie">
+    </canvas>
+  </div>
+</div>
