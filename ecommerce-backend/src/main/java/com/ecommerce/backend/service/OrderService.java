@@ -156,6 +156,7 @@ public OrderResponse mapToSellerResponse(Order order, User seller) {
               item.getProduct().getImageUrls().isEmpty() ? null
                   : item.getProduct().getImageUrls().get(0)
             );
+            ir.setShipmentStatus(item.getShipmentStatus().toString());
             ir.setQuantity(item.getQuantity());
             ir.setPrice(item.getVariant()!=null
                 ? item.getVariant().getPrice()
@@ -213,7 +214,7 @@ public OrderResponse mapToResponse(Order order) {
         itemRes.setPrice(item.getProduct().getPrice());
         itemRes.setStatus(item.getStatus().toString());
         itemRes.setQuantity(item.getQuantity());
-        
+           itemRes.setShipmentStatus(item.getShipmentStatus().toString());
         itemRes.setVariantId(item.getVariant() != null ? item.getVariant().getId() : null); // ✅ burası
         
         return itemRes;

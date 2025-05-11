@@ -83,6 +83,9 @@ export interface OrderItemResponse {
   price: number;
   quantity: number;
     variantId?: number;
+
+  /** add this: */
+  status: string;
   shipmentStatus?: string;
 }
 

@@ -9,6 +9,14 @@ public class OrderItemResponse {
     private Long id;
     private Long variantId;
     private String status;
+    private String shipmentStatus;
+
+    public String getShipmentStatus() {
+        return shipmentStatus;
+    }
+    public void setShipmentStatus(String shipmentStatus) {
+        this.shipmentStatus = shipmentStatus;
+    }
     public Long getVariantId() {
         return variantId;
     }
