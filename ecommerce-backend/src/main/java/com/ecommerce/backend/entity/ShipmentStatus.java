@@ -1,5 +1,10 @@
 package com.ecommerce.backend.entity;
-public enum ShipmentStatus {
-    PENDING, SHIPPED, DELIVERED, CANCELLED
-}
 
+public enum ShipmentStatus {
+     TRANSIT,           // satıcı SHIPPED dediğinde buraya düşecek
+    AT_DISTRIBUTION_CENTER,
+    AT_BRANCH,
+    SHIPPED,
+    DELIVERED,
+    CANCELLED
+}

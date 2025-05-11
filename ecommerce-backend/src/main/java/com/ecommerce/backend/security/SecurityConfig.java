@@ -64,7 +64,7 @@ public class SecurityConfig {
    // Korunan endpointler
     .requestMatchers("/api/products/pending").hasRole("ADMIN")
    
-
+  .requestMatchers("/api/logistics/**").hasRole("LOGISTICS")
     .anyRequest().authenticated()
 )
                 .sessionManagement(sess -> sess
@@ -79,8 +79,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.asList("http://localhost:4200")); // Vercel için buraya eklenir
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+          config.setAllowedMethods(Arrays.asList(
+      "GET","POST","PUT","PATCH","DELETE","OPTIONS"
+    ));  config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
         config.setExposedHeaders(Arrays.asList("Authorization"));
         config.setAllowCredentials(true);
 

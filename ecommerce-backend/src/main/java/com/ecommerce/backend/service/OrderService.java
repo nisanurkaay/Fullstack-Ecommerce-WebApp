@@ -57,8 +57,7 @@ public Order placeOrder(User user, OrderRequest request) {
         item.setOrder(order);
         item.setQuantity(itemRequest.getQuantity());
         item.setStatus(OrderItemStatus.PLACED); // ✅ Zorunlu alan
-        item.setShipmentStatus(ShipmentStatus.PENDING); // opsiyonel ama istersen set et
-
+    
         if (itemRequest.getVariantId() != null) {
             ProductVariant variant = variantRepository.findById(itemRequest.getVariantId())
                     .orElseThrow(() -> new RuntimeException("Variant not found"));
@@ -347,7 +346,14 @@ public void updateOrderItemStatus(Long orderId,
         // 6) Diğer statülerde sadece güncelle
         item.setStatus(statusEnum);
     }
-
+ 
+            // — yalnızca satıcı “SHIPPED” dediğinde:
+            if (statusEnum == OrderItemStatus.SHIPPED) {
+                // lojistikçilere görünmesi için
+                item.setShipmentStatus(ShipmentStatus.TRANSIT);
+            } else if (statusEnum == OrderItemStatus.DELIVERED) {
+        item.setShipmentStatus(ShipmentStatus.DELIVERED);
+    }
     // 7) Eğer siparişteki tüm item’lar aynı statüdeyse, order.status’u da eşitle
     boolean allMatch = order.getItems().stream()
         .map(OrderItem::getStatus)

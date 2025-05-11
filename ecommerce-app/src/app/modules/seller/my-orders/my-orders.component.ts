@@ -10,6 +10,7 @@ interface OrderItemResponse {
   price:      number;
   quantity:   number;
   status:     string;
+    shipmentStatus?: string;
   variantId?: number;
 }
 

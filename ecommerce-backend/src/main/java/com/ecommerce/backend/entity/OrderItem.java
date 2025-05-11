@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
+import com.ecommerce.backend.entity.ShipmentStatus;
 
 
 @Entity
@@ -35,8 +36,7 @@ private ProductVariant variant;
 
 
 private String trackingNumber;
-@Enumerated(EnumType.STRING)
-private ShipmentStatus shipmentStatus;
+
 private LocalDate estimatedDeliveryDate;
 
 @ManyToOne
@@ -94,19 +94,30 @@ public OrderItemStatus getStatus() {
     public LocalDate getEstimatedDeliveryDate() {
         return estimatedDeliveryDate;
     }
-    public ShipmentStatus getShipmentStatus() {
-        return shipmentStatus;
-    }
+ 
     public String getTrackingNumber() {
         return trackingNumber;
     }
     public void setEstimatedDeliveryDate(LocalDate estimatedDeliveryDate) {
         this.estimatedDeliveryDate = estimatedDeliveryDate;
     }
-    public void setShipmentStatus(ShipmentStatus shipmentStatus) {
-        this.shipmentStatus = shipmentStatus;
-    }
+  
     public void setTrackingNumber(String trackingNumber) {
         this.trackingNumber = trackingNumber;
     }
+
+    
+    @Enumerated(EnumType.STRING)
+    @Column(name = "shipment_status")
+    private ShipmentStatus shipmentStatus;
+
+    // getter / setter
+    public ShipmentStatus getShipmentStatus() {
+        return shipmentStatus;
+    }
+
+    public void setShipmentStatus(ShipmentStatus shipmentStatus) {
+        this.shipmentStatus = shipmentStatus;
+    }
+
 }

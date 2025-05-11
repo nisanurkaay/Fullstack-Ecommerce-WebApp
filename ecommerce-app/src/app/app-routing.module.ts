@@ -18,6 +18,7 @@ const routes: Routes = [
   { path: 'seller', loadChildren: () => import('./modules/seller/seller.module').then(m => m.SellerModule) },
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] },
 
+  { path: 'logistics', loadChildren: () => import('./modules/logistics/logistics.module').then(m => m.LogisticsModule), canActivate: [AuthGuard] },
 
 
   { path: '**', redirectTo: '' }

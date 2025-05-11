@@ -59,7 +59,9 @@
     {{ s }}
   </option>
 </select>
-
+    <p *ngIf="item.status === 'SHIPPED'">
+      Kargo Durumu: {{ item.shipmentStatus || 'Beklemede' }}
+    </p>
     </div>
   </div>
 </div>

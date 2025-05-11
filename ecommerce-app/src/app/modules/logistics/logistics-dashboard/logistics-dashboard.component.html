@@ -1,0 +1,37 @@
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-4">Lojistikçi Paneli</h2>
+  <table class="w-full table-auto border-collapse">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="p-2 text-left">Sipariş #</th>
+        <th class="p-2 text-left">Ürün</th>
+        <th class="p-2">Adet</th>
+        <th class="p-2">Mevcut Kargo Durumu</th>
+        <th class="p-2">Yeni Durum</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of shipments" class="border-t">
+        <td class="p-2">{{ item.orderId }}</td>
+        <td class="p-2 flex items-center">
+          <img [src]="item.productImage" class="w-12 h-12 rounded mr-2" />
+          {{ item.productName }}
+        </td>
+        <td class="p-2 text-center">{{ item.quantity }}</td>
+        <td class="p-2 uppercase">{{ item.shipmentStatus }}</td>
+
+      <td class="p-2 text-center">
+      <td class="p-2">
+  <button
+    *ngIf="NEXT_STATUS[item.shipmentStatus]"
+    (click)="advance(item)"
+    class="px-3 py-1 bg-blue-500 rounded text-white hover:bg-blue-600"
+  >
+    İlerle → {{ NEXT_STATUS[item.shipmentStatus] }}
+  </button>
+</td>
+
+    </tr>
+    </tbody>
+  </table>
+</div>

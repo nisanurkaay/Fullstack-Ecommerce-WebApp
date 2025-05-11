@@ -1,5 +1,6 @@
 package com.ecommerce.backend.repository;
 import com.ecommerce.backend.entity.OrderItem;
+import com.ecommerce.backend.entity.ShipmentStatus;
 
 import java.util.List;
 
@@ -53,4 +54,11 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
       ) DESC
     """)
     List<Object[]> findSellerRevenue(Pageable pageable);
+       @Query("""
+      SELECT i
+      FROM OrderItem i
+      WHERE i.shipmentStatus IS NOT NULL
+        AND i.shipmentStatus <> com.ecommerce.backend.entity.ShipmentStatus.CANCELLED
+    """)
+    List<OrderItem> findAllActiveShipments();
 }
