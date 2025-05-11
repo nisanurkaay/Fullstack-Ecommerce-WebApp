@@ -8,8 +8,10 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;;
 @Entity
 public class ProductVariant {
-    @Id @GeneratedValue
-    private Long id;
+ @Id 
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private Long id;
+
 
     @Enumerated(EnumType.STRING)
     private ColorEnum color;
