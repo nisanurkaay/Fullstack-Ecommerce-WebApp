@@ -75,3 +75,23 @@ cancelAndRefundOrder(orderId: number): Observable<string> {
 }
 
 }
+export interface OrderItemResponse {
+  id: number;
+  productId: number;
+  productName: string;
+  productImage: string;
+  price: number;
+  quantity: number;
+    variantId?: number;
+  shipmentStatus?: string;
+}
+
+export interface OrderResponse {
+  id: number;
+  user: { id: number; name: string };
+  status: string;
+  totalAmount: number;
+  createdAt: string;
+  paymentIntentId?: string;
+  items: OrderItemResponse[];
+}

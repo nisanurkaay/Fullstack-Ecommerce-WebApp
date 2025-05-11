@@ -1,25 +1,20 @@
+import {
+  SharedResizeObserver
+} from "./chunk-IUMEORW4.js";
+import {
+  MAT_RIPPLE_GLOBAL_OPTIONS,
+  MatRipple,
+  _StructuralStylesLoader
+} from "./chunk-NEOET5IP.js";
+import "./chunk-UXIGTWEL.js";
 import "./chunk-OIBNGD5S.js";
 import {
   CdkPortal,
   CdkPortalOutlet,
   TemplatePortal
-} from "./chunk-NFZAHVT7.js";
-import {
-  SharedResizeObserver
-} from "./chunk-KIATJGNN.js";
-import {
-  MAT_RIPPLE_GLOBAL_OPTIONS,
-  MatRipple,
-  _StructuralStylesLoader
-} from "./chunk-62JQWKBN.js";
-import "./chunk-25CSXPGM.js";
+} from "./chunk-BA2EOEJB.js";
 import "./chunk-42FJBLFI.js";
 import "./chunk-IBYU652R.js";
-import {
-  CdkScrollable,
-  ViewportRuler
-} from "./chunk-UQ73JJ3A.js";
-import "./chunk-2O4WY5GE.js";
 import {
   CdkMonitorFocus,
   CdkObserveContent,
@@ -30,19 +25,24 @@ import {
   SPACE,
   _IdGenerator,
   hasModifierKey
-} from "./chunk-JNKAWSGA.js";
+} from "./chunk-S22ZG5WZ.js";
 import {
   _CdkPrivateStyleLoader,
   _bindEventWithOptions
-} from "./chunk-XJNSAXZA.js";
+} from "./chunk-KKV4JPMR.js";
 import {
-  Directionality
-} from "./chunk-NBUYI3QW.js";
+  CdkScrollable,
+  ViewportRuler
+} from "./chunk-4A5W4TOI.js";
+import "./chunk-2O4WY5GE.js";
 import {
   Platform
-} from "./chunk-TTJDA5QJ.js";
-import "./chunk-6GGXITPF.js";
-import "./chunk-5MRPC2E5.js";
+} from "./chunk-CRRUBMLE.js";
+import {
+  Directionality
+} from "./chunk-QDDDAA52.js";
+import "./chunk-36X7EITQ.js";
+import "./chunk-3PSR4HGC.js";
 import {
   ANIMATION_MODULE_TYPE,
   ChangeDetectionStrategy,
@@ -109,11 +109,11 @@ import {
   ɵɵtext,
   ɵɵtextInterpolate,
   ɵɵviewQuery
-} from "./chunk-UXETAPFX.js";
+} from "./chunk-EIP5WKTM.js";
+import "./chunk-5KXDAEEK.js";
 import {
   merge
-} from "./chunk-WPM5VTLQ.js";
-import "./chunk-PEBH6BBU.js";
+} from "./chunk-VMI3K6GE.js";
 import {
   BehaviorSubject,
   EMPTY,
@@ -128,7 +128,8 @@ import {
   switchMap,
   takeUntil,
   timer
-} from "./chunk-4S3KYZTJ.js";
+} from "./chunk-WD6C567C.js";
+import "./chunk-HM5YLMWO.js";
 import "./chunk-WDMUDEB6.js";
 
 // node_modules/@angular/material/fesm2022/tabs.mjs

@@ -1,19 +1,67 @@
-<h2 class="text-xl font-bold mb-4">Tüm Siparişler</h2>
+<h2 class="text-2xl font-bold mb-4">Tüm Siparişler</h2>
 
-<select [(ngModel)]="selectedStatus" (change)="filterByStatus()" class="mb-4 p-2 border rounded">
-  <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
-</select>
+<div class="mb-4 flex items-center space-x-4">
+  <label>
+    Durum:
+    <select [(ngModel)]="selectedStatus"
+            (change)="filterByStatus()"
+            class="border rounded px-2 py-1 ml-2">
+      <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+    </select>
+  </label>
+</div>
 
-<div *ngFor="let order of filteredOrders" class="border p-4 mb-2 rounded shadow">
-  <p><strong>Sipariş ID:</strong> {{ order.id }}</p>
-  <p><strong>Kullanıcı:</strong> {{ order.user.name }}</p>
-  <p><strong>Durum:</strong> {{ order.status }}</p>
-  <p><strong>Tutar:</strong> {{ order.totalAmount | currency:'TRY' }}</p>
-  <p><strong>Tarih:</strong> {{ order.createdAt | date:'medium' }}</p>
+<div *ngFor="let order of filteredOrders"
+     class="border p-4 mb-4 rounded shadow bg-white">
+  <div class="flex justify-between items-center mb-2">
+    <div>
+      <strong>Sipariş #{{ order.id }}</strong>
+      — <span class="uppercase">{{ order.status }}</span>
+    </div>
+    <div class="text-sm text-gray-600">
+      {{ order.createdAt | date:'medium' }}
+    </div>
+  </div>
 
-  <ul>
-    <li *ngFor="let item of order.items">
-      {{ item.product.name }} ({{ item.quantity }} adet)
-    </li>
-  </ul>
+  <p class="text-sm"><strong>Kullanıcı:</strong> {{ order.userName }}</p>
+  <p class="text-sm mb-2">
+    <strong>Toplam Tutar:</strong> {{ order.totalAmount | currency:'TRY' }}
+  </p>
+
+  <table class="w-full table-auto border-collapse">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="p-2">Resimler</th>
+        <th class="p-2 text-left">Ürün</th>
+        <th class="p-2 text-center">Variant</th>
+        <th class="p-2 text-center">Adet</th>
+        <th class="p-2 text-center">Durum</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of order.items" class="border-t">
+        <!-- Burada artık item.imageUrls kullanıyoruz -->
+        <td class="p-2">
+          <div class="flex gap-2">
+            <ng-container *ngIf="item.imageUrls && item.imageUrls.length; else noImg">
+              <img
+                *ngFor="let img of item.imageUrls"
+                [src]="fullImageUrl(img)"
+                alt="{{ item.productName }}"
+                class="w-12 h-12 object-cover rounded border"
+              />
+            </ng-container>
+            <ng-template #noImg>
+              <span class="text-sm text-gray-400">Resim yok</span>
+            </ng-template>
+          </div>
+        </td>
+
+        <td class="p-2">{{ item.productName }}</td>
+        <td class="p-2 text-center">{{ item.variantId ?? '—' }}</td>
+        <td class="p-2 text-center">{{ item.quantity }}</td>
+        <td class="p-2 text-center">{{ item.status }}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
