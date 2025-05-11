@@ -5,6 +5,7 @@ import com.ecommerce.backend.entity.ShipmentStatus;
 import com.ecommerce.backend.service.LogisticsService;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,6 +50,7 @@ public class LogisticsController {
                 d.setProductImage(item.getProduct().getImageUrls().stream().findFirst().orElse(""));
                 d.setQuantity(item.getQuantity());
                 d.setShipmentStatus(item.getShipmentStatus().name());
+                   d.setShippingAddress(item.getOrder().getShippingAddress());
                 return d;
             }).toList();
         return ResponseEntity.ok(dtos);
@@ -58,6 +60,15 @@ public class LogisticsController {
         private String productName, productImage;
         private Integer quantity;
         private String shipmentStatus;
+        private String shippingAddress;
+
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
        public Long getId() {
            return id;
        }

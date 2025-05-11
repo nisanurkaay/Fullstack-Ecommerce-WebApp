@@ -48,6 +48,7 @@ public Order placeOrder(User user, OrderRequest request) {
     order.setUser(user);
     order.setStatus(OrderStatus.PLACED);
     order.setCreatedAt(LocalDateTime.now());
+  order.setShippingAddress(request.getAddress());
 
     List<OrderItem> items = new ArrayList<>();
     double totalAmount = 0.0;
@@ -57,6 +58,7 @@ public Order placeOrder(User user, OrderRequest request) {
         item.setOrder(order);
         item.setQuantity(itemRequest.getQuantity());
         item.setStatus(OrderItemStatus.PLACED); // ✅ Zorunlu alan
+      item.setShipmentStatus(ShipmentStatus.PENDING); // ✅ Zorunlu alan
     
         if (itemRequest.getVariantId() != null) {
             ProductVariant variant = variantRepository.findById(itemRequest.getVariantId())
@@ -110,6 +112,7 @@ public Order placeOrder(User user, OrderRequest request) {
     order.setItems(items);
     order.setTotalAmount(totalAmount);
     order.setPaymentIntentId(request.getPaymentIntentId()); // ✅ Yalnızca pi_... olmalı
+
 
     return orderRepository.save(order);
 }
@@ -200,7 +203,7 @@ public OrderResponse mapToResponse(Order order) {
     response.setStatus(order.getStatus().toString());
     response.setCreatedAt(order.getCreatedAt());
     response.setPaymentIntentId(order.getPaymentIntentId());
-
+    response.setAddress(order.getShippingAddress());
     List<OrderItemResponse> itemResponses = order.getItems().stream().map(item -> {
         OrderItemResponse itemRes = new OrderItemResponse();
         itemRes.setId(item.getId());
@@ -214,8 +217,11 @@ public OrderResponse mapToResponse(Order order) {
         itemRes.setPrice(item.getProduct().getPrice());
         itemRes.setStatus(item.getStatus().toString());
         itemRes.setQuantity(item.getQuantity());
-           itemRes.setShipmentStatus(item.getShipmentStatus().toString());
-        itemRes.setVariantId(item.getVariant() != null ? item.getVariant().getId() : null); // ✅ burası
+      if (item.getShipmentStatus() != null) {
+        itemRes.setShipmentStatus(item.getShipmentStatus().name());
+    } else {
+        itemRes.setShipmentStatus(null); // ya da opsiyonel olarak "PENDING"
+    }     itemRes.setVariantId(item.getVariant() != null ? item.getVariant().getId() : null); // ✅ burası
         
         return itemRes;
     }).toList();

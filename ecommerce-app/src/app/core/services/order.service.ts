@@ -10,11 +10,13 @@ export interface OrderItemRequest {
   productId: number;
   variantId?: number;
   quantity: number;
+
 }
 
 export interface OrderRequest {
   items: OrderItemRequest[];
   paymentIntentId?: string; // Stripe ödeme varsa eklersin
+    address?: string;
 }
 
 @Injectable({
@@ -24,19 +26,20 @@ export class OrderService {
   private apiUrl = 'http://localhost:8081/api/orders';
 
   constructor(private http: HttpClient) {}
-
-  createOrderFromCart(cartItems: CartItem[], paymentIntentId?: string): Observable<any> {
+  createOrderFromCart(
+    cartItems: CartItem[],
+    paymentIntentId?: string,
+    address?: string      // ← yeni parametre
+  ): Observable<any> {
     const items: OrderItemRequest[] = cartItems.map(item => ({
       productId: item.product.id!,
-      variantId: item.variantId, // null veya undefined olabilir
+      variantId: item.variantId,
       quantity: item.quantity
     }));
 
     const orderRequest: OrderRequest = { items };
-
-    if (paymentIntentId) {
-      (orderRequest as any).paymentIntentId = paymentIntentId;
-    }
+    if (paymentIntentId) orderRequest.paymentIntentId = paymentIntentId;
+    if (address)          orderRequest.address        = address;
 
     return this.http.post(this.apiUrl, orderRequest);
   }
@@ -97,4 +100,5 @@ export interface OrderResponse {
   createdAt: string;
   paymentIntentId?: string;
   items: OrderItemResponse[];
+  shippingAddress :string;
 }

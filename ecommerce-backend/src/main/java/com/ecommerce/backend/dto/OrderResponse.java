@@ -10,7 +10,14 @@ public class OrderResponse {
     private LocalDateTime createdAt;
     private List<OrderItemResponse> items;
     private String paymentIntentId;
+    private String address; 
 
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
     public String getPaymentIntentId() {
         return paymentIntentId;
     }

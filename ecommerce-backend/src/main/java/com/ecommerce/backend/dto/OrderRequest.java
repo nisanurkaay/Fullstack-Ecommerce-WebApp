@@ -17,4 +17,16 @@ public class OrderRequest {
     }
     public void setItems(List<OrderItemRequest> items) {
         this.items = items;
-}}
+}
+
+private String address;        
+
+    // getter / setter
+    public String getAddress() {
+        return address;
+    }
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+}

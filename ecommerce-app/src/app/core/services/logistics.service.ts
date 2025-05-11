@@ -11,6 +11,7 @@ export interface ShipmentItem {
   productImage:   string;
   quantity:       number;
   shipmentStatus: string;
+  shippingAddress: string;
 }
 
 @Injectable({ providedIn: 'root' })

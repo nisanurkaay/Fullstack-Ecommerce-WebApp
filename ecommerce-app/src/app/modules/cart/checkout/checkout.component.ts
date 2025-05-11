@@ -17,7 +17,7 @@ import { environment } from 'environments/environment';
 export class CheckoutComponent implements OnInit, AfterViewInit {
   cartItems: CartItem[] = [];
   totalAmount: number = 0;
-
+  shippingAddress: string = '';
   private stripe: Stripe | null = null;
   private elements!: StripeElements;
   private card!: StripeCardElement;
@@ -90,6 +90,11 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   }
 
   createOrder(paymentIntentId: string): void {
+       const address = this.shippingAddress.trim();
+    if (!address) {
+      alert('Lütfen teslimat adresinizi girin.');
+      return;
+    }
     console.log("Token var mı:", this.authService.getAccessToken());
     const orderPayload = {
       items: this.cartItems.map(item => ({
@@ -97,12 +102,13 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
         variantId: item.variantId,
         quantity: item.quantity
       })),
-      paymentIntentId
+      paymentIntentId,
+       address
     };
 
     console.log("📦 GÖNDERİLEN ORDER REQUEST:", JSON.stringify(orderPayload, null, 2));
 
-    this.orderService.createOrderFromCart(this.cartItems, paymentIntentId).subscribe({
+    this.orderService.createOrderFromCart(this.cartItems, paymentIntentId, address).subscribe({
       next: () => {
         alert('🎉 Siparişiniz başarıyla oluşturuldu!');
         this.cartService.clearCart();
