@@ -19,18 +19,18 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
     long countRefundedItems();
 
     // Seller: kendi iade ve satış miktarları
-    @Query("""
-      SELECT COUNT(i)
-      FROM OrderItem i
-      WHERE i.status = 'PLACED'
-        AND i.seller.id = :sellerId
-    """)
-    long countPlacedBySeller(@Param("sellerId") Long sellerId);
+    // Seller: tüm iade dışındaki satış miktarları
+@Query("""
+  SELECT COUNT(i)
+  FROM OrderItem i
+  WHERE i.seller.id = :sellerId
+""")
+ long countPlacedBySeller(@Param("sellerId") Long sellerId);
 
     @Query("""
       SELECT COUNT(i)
       FROM OrderItem i
-      WHERE i.status = 'REFUNDED'
+      WHERE i.status = 'CANCELLED'
         AND i.seller.id = :sellerId
     """)
     long countRefundedBySeller(@Param("sellerId") Long sellerId);
