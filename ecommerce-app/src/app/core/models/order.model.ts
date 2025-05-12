@@ -4,9 +4,9 @@ import { OrderItem } from './order-item.model';
 export interface Order {
   id: number;
   user: User;
-  createdAt: string; // ISO string
+  createdAt: string;
   totalAmount: number;
-  status: 'PLACED' | 'PROCESSING' | 'SHIPPED' | 'CANCELLED' | 'REFUNDED'; // enum karşılığı
+  status: 'PLACED' | 'PROCESSING' | 'SHIPPED' | 'CANCELLED' | 'REFUNDED';
   items: OrderItem[];
   paymentIntentId?: string;
 }

@@ -3,5 +3,5 @@ export interface Category {
   name: string;
   description?: string;
   parentId?: number | null;
-  productCount?: number; // null for top-level categories
+  productCount?: number;
 }

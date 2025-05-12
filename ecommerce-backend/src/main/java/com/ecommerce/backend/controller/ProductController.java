@@ -100,8 +100,11 @@ public class ProductController {
         return ResponseEntity.ok(productService.filterProductsByRole(categoryId, colors, sizes, userId));
     }
     
-    @PutMapping("/{id}")
-    @PreAuthorize("hasRole('SELLER')") 
+@PutMapping(
+  path = "/{id}",
+  consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+)
+@PreAuthorize("hasRole('SELLER')")
 public ResponseEntity<ProductResponse> updateProduct(
     @PathVariable Long id,
     @RequestPart("product") ProductRequest request,

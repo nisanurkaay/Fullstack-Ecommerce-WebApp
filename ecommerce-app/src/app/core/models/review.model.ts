@@ -4,6 +4,6 @@ export interface Review {
   reviewerName: string;
   rating: number;
   comment: string;
-  date: string;       // reviewDate to string
-  orderId?: number;   // isteğe bağlı
+  date: string;
+  orderId?: number;
 }

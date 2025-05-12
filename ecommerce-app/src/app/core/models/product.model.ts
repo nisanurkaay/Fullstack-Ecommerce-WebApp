@@ -25,5 +25,5 @@ export interface ProductVariant {
   price: number;
   status?: ProductStatus;
 
-  imageUrls: string[]; // çoklu görsel URL'leri
+  imageUrls: string[];
 }
