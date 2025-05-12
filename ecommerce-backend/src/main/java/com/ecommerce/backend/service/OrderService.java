@@ -376,4 +376,42 @@ public void updateOrderItemStatus(Long orderId,
     orderRepository.save(order);
 }
 
+
+
+  @Transactional
+  public void cancelOrderByCustomer(Long orderId, User customer) {
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new RuntimeException("Order not found"));
+
+    // sadece kendi siparişi mi?
+    if (!order.getUser().getId().equals(customer.getId())) {
+      throw new RuntimeException("Bu siparişi iptal etme yetkiniz yok");
+    }
+
+    // 1) Tüm kalemler için stok iadesi
+    order.getItems().forEach(item -> {
+      if (item.getVariant() != null) {
+        ProductVariant v = item.getVariant();
+        v.setStock(v.getStock() + item.getQuantity());
+        variantRepository.save(v);
+      } else {
+        Product p = item.getProduct();
+        p.setStockQuantity(p.getStockQuantity() + item.getQuantity());
+        productRepository.save(p);
+      }
+      // kalem statüsünü CANCELLED yap
+      item.setStatus(OrderItemStatus.CANCELLED);
+    });
+
+    // 2) Stripe tam iade
+    String pi = order.getPaymentIntentId();
+    if (pi != null && pi.startsWith("pi_")) {
+      stripePaymentService.refundPayment(pi);
+    }
+
+    // 3) Sipariş statüsünü de CANCELLED yap
+    order.setStatus(OrderStatus.CANCELLED);
+    orderRepository.save(order);
+  }
+
 }

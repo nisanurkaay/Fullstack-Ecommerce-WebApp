@@ -58,5 +58,15 @@
   </tbody>
 </table>
 
+    <div class="p-4 text-right">
+      <!-- sadece henüz iptal edilmemiş siparişler için göster -->
+      <button
+        *ngIf="order.status !== 'CANCELLED'"
+        (click)="cancel(order.id)"
+        class="px-4 py-2 bg-red-500 text-white rounded"
+      >
+        Siparişi İptal Et
+      </button>
+    </div>
   </section>
 </main>

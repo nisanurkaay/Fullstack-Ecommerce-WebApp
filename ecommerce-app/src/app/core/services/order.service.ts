@@ -1,5 +1,3 @@
-// src/app/core/services/order.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -15,7 +13,7 @@ export interface OrderItemRequest {
 
 export interface OrderRequest {
   items: OrderItemRequest[];
-  paymentIntentId?: string; // Stripe ödeme varsa eklersin
+  paymentIntentId?: string;
     address?: string;
 }
 
@@ -29,7 +27,7 @@ export class OrderService {
   createOrderFromCart(
     cartItems: CartItem[],
     paymentIntentId?: string,
-    address?: string      // ← yeni parametre
+    address?: string
   ): Observable<any> {
     const items: OrderItemRequest[] = cartItems.map(item => ({
       productId: item.product.id!,
@@ -69,13 +67,25 @@ cancelItemBySeller(orderId: number, itemId: number): Observable<string> {
 
 
   getAllOrders(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}`); // Admin ve seller için de aynı endpoint
+    return this.http.get<any[]>(`${this.apiUrl}`);
   }
 cancelAndRefundOrder(orderId: number): Observable<string> {
   return this.http.put<string>(
     `${this.apiUrl}/${orderId}/cancel-by-seller`, {}
   );
 }
+
+
+
+  cancelOrderAsCustomer(orderId: number): Observable<string> {
+    const token = localStorage.getItem('jwt');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.put(
+      `${this.apiUrl}/${orderId}/cancel`,
+      {},
+      { headers, responseType: 'text' }
+    );
+  }
 
 }
 export interface OrderItemResponse {

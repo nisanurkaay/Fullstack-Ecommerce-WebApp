@@ -53,7 +53,7 @@ public ResponseEntity<?> createOrder(@RequestBody OrderRequest request,
 
     Order order = orderService.placeOrder(user, request);
 
-    // DTO'ya dönüştür (servise eklediğin method)
+
     OrderResponse response = orderService.mapToResponse(order);
 
     return ResponseEntity.ok(response);
@@ -69,22 +69,20 @@ public ResponseEntity<?> createOrder(@RequestBody OrderRequest request,
 
         switch (user.getRole()) {
             case ROLE_ADMIN:
-                // everyone sees every order
                 responseList = orderService.getAllOrders().stream()
                     .map(orderService::mapToResponse)
                     .toList();
                 break;
 
             case ROLE_SELLER:
-                // only orders that include this seller’s products,
-                // and only map the items sold by them
+                
                 responseList = orderService.getOrdersForSeller(user).stream()
                     .map(order -> orderService.mapToSellerResponse(order, user))
                     .toList();
                 break;
 
             default:
-                // buyer: only their own orders
+               
                 responseList = orderService.getOrdersByUser(user).stream()
                     .map(orderService::mapToResponse)
                     .toList();
@@ -121,7 +119,20 @@ public ResponseEntity<String> cancelItemBySeller(
 }
 
 
+  @PutMapping("/{orderId}/cancel")
+  @PreAuthorize("hasRole('USER') or hasRole('CUSTOMER')")
+  public ResponseEntity<String> cancelOrderByCustomer(
+      @PathVariable Long orderId,
+      @AuthenticationPrincipal UserDetails ud
+  ) {
+    User customer = userRepository.findByEmail(ud.getUsername())
+        .orElseThrow(() -> new RuntimeException("User not found"));
 
+    orderService.cancelOrderByCustomer(orderId, customer);
+    return ResponseEntity.ok("Siparişiniz başarıyla iptal edildi ve ödemeniz iade edildi.");
+  }
+
+  
 @PutMapping("/{orderId}/items/{itemId}/status")
 @PreAuthorize("hasRole('SELLER')")
 public ResponseEntity<String> updateOrderItemStatus(

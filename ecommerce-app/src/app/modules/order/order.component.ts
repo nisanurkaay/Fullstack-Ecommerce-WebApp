@@ -20,8 +20,18 @@ export class OrderComponent implements OnInit {
   orders: GroupedOrder[] = [];
 
   constructor(private orderService: OrderService) {}
+ load() {
+    this.orderService.getMyOrders().subscribe(raw => {
+      this.orders = raw.map(o => ({
+        id: o.id,
+        totalAmount: o.totalAmount,
+        status: o.status,
+        createdAt: new Date(o.createdAt),
+        items: o.items
+      }));
+    });
+  }
 
- // src/app/modules/order/order.component.ts
 ngOnInit(): void {
   this.orderService.getMyOrders().subscribe((raw: OrderResponse[]) => {
     console.log('▶︎ raw orders:', raw);
@@ -35,6 +45,15 @@ ngOnInit(): void {
     console.log('▶︎ mapped orders:', this.orders);
   });
 }
-
+  cancel(orderId: number) {
+    if (!confirm('Bu siparişi gerçekten iptal etmek istiyor musunuz?')) return;
+    this.orderService.cancelOrderAsCustomer(orderId).subscribe({
+      next: msg => {
+        alert(msg);
+        this.load(); // listeyi tazele
+      },
+      error: err => alert('İptal sırasında hata: ' + err.message)
+    });
+  }
 
 }
