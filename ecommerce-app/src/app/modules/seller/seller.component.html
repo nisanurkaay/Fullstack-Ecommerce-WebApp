@@ -6,10 +6,10 @@
   ☰
 </button>
 
-<!-- Sayfa Düzeni -->
-<div class="relative min-h-screen lg:flex bg-gray-100">
+
+<div class="flex h-screen overflow-hidden">
   <!-- Sidebar -->
-  <aside
+   <aside
     class="bg-gray-900 text-white fixed lg:static top-16 lg:top-0 inset-y-0 left-0 z-40 transform lg:translate-x-0 transition-transform duration-300 ease-in-out
            w-full lg:w-64"
     [class.-translate-x-full]="!isSidebarOpen && !isLargeScreen"
@@ -34,8 +34,8 @@
     (click)="toggleSidebar()"
   ></div>
 
-  <!-- İçerik -->
-  <main class="flex-1 lg:ml-64 bg-gray-100 p-6 overflow-y-auto relative z-10">
+  <!-- Main Content -->
+  <main class="flex-1 bg-gray-100 p-6 overflow-y-auto">
     <router-outlet></router-outlet>
   </main>
 </div>
