@@ -1,72 +1,74 @@
-<!-- src/app/modules/orders/order.component.html -->
-<main class="p-6 space-y-8">
-  <!-- No orders -->
-  <div *ngIf="orders.length === 0" class="text-center text-gray-600">
-    Henüz siparişiniz yok.
+<main class="p-6">
+
+  <!-- Filtre Sekmeleri -->
+  <nav class="filter-nav">
+    <button
+      class="filter-button"
+      [class.active]="currentFilter==='ACTIVE'"
+      (click)="setFilter('ACTIVE')"
+    >Active Orders</button>
+    <button
+      class="filter-button"
+      [class.active]="currentFilter==='COMPLETED'"
+      (click)="setFilter('COMPLETED')"
+    >Completed Orders</button>
+    <button
+      class="filter-button"
+      [class.active]="currentFilter==='CANCELLED'"
+      (click)="setFilter('CANCELLED')"
+    >Cancelled Orders</button>
+  </nav>
+
+  <div *ngIf="!filteredOrders.length" class="empty-msg">
+    {{ currentFilter === 'ACTIVE'
+        ? 'Henüz aktif siparişiniz yok.'
+        : currentFilter === 'COMPLETED'
+          ? 'Henüz teslim edilmiş siparişiniz yok.'
+          : 'Henüz iptal edilmiş siparişiniz yok.' }}
   </div>
 
-  <!-- List of grouped orders -->
-  <section *ngFor="let order of orders" class="border rounded-lg shadow-sm">
-    <header class="flex justify-between items-center p-4 bg-gray-50 border-b">
+  <section *ngFor="let order of filteredOrders" class="order-card">
+
+    <header class="order-header">
       <div>
-        <h2 class="text-xl font-semibold">Sipariş #{{ order.id }}</h2>
-        <p class="text-sm text-gray-500">
-          {{ order.createdAt | date:'short' }}
-        </p>
+        <h2 class="text-xl font-semibold mb-1">Sipariş #{{ order.id }}</h2>
+        <p class="text-sm text-gray-500">{{ order.createdAt | date:'short' }}</p>
       </div>
       <div class="text-right">
-        <p class="text-lg font-medium">{{ order.totalAmount | currency:'₺' }}</p>
-        <span
-          class="inline-block mt-1 px-2 py-1 text-xs font-semibold rounded"
-          [ngClass]="{
-            'bg-green-100 text-green-800': order.status==='PLACED' || order.status==='SHIPPED',
-            'bg-yellow-100 text-yellow-800': order.status==='PROCESSING',
-            'bg-red-100 text-red-800': order.status==='CANCELLED'
-          }"
-        >
-          {{ order.status }}
-        </span>
+        <p class="text-lg font-medium mb-1">{{ order.totalAmount | currency:'₺' }}</p>
+        <span class="order-status">{{ order.status }}</span>
       </div>
     </header>
 
-   <table class="w-full text-left">
-  <thead>
-    <tr class="bg-gray-100">
-      <th class="p-3">Ürün</th>
-      <th class="p-3">Adet</th>
-      <th class="p-3">Birim Fiyat</th>
-      <th class="p-3">Durum</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of order.items" class="border-b hover:bg-gray-50">
-      <td class="p-3 flex items-center space-x-3">
-        <img
-          [src]="item.productImage"
-          alt="{{ item.productName }}"
-          class="w-12 h-12 object-cover rounded"
-        />
-        <span>{{ item.productName }}</span>
-      </td>
-      <td class="p-3">{{ item.quantity }}</td>
-      <td class="p-3">{{ item.price | currency:'₺' }}</td>
-      <td class="p-3 uppercase">
-        <!-- SHIPPED ise shipmentStatus, diğerleri için status -->
-        {{ item.status === 'SHIPPED' ? item.shipmentStatus : item.status }}
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <table class="order-table">
+      <thead>
+        <tr>
+          <th>Ürün</th>
+          <th>Adet</th>
+          <th>Birim Fiyat</th>
+          <th>Durum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of order.items">
+          <td class="flex items-center space-x-3">
+            <img [src]="item.productImage" alt="{{ item.productName }}" class="w-12 h-12 rounded object-cover" />
+            <span>{{ item.productName }}</span>
+          </td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.price | currency:'₺' }}</td>
+          <td class="uppercase">
+            {{ item.status === 'SHIPPED' ? item.shipmentStatus : item.status }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-    <div class="p-4 text-right">
-      <!-- sadece henüz iptal edilmemiş siparişler için göster -->
-      <button
-        *ngIf="order.status !== 'CANCELLED'"
-        (click)="cancel(order.id)"
-        class="px-4 py-2 bg-red-500 text-white rounded"
-      >
+    <div *ngIf="currentFilter==='ACTIVE'" class="p-4 text-right bg-gray-50">
+      <button (click)="cancel(order.id)" class="cancel-button">
         Siparişi İptal Et
       </button>
     </div>
+
   </section>
 </main>

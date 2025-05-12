@@ -18,9 +18,11 @@ interface GroupedOrder {
 })
 export class OrderComponent implements OnInit {
   orders: GroupedOrder[] = [];
-
+    filteredOrders: GroupedOrder[] = [];
+  currentFilter: 'ACTIVE' | 'COMPLETED' | 'CANCELLED' = 'ACTIVE';
   constructor(private orderService: OrderService) {}
- load() {
+
+   load() {
     this.orderService.getMyOrders().subscribe(raw => {
       this.orders = raw.map(o => ({
         id: o.id,
@@ -29,28 +31,39 @@ export class OrderComponent implements OnInit {
         createdAt: new Date(o.createdAt),
         items: o.items
       }));
+
+      this.applyFilter();
+
+    });
+  }
+
+  setFilter(filter: 'ACTIVE'|'COMPLETED'|'CANCELLED') {
+    this.currentFilter = filter;
+    this.applyFilter();
+  }
+
+  private applyFilter() {
+    this.filteredOrders = this.orders.filter(o => {
+      switch (this.currentFilter) {
+        case 'ACTIVE':
+          return o.status !== 'DELIVERED' && o.status !== 'CANCELLED';
+        case 'COMPLETED':
+          return o.status === 'DELIVERED';
+        case 'CANCELLED':
+          return o.status === 'CANCELLED';
+      }
     });
   }
 
 ngOnInit(): void {
-  this.orderService.getMyOrders().subscribe((raw: OrderResponse[]) => {
-    console.log('▶︎ raw orders:', raw);
-    this.orders = raw.map(o => ({
-      id: o.id,
-      totalAmount: o.totalAmount,
-      status: o.status,
-      createdAt: new Date(o.createdAt),
-      items: o.items
-    }));
-    console.log('▶︎ mapped orders:', this.orders);
-  });
+  this.load();
 }
   cancel(orderId: number) {
     if (!confirm('Bu siparişi gerçekten iptal etmek istiyor musunuz?')) return;
     this.orderService.cancelOrderAsCustomer(orderId).subscribe({
       next: msg => {
         alert(msg);
-        this.load(); // listeyi tazele
+        this.load();
       },
       error: err => alert('İptal sırasında hata: ' + err.message)
     });
