@@ -1,43 +1,41 @@
-<div class="flex h-screen overflow-hidden">
+<!-- Mobil Toggle Butonu -->
+<button
+  class="lg:hidden fixed top-16 left-4 z-50 bg-gray-900 text-white p-2 rounded"
+  (click)="toggleSidebar()"
+>
+  ☰
+</button>
+
+<!-- Sayfa Düzeni -->
+<div class="relative min-h-screen lg:flex bg-gray-100">
   <!-- Sidebar -->
-  <aside class="w-64 bg-gray-900 text-white hidden lg:block">
-
-    <nav class="mt-6 space-y-1">
-
-         <a
-        routerLink="analytics"
-        routerLinkActive="bg-gray-700"
-        class="block px-6 py-3 rounded hover:bg-gray-800 transition"
-      >
-        📊 Analytics
-      </a>
-      <a
-        routerLink="products"
-        routerLinkActive="bg-gray-700"
-        class="block px-6 py-3 rounded hover:bg-gray-800 transition"
-      >
-        🛍 My Products
-      </a>
-      <a
-        routerLink="orders"
-        routerLinkActive="bg-gray-700"
-        class="block px-6 py-3 rounded hover:bg-gray-800 transition"
-      >
-        📦 My Orders
-      </a>
-
-      <a
-        routerLink="add-product"
-        routerLinkActive="bg-gray-700"
-        class="block px-6 py-3 rounded hover:bg-gray-800 transition"
-      >
-        ➕ Add Product
-      </a>
+  <aside
+    class="bg-gray-900 text-white fixed lg:static top-16 lg:top-0 inset-y-0 left-0 z-40 transform lg:translate-x-0 transition-transform duration-300 ease-in-out
+           w-full lg:w-64"
+    [class.-translate-x-full]="!isSidebarOpen && !isLargeScreen"
+    [class.translate-x-0]="isSidebarOpen || isLargeScreen"
+  >
+    <nav class="mt-6 space-y-1 p-4">
+      <a routerLink="analytics" routerLinkActive="bg-gray-700"
+         class="block px-6 py-3 hover:bg-gray-800 rounded transition">📊 Analytics</a>
+      <a routerLink="products" routerLinkActive="bg-gray-700"
+         class="block px-6 py-3 hover:bg-gray-800 rounded transition">🛍 My Products</a>
+      <a routerLink="orders" routerLinkActive="bg-gray-700"
+         class="block px-6 py-3 hover:bg-gray-800 rounded transition">📦 My Orders</a>
+      <a routerLink="add-product" routerLinkActive="bg-gray-700"
+         class="block px-6 py-3 hover:bg-gray-800 rounded transition">➕ Add Product</a>
     </nav>
   </aside>
 
-  <!-- Main Content -->
-  <main class="flex-1 bg-gray-100 p-6 overflow-y-auto">
+  <!-- Mobil Karartma -->
+  <div
+    class="fixed inset-0 bg-black bg-opacity-40 z-30 lg:hidden"
+    *ngIf="isSidebarOpen && !isLargeScreen"
+    (click)="toggleSidebar()"
+  ></div>
+
+  <!-- İçerik -->
+  <main class="flex-1 lg:ml-64 bg-gray-100 p-6 overflow-y-auto relative z-10">
     <router-outlet></router-outlet>
   </main>
 </div>

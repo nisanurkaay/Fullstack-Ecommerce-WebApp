@@ -1,33 +1,44 @@
-<div class="flex h-screen overflow-hidden">
-  <!-- Sidebar -->
-  <aside class="w-64 bg-gray-900 text-white hidden lg:block">
+<!-- Mobil Toggle Butonu -->
+<button
+  class="lg:hidden fixed top-16 left-4 z-50 bg-gray-900 text-white p-2 rounded"
+  (click)="toggleSidebar()"
+>
+  ☰
+</button>
 
-    <nav class="mt-6 space-y-1">
-        <a routerLink="analytics" routerLinkActive="bg-gray-700"
-         class="block px-6 py-3 hover:bg-gray-800 rounded transition">
-        📊 Analytics
-      </a>
+<!-- Sayfa Yapısı -->
+<div class="relative min-h-screen lg:flex bg-gray-100">
+  <!-- Sidebar -->
+  <aside
+  class="bg-gray-900 text-white fixed lg:static top-16 lg:top-0 inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out
+         w-full lg:w-64"
+  [class.-translate-x-full]="!isSidebarOpen && !isLargeScreen"
+  [class.translate-x-0]="isSidebarOpen || isLargeScreen"
+>
+
+    <nav class="space-y-1 p-4">
+      <a routerLink="analytics" routerLinkActive="bg-gray-700"
+         class="block px-6 py-3 hover:bg-gray-800 rounded transition">📊 Analytics</a>
       <a routerLink="order-mgmt" routerLinkActive="bg-gray-700"
-         class="block px-6 py-3 hover:bg-gray-800 rounded transition">
-        📦 Orders
-      </a>
+         class="block px-6 py-3 hover:bg-gray-800 rounded transition">📦 Orders</a>
       <a routerLink="product-mgmt" routerLinkActive="bg-gray-700"
-         class="block px-6 py-3 hover:bg-gray-800 rounded transition">
-        🛒 Products
-      </a>
+         class="block px-6 py-3 hover:bg-gray-800 rounded transition">🛒 Products</a>
       <a routerLink="user-mgmt" routerLinkActive="bg-gray-700"
-         class="block px-6 py-3 hover:bg-gray-800 rounded transition">
-        👥 Users
-      </a>
+         class="block px-6 py-3 hover:bg-gray-800 rounded transition">👥 Users</a>
       <a routerLink="category-mgmt" routerLinkActive="bg-gray-700"
-         class="block px-6 py-3 hover:bg-gray-800 rounded transition">
-        🗂 Categories
-      </a>
+         class="block px-6 py-3 hover:bg-gray-800 rounded transition">🗂 Categories</a>
     </nav>
   </aside>
 
-  <!-- Main content -->
-  <main class="flex-1 bg-gray-100 p-6 overflow-y-auto">
+  <!-- Yumuşak Gri Karartma (Mobilde) -->
+  <div
+    class="fixed inset-0 bg-gray-800 bg-opacity-30 z-30 lg:hidden"
+    *ngIf="isSidebarOpen && !isLargeScreen"
+    (click)="toggleSidebar()"
+  ></div>
+
+  <!-- Ana İçerik -->
+  <main class="flex-1 bg-gray-100 p-6 overflow-y-auto relative z-10">
     <router-outlet></router-outlet>
   </main>
 </div>
