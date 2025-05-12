@@ -25,6 +25,23 @@
         <input id="corporate" type="text" formControlName="corporate" />
       </div>
 
+  <div class="form-group">
+    <label for="password">New Password</label>
+    <input id="password" type="password" formControlName="password" placeholder="Leave blank to keep current" />
+    <div *ngIf="profileForm.get('password')!.touched && profileForm.get('password')!.invalid" class="text-red-500 text-sm">
+      Minimum 6 characters
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="confirmPassword">Confirm Password</label>
+    <input id="confirmPassword" type="password" formControlName="confirmPassword" />
+    <div *ngIf="profileForm.errors?.['mismatch']" class="text-red-500 text-sm">
+  Passwords do not match
+</div>
+
+  </div>
+
       <!-- Submit -->
       <div class="text-right">
         <button type="submit" class="btn-primary" [disabled]="profileForm.invalid">

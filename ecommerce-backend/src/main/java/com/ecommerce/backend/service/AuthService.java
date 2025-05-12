@@ -101,4 +101,10 @@ public class AuthService {
         userRepository.findByEmail(email)
             .ifPresent(user -> refreshTokenService.deleteByUserId(user.getId()));
     }
+
+    // inside AuthService
+public void saveUpdatedUser(User user) {
+    userRepository.save(user);
+}
+
 }

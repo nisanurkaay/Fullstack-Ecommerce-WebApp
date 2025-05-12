@@ -46,8 +46,7 @@ export class AuthService {
           email: credentials.email
         }));
 
-        // Eğer varsa BehaviorSubject gibi şeyleri de burada tetikle
-        this.currentUser$$.next({
+          this.currentUser$$.next({
           id: res.id,
           name: res.name,
           role: res.role,
@@ -57,8 +56,15 @@ export class AuthService {
     );
   }
 
+updateProfile(updates: Partial<User>): Observable<any> {
+  return this.http.put(
+    `${this.apiUrl}/me`,
+    updates,
+    { responseType: 'text' }        // ← tell Angular “expect text, not JSON”
+  );
+}
 
-  // 🆕 REGISTER
+
   register(data: { name: string; email: string; password: string; corporate?: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
@@ -74,28 +80,23 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/refresh-token`, { refreshToken });
   }
 
-  // 📄 GET CURRENT USER
+
   getCurrentUser(): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/me`);
   }
 
-  // 📝 UPDATE PROFILE
-  updateProfile(updates: Partial<User>): Observable<any> {
-    return this.http.put(`${this.apiUrl}/me`, updates);
-  }
 
-  // 📧 FORGOT PASSWORD
+
   forgotPassword(email: string): Observable<{ success: boolean }> {
     return this.http.post<{ success: boolean }>(`${this.apiUrl}/forgot-password`, { email });
   }
 
-  // 🔓 LOGOUT
   logout(): void {
     localStorage.clear();
     this.currentUser$$.next(null);
   }
 
-  // 🚦 IS LOGGED IN
+
   isLoggedIn(): boolean {
     return !!this.getAccessToken();
   }
